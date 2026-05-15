@@ -46,7 +46,7 @@ async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
       .from('equipment')
       .select(BASE_SELECT)
       .eq('is_active', true)
-      .not('category', 'in', '("services","spare_parts")')
+      .eq('is_public', true)
       .limit(80);
 
     if (error || !data) return [];
@@ -69,7 +69,7 @@ async function fetchNew(): Promise<EquipmentWithPrice[]> {
       .from('equipment')
       .select(BASE_SELECT)
       .eq('is_active', true)
-      .not('category', 'in', '("services","spare_parts")')
+      .eq('is_public', true)
       .order('created_at', { ascending: false })
       .limit(12);
 
@@ -86,7 +86,7 @@ async function fetchSale(): Promise<EquipmentWithPrice[]> {
       .from('equipment')
       .select(BASE_SELECT)
       .eq('is_active', true)
-      .not('category', 'in', '("services","spare_parts")')
+      .eq('is_public', true)
       .limit(80);
 
     if (error || !data) return [];
