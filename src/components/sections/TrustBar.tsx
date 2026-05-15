@@ -128,7 +128,7 @@ export default function TrustBar() {
       ref={ref}
       dir="rtl"
       className="relative overflow-hidden"
-      style={{ background: '#070e1a' }}
+      style={{ background: '#1a2b4a' }}
       aria-label="נתוני DES"
     >
       {/* Top accent line */}

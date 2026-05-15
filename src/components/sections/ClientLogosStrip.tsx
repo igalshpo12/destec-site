@@ -14,7 +14,7 @@ export default function ClientLogosStrip() {
     <section
       dir="rtl"
       className="py-12"
-      style={{ background: '#f7f8fa', borderTop: '1px solid #eaecf0' }}
+      style={{ background: '#ffffff', borderTop: '1px solid #e8ecf0' }}
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Label */}

@@ -21,10 +21,9 @@ export default function Header() {
       dir="rtl"
       className="sticky top-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(7,14,26,0.97)' : '#070e1a',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 1px 0 rgba(255,255,255,0.07), 0 8px 24px rgba(0,0,0,0.3)' : 'none',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        background: '#ffffff',
+        borderBottom: '1px solid #e8ecf0',
+        boxShadow: scrolled ? '0 2px 12px rgba(26,43,74,0.08)' : 'none',
       }}
     >
       {/* Main header row */}
@@ -33,11 +32,11 @@ export default function Header() {
         {/* Mobile menu toggle */}
         <button
           className="lg:hidden p-2 transition-colors rounded-lg"
-          style={{ color: 'rgba(255,255,255,0.6)' }}
+          style={{ color: '#4a5568' }}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="תפריט"
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.6)'; }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#1a2b4a'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#4a5568'; }}
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -56,9 +55,9 @@ export default function Header() {
               dir="rtl"
               className="w-full rounded-lg py-2 pr-4 pl-9 text-sm transition-all duration-200"
               style={{
-                background: searchFocused ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)',
-                border: searchFocused ? '1px solid rgba(30,144,255,0.6)' : '1px solid rgba(255,255,255,0.1)',
-                color: '#fff',
+                background: searchFocused ? '#fff' : '#f8f9fb',
+                border: searchFocused ? '1px solid rgba(30,144,255,0.6)' : '1px solid #e8ecf0',
+                color: '#1a2b4a',
                 outline: 'none',
               }}
             />
@@ -66,7 +65,7 @@ export default function Header() {
               type="submit"
               className="absolute left-2 top-1/2 -translate-y-1/2 transition-colors"
               aria-label="חפש"
-              style={{ color: 'rgba(255,255,255,0.4)' }}
+              style={{ color: '#9ba3af' }}
             >
               <Search className="w-4 h-4" />
             </button>
@@ -90,13 +89,13 @@ export default function Header() {
             <div className="hidden sm:block">
               <div
                 className="text-xs font-medium leading-tight"
-                style={{ color: 'rgba(255,255,255,0.7)' }}
+                style={{ color: '#1a2b4a' }}
               >
                 שירותי ציוד
               </div>
               <div
                 className="text-xs font-medium leading-tight"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
+                style={{ color: '#6b7280' }}
               >
                 רפואי ודנטלי
               </div>
@@ -131,21 +130,21 @@ export default function Header() {
             href="/contact?service=repair"
             className="hidden md:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all duration-150 whitespace-nowrap"
             style={{
-              background: 'rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.7)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#f8f9fb',
+              color: '#4a5568',
+              border: '1px solid #e8ecf0',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = 'rgba(30,144,255,0.15)';
-              el.style.color = '#fff';
+              el.style.background = 'rgba(30,144,255,0.06)';
+              el.style.color = '#1a2b4a';
               el.style.borderColor = 'rgba(30,144,255,0.4)';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = 'rgba(255,255,255,0.08)';
-              el.style.color = 'rgba(255,255,255,0.7)';
-              el.style.borderColor = 'rgba(255,255,255,0.12)';
+              el.style.background = '#f8f9fb';
+              el.style.color = '#4a5568';
+              el.style.borderColor = '#e8ecf0';
             }}
           >
             <Wrench className="w-3.5 h-3.5 flex-shrink-0" />
@@ -157,7 +156,7 @@ export default function Header() {
       {/* Category nav bar */}
       <nav
         className="hidden lg:block"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ borderTop: '1px solid #e8ecf0' }}
         aria-label="קטגוריות"
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
@@ -167,14 +166,14 @@ export default function Header() {
                 <Link
                   href={`/catalog?category=${cat.slug}`}
                   className="block text-sm px-4 py-3 whitespace-nowrap transition-all duration-150 relative group"
-                  style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}
+                  style={{ color: '#4a5568', fontWeight: 500 }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLElement;
-                    el.style.color = '#fff';
+                    el.style.color = '#1a2b4a';
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLElement;
-                    el.style.color = 'rgba(255,255,255,0.55)';
+                    el.style.color = '#4a5568';
                   }}
                 >
                   {cat.label}
@@ -194,10 +193,10 @@ export default function Header() {
       {menuOpen && (
         <div
           className="lg:hidden"
-          style={{ background: '#070e1a', borderTop: '1px solid rgba(255,255,255,0.08)' }}
+          style={{ background: '#fff', borderTop: '1px solid #e8ecf0' }}
         >
           {/* Mobile search */}
-          <div className="px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="px-4 py-3" style={{ borderBottom: '1px solid #e8ecf0' }}>
             <form action="/catalog" method="get" className="relative">
               <input
                 type="search"
@@ -206,13 +205,13 @@ export default function Header() {
                 dir="rtl"
                 className="w-full rounded-lg py-2 pr-4 pl-9 text-sm"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#fff',
+                  background: '#f8f9fb',
+                  border: '1px solid #e8ecf0',
+                  color: '#1a2b4a',
                   outline: 'none',
                 }}
               />
-              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(255,255,255,0.4)' }} />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9ba3af' }} />
             </form>
           </div>
           <ul className="py-1">
@@ -221,10 +220,10 @@ export default function Header() {
                 <Link
                   href={`/catalog?category=${cat.slug}`}
                   className="block px-4 py-3 text-sm font-medium transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.6)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                  style={{ color: '#4a5568', borderBottom: '1px solid #f4f6f8' }}
                   onClick={() => setMenuOpen(false)}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.6)'; }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#1a2b4a'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#4a5568'; }}
                 >
                   {cat.label}
                 </Link>

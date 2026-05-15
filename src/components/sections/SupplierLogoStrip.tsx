@@ -24,16 +24,10 @@ export default function SupplierLogoStrip() {
   return (
     <section
       dir="rtl"
-      style={{ background: '#0d1929' }}
+      style={{ background: '#f4f6f8', borderTop: '1px solid #e8ecf0', borderBottom: '1px solid #e8ecf0' }}
       className="relative overflow-hidden py-16"
       aria-label="הספקים שלנו"
     >
-      {/* Subtle top line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(30,144,255,0.3), transparent)' }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -44,14 +38,14 @@ export default function SupplierLogoStrip() {
             הספקים הרשמיים שלנו
           </p>
           <h2
-            className="font-black text-white"
-            style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)' }}
+            className="font-black"
+            style={{ color: '#1a2b4a', fontSize: 'clamp(1.5rem, 2.5vw, 2rem)' }}
           >
             מותגים עולמיים. ייצוג ישראלי מורשה.
           </h2>
           <p
             className="text-sm mt-3 max-w-lg mx-auto"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: '#6b7280' }}
           >
             DES הינו יבואן מורשה ומפיץ רשמי של כל המותגים הבאים בישראל
           </p>
@@ -64,43 +58,43 @@ export default function SupplierLogoStrip() {
               key={s.name}
               className="group flex flex-col items-center p-4 rounded-xl cursor-default transition-all duration-300"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#fff',
+                border: '1px solid #e8ecf0',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.background = `${s.color}12`;
+                el.style.background = `${s.color}08`;
                 el.style.borderColor = `${s.color}40`;
                 el.style.transform = 'translateY(-3px)';
+                el.style.boxShadow = `0 4px 12px ${s.color}20`;
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.background = 'rgba(255,255,255,0.04)';
-                el.style.borderColor = 'rgba(255,255,255,0.07)';
+                el.style.background = '#fff';
+                el.style.borderColor = '#e8ecf0';
                 el.style.transform = '';
+                el.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
               }}
             >
               {/* Logo circle */}
               <div
                 className="w-11 h-11 rounded-full flex items-center justify-center font-black text-xs mb-2 transition-all duration-300"
                 style={{
-                  background: 'rgba(255,255,255,0.07)',
-                  color: 'rgba(255,255,255,0.4)',
+                  background: '#f4f6f8',
+                  color: '#9ba3af',
                   fontSize: s.initials.length > 3 ? '0.5rem' : '0.65rem',
                   letterSpacing: '-0.02em',
-                  filter: 'grayscale(1)',
                 }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget as HTMLElement;
                   el.style.background = s.color;
                   el.style.color = '#fff';
-                  el.style.filter = 'grayscale(0)';
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = 'rgba(255,255,255,0.07)';
-                  el.style.color = 'rgba(255,255,255,0.4)';
-                  el.style.filter = 'grayscale(1)';
+                  el.style.background = '#f4f6f8';
+                  el.style.color = '#9ba3af';
                 }}
               >
                 {s.initials}
@@ -109,9 +103,9 @@ export default function SupplierLogoStrip() {
               {/* Name */}
               <span
                 className="text-xs font-semibold text-center leading-tight transition-colors duration-300"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)'; }}
+                style={{ color: '#4a5568' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#1a2b4a'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#4a5568'; }}
               >
                 {s.name}
               </span>
@@ -119,7 +113,7 @@ export default function SupplierLogoStrip() {
               {/* Country */}
               <span
                 className="text-xs mt-0.5 text-center"
-                style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.6rem' }}
+                style={{ color: '#9ba3af', fontSize: '0.6rem' }}
               >
                 {s.country}
               </span>
@@ -130,7 +124,7 @@ export default function SupplierLogoStrip() {
         {/* Bottom note */}
         <p
           className="text-center text-xs mt-10"
-          style={{ color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}
+          style={{ color: '#9ba3af', letterSpacing: '0.04em' }}
         >
           כל הסחורה מיובאת ישירות מהיצרן · אחריות מלאה · תמיכה טכנית
         </p>

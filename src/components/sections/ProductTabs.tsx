@@ -115,7 +115,7 @@ export default function ProductTabs() {
   }, [activeTab]);
 
   return (
-    <section dir="rtl" className="py-16" style={{ background: '#f7f8fa' }}>
+    <section dir="rtl" className="py-16" style={{ background: '#ffffff' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Header row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
@@ -146,7 +146,7 @@ export default function ProductTabs() {
                 className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
                 style={
                   activeTab === tab.id
-                    ? { background: '#0d1929', color: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }
+                    ? { background: '#1a2b4a', color: '#fff', boxShadow: '0 2px 8px rgba(26,43,74,0.15)' }
                     : { background: 'transparent', color: '#6b7280' }
                 }
               >
@@ -178,14 +178,14 @@ export default function ProductTabs() {
             href="/catalog"
             className="inline-flex items-center gap-3 font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
             style={{
-              background: '#0d1929',
+              background: '#1a2b4a',
               color: '#fff',
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.background = '#1e90ff';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#0d1929';
+              (e.currentTarget as HTMLElement).style.background = '#1a2b4a';
             }}
           >
             <span>לכל הקטלוג</span>

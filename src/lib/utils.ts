@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Returns a short display name for a product item.
+ * Prefers name_he, falls back to name_en.
+ * Splits at the first occurrence of " - ", " / ", ",", or " – " and takes the part before.
+ * Trims whitespace. Caps at 40 characters with "…" if truncated.
+ */
+export function shortName(item: { name_he?: string | null; name_en?: string | null }): string {
+  const raw = (item.name_he && item.name_he.trim()) ? item.name_he : (item.name_en ?? '');
+  // Split at first occurrence of any delimiter
+  const delimiterRe = / - | \/ |,| – /;
+  const match = delimiterRe.exec(raw);
+  const part = match ? raw.slice(0, match.index) : raw;
+  const trimmed = part.trim();
+  if (trimmed.length > 40) return trimmed.slice(0, 40) + '…';
+  return trimmed;
+}
+
 export function formatPrice(price: number, currency = 'ILS'): string {
   if (currency === 'ILS') {
     return new Intl.NumberFormat('he-IL', {

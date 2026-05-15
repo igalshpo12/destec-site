@@ -1,22 +1,162 @@
 'use client';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { EquipmentWithPrice } from '@/lib/supabase';
-import { formatPrice, CATEGORY_LABELS } from '@/lib/utils';
+import { formatPrice, CATEGORY_LABELS, shortName } from '@/lib/utils';
 
 /* Brand → accent color map */
-const BRAND_COLORS: Record<string, { accent: string; bg: string; letter: string }> = {
-  NSK:               { accent: '#c0392b', bg: 'rgba(192,57,43,0.08)',   letter: 'N' },
-  'W&H':             { accent: '#1e3a6e', bg: 'rgba(30,58,110,0.08)',   letter: 'W' },
-  KaVo:              { accent: '#005baa', bg: 'rgba(0,91,170,0.08)',    letter: 'K' },
-  'MK-dent':         { accent: '#d35400', bg: 'rgba(211,84,0,0.08)',    letter: 'M' },
-  Nouvag:            { accent: '#27ae60', bg: 'rgba(39,174,96,0.08)',   letter: 'N' },
-  'Bien-Air':        { accent: '#2c3e50', bg: 'rgba(44,62,80,0.08)',    letter: 'B' },
-  Anthogyr:          { accent: '#8e44ad', bg: 'rgba(142,68,173,0.08)', letter: 'A' },
-  'Dentsply Sirona': { accent: '#00589b', bg: 'rgba(0,88,155,0.08)',    letter: 'D' },
-  JINME:             { accent: '#e74c3c', bg: 'rgba(231,76,60,0.08)',   letter: 'J' },
+const BRAND_COLORS: Record<string, { accent: string; letter: string }> = {
+  NSK:               { accent: '#c0392b', letter: 'N' },
+  'W&H':             { accent: '#1e3a6e', letter: 'W' },
+  KaVo:              { accent: '#005baa', letter: 'K' },
+  'MK-dent':         { accent: '#d35400', letter: 'M' },
+  Nouvag:            { accent: '#27ae60', letter: 'N' },
+  'Bien-Air':        { accent: '#2c3e50', letter: 'B' },
+  Anthogyr:          { accent: '#8e44ad', letter: 'A' },
+  'Dentsply Sirona': { accent: '#00589b', letter: 'D' },
+  JINME:             { accent: '#e74c3c', letter: 'J' },
 };
 
-const FALLBACK = { accent: '#1a2b4a', bg: 'rgba(26,43,74,0.08)', letter: '?' };
+const FALLBACK = { accent: '#1a2b4a', letter: '?' };
+
+/** Returns an inline SVG icon for the given category slug */
+function getCategoryIcon(category: string): ReactNode {
+  const iconProps = {
+    xmlns: 'http://www.w3.org/2000/svg',
+    viewBox: '0 0 64 64',
+    fill: 'none',
+    stroke: '#1a2b4a',
+    strokeWidth: '2.5',
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    style: { opacity: 0.4, width: '42%', height: '42%' },
+  };
+
+  switch (category) {
+    case 'turbines':
+      // Turbine / fan blade — circular, 4 blades
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="5" />
+          {/* 4 blade arcs */}
+          <path d="M32 27 C28 16, 18 14, 16 20 C14 26, 22 28, 27 29" />
+          <path d="M37 32 C48 28, 50 18, 44 16 C38 14, 36 22, 35 27" />
+          <path d="M32 37 C36 48, 46 50, 48 44 C50 38, 42 36, 37 35" />
+          <path d="M27 32 C16 36, 14 46, 20 48 C26 50, 28 42, 29 37" />
+        </svg>
+      );
+
+    case 'angles':
+      // Contra-angle handpiece — angled tube
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <path d="M14 48 L34 28" strokeWidth="5" strokeLinecap="round" />
+          <path d="M34 28 L34 16" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="34" cy="12" r="4" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+          <rect x="10" y="44" width="8" height="12" rx="2" transform="rotate(-45 14 50)" />
+        </svg>
+      );
+
+    case 'handpieces':
+      // Straight handpiece silhouette
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <rect x="12" y="28" width="40" height="8" rx="4" />
+          <circle cx="52" cy="32" r="3" />
+          <rect x="14" y="30" width="6" height="4" rx="1" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+          <rect x="22" y="30" width="4" height="4" rx="1" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+        </svg>
+      );
+
+    case 'drills':
+      // Drill bit — pointed spiral
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <line x1="32" y1="8" x2="32" y2="52" />
+          <path d="M26 52 L32 60 L38 52" />
+          {/* Spiral flutes */}
+          <path d="M26 16 Q32 20 38 16" />
+          <path d="M26 24 Q32 28 38 24" />
+          <path d="M26 32 Q32 36 38 32" />
+          <path d="M26 40 Q32 44 38 40" />
+          <rect x="24" y="8" width="16" height="6" rx="2" />
+        </svg>
+      );
+
+    case 'motors':
+      // Gear / motor icon
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="9" />
+          <circle cx="32" cy="32" r="3" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+          {/* 8 teeth */}
+          {[0,45,90,135,180,225,270,315].map((deg) => {
+            const rad = (deg * Math.PI) / 180;
+            const x1 = 32 + 13 * Math.cos(rad);
+            const y1 = 32 + 13 * Math.sin(rad);
+            const x2 = 32 + 19 * Math.cos(rad);
+            const y2 = 32 + 19 * Math.sin(rad);
+            return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} strokeWidth="3" strokeLinecap="round" />;
+          })}
+        </svg>
+      );
+
+    case 'surgery':
+    case 'electrosurgery':
+      // Scalpel
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <path d="M16 48 L44 20" strokeWidth="3" />
+          <path d="M44 20 L50 14 L52 16 L46 22 Z" fill="#1a2b4a" fillOpacity="0.4" />
+          <path d="M44 20 L40 28 L46 26 Z" fill="#1a2b4a" fillOpacity="0.35" />
+        </svg>
+      );
+
+    case 'sterilization':
+      // Autoclave / flask
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <rect x="18" y="28" width="28" height="22" rx="4" />
+          <rect x="14" y="24" width="36" height="6" rx="2" />
+          <rect x="26" y="12" width="12" height="14" rx="2" />
+          <line x1="24" y1="36" x2="40" y2="36" />
+          <line x1="24" y1="42" x2="40" y2="42" />
+        </svg>
+      );
+
+    case 'prophylaxis':
+    case 'scalers':
+      // Tooth with brush strokes
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          {/* Tooth */}
+          <path d="M20 16 C20 12, 26 10, 32 12 C38 10, 44 12, 44 16 C46 22, 44 30, 40 40 C38 46, 36 52, 34 52 C32 52, 32 48, 32 48 C32 48, 32 52, 30 52 C28 52, 26 46, 24 40 C20 30, 18 22, 20 16 Z" />
+          {/* Brush lines */}
+          <line x1="46" y1="22" x2="54" y2="22" strokeWidth="2.5" />
+          <line x1="48" y1="28" x2="56" y2="28" strokeWidth="2.5" />
+          <line x1="46" y1="34" x2="54" y2="34" strokeWidth="2.5" />
+        </svg>
+      );
+
+    case 'restorative':
+      // Tooth icon
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <path d="M20 16 C20 12, 26 10, 32 12 C38 10, 44 12, 44 16 C46 22, 44 30, 40 40 C38 46, 36 52, 34 52 C32 52, 32 48, 32 48 C32 48, 32 52, 30 52 C28 52, 26 46, 24 40 C20 30, 18 22, 20 16 Z" />
+          <path d="M26 18 C28 16, 36 16, 38 18" strokeWidth="1.5" />
+        </svg>
+      );
+
+    default:
+      // Medical cross
+      return (
+        <svg {...iconProps} viewBox="0 0 64 64">
+          <rect x="28" y="12" width="8" height="40" rx="4" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+          <rect x="12" y="28" width="40" height="8" rx="4" fill="#1a2b4a" fillOpacity="0.4" stroke="none" />
+        </svg>
+      );
+  }
+}
 
 interface Props {
   item: EquipmentWithPrice;
@@ -27,6 +167,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
   const mfr = item.manufacturer || '';
   const brand = BRAND_COLORS[mfr] || FALLBACK;
   const categoryLabel = item.category ? (CATEGORY_LABELS[item.category] || item.category) : null;
+  const displayName = shortName(item);
 
   return (
     <article
@@ -34,9 +175,9 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
       className="group bg-white flex flex-col overflow-hidden transition-all duration-250"
       style={{
         borderRight: `2px solid ${brand.accent}`,
-        borderTop: '1px solid #f0f2f5',
-        borderBottom: '1px solid #f0f2f5',
-        borderLeft: '1px solid #f0f2f5',
+        borderTop: '1px solid #e8ecf0',
+        borderBottom: '1px solid #e8ecf0',
+        borderLeft: '1px solid #e8ecf0',
         borderRadius: '2px 10px 10px 2px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
         willChange: 'transform, box-shadow',
@@ -56,35 +197,14 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
         el.style.borderRightWidth = '2px';
       }}
     >
-      {/* Image area — clean navy gradient with brand initial */}
+      {/* Image area — light grey background with category icon */}
       <div
         className="relative aspect-[4/3] flex items-center justify-center overflow-hidden"
-        style={{ background: `linear-gradient(135deg, #0d1929 0%, #1a2b4a 100%)` }}
+        style={{ background: '#f0f4f8' }}
       >
-        {/* Subtle pattern */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle, ${brand.accent}40 1px, transparent 1px)`,
-            backgroundSize: '18px 18px',
-          }}
-        />
-        {/* Brand letter */}
-        <div
-          className="relative z-10 flex items-center justify-center font-black"
-          style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            background: `${brand.accent}22`,
-            border: `1.5px solid ${brand.accent}50`,
-            color: brand.accent,
-            fontSize: '1.5rem',
-            letterSpacing: '-0.02em',
-            opacity: 0.9,
-          }}
-        >
-          {brand.letter}
+        {/* Category icon — centered, navy at 40% opacity */}
+        <div className="flex items-center justify-center w-full h-full">
+          {getCategoryIcon(item.category || '')}
         </div>
 
         {/* Manufacturer pill — top right */}
@@ -92,7 +212,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
           <span
             className="absolute top-2.5 right-2.5 text-xs font-bold px-2.5 py-1 rounded-full"
             style={{
-              background: '#0d1929',
+              background: '#fff',
               color: brand.accent,
               border: `1px solid ${brand.accent}40`,
               fontSize: '0.65rem',
@@ -122,10 +242,10 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
           <span
             className="absolute bottom-2.5 left-2.5 text-xs px-2 py-0.5 rounded"
             style={{
-              background: 'rgba(13,25,41,0.75)',
-              color: 'rgba(255,255,255,0.6)',
+              background: 'rgba(240,244,248,0.9)',
+              color: '#4a5568',
               fontSize: '0.6rem',
-              backdropFilter: 'blur(4px)',
+              border: '1px solid #e8ecf0',
               letterSpacing: '0.05em',
             }}
           >
@@ -145,17 +265,18 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
           {item.item_number || '—'}
         </span>
 
-        {/* Product name */}
+        {/* Product name — short display name */}
         <h3
-          className="font-bold text-sm leading-snug line-clamp-2 flex-1"
-          style={{ color: '#0d1929' }}
+          className="font-bold text-sm leading-snug flex-1"
+          style={{ color: '#1a2b4a' }}
+          title={item.name_he || item.name_en || ''}
         >
-          {item.name_he || item.name_en}
+          {displayName}
         </h3>
 
         {/* Model */}
         {item.model && (
-          <p className="text-xs font-mono" dir="ltr" style={{ color: '#b0b8c4' }}>
+          <p className="text-xs font-mono" dir="ltr" style={{ color: '#9ba3af' }}>
             {item.model}
           </p>
         )}
@@ -177,7 +298,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
               <>
                 <div
                   className="font-black"
-                  style={{ color: '#0d1929', fontSize: '1.1rem', lineHeight: 1 }}
+                  style={{ color: '#1a2b4a', fontSize: '1.1rem', lineHeight: 1 }}
                 >
                   {formatPrice(item.price, item.currency || 'ILS')}
                 </div>
@@ -195,14 +316,14 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
             href={`/catalog/${item.id}`}
             className="text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
             style={{
-              background: '#0d1929',
+              background: '#1a2b4a',
               color: '#fff',
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.background = brand.accent;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#0d1929';
+              (e.currentTarget as HTMLElement).style.background = '#1a2b4a';
             }}
           >
             פרטים
