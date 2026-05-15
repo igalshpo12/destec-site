@@ -2,17 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, MessageCircle, Wrench, Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-const NAV_CATEGORIES = [
-  { label: 'טורבינות, זוויתנים וידיתנים', href: '/catalog?category=turbines' },
-  { label: 'כירורגיה והשתלות', href: '/catalog?category=surgery' },
-  { label: 'סטריליזציה ותחזוקה', href: '/catalog?category=sterilization' },
-  { label: 'שיקום הפה', href: '/catalog?category=restorative' },
-  { label: 'פרופילקטיקה', href: '/catalog?category=prophylaxis' },
-  { label: 'מנועים', href: '/catalog?category=motors' },
-  { label: 'מקדחים', href: '/catalog?category=drills' },
-];
+import { cn, NAV_CATEGORIES } from '@/lib/utils';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -125,9 +115,9 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4">
           <ul className="flex items-center justify-center gap-0 overflow-x-auto">
             {NAV_CATEGORIES.map((cat) => (
-              <li key={cat.href}>
+              <li key={cat.slug}>
                 <Link
-                  href={cat.href}
+                  href={`/catalog?category=${cat.slug}`}
                   className="block text-white/85 hover:text-white hover:bg-white/10 text-sm font-medium px-4 py-3 transition-colors whitespace-nowrap"
                 >
                   {cat.label}
@@ -156,9 +146,9 @@ export default function Header() {
           </div>
           <ul className="py-2">
             {NAV_CATEGORIES.map((cat) => (
-              <li key={cat.href}>
+              <li key={cat.slug}>
                 <Link
-                  href={cat.href}
+                  href={`/catalog?category=${cat.slug}`}
                   className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#1a2b4a] text-sm font-medium border-b border-gray-50"
                   onClick={() => setMenuOpen(false)}
                 >

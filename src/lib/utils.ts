@@ -33,7 +33,50 @@ export const CATEGORY_LABELS: Record<string, string> = {
   restorative: 'שיקום',
   scalers: 'סקילרים',
   surgery: 'כירורגיה',
+  electrosurgery: 'אלקטרוכירורגיה',
+  spare_parts: 'חלקי חילוף',
+  consumables: 'מתרפים',
 };
+
+export const NAV_CATEGORIES = [
+  {
+    slug: 'handpieces',
+    label: 'טורבינות זוויתנים וידיתנים',
+    dbCategories: ['turbines', 'angles', 'handpieces'],
+  },
+  {
+    slug: 'surgery',
+    label: 'כירורגיה והשתלות',
+    dbCategories: ['surgery', 'electrosurgery'],
+  },
+  {
+    slug: 'sterilization',
+    label: 'סטריליזציה ותחזוקה',
+    dbCategories: ['sterilization', 'spare_parts', 'consumables'],
+  },
+  {
+    slug: 'restorative',
+    label: 'שיקום הפה',
+    dbCategories: ['restorative'],
+  },
+  {
+    slug: 'prophylaxis',
+    label: 'פרופילקטיקה',
+    dbCategories: ['prophylaxis', 'scalers'],
+  },
+  {
+    slug: 'motors',
+    label: 'מנועים',
+    dbCategories: ['motors'],
+  },
+  {
+    slug: 'drills',
+    label: 'מקדחים',
+    dbCategories: ['drills'],
+  },
+];
+
+export const HIDDEN_CATEGORIES = ['services'];
 
 export const SUPPLIERS = [
   'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME',

@@ -1,6 +1,6 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CATEGORY_LABELS, SUPPLIERS } from '@/lib/utils';
+import { NAV_CATEGORIES, SUPPLIERS } from '@/lib/utils';
 import { SlidersHorizontal, X } from 'lucide-react';
 
 export default function FilterSidebar() {
@@ -64,7 +64,7 @@ export default function FilterSidebar() {
               כל הקטגוריות
             </button>
           </li>
-          {Object.entries(CATEGORY_LABELS).map(([slug, label]) => (
+          {NAV_CATEGORIES.map(({ slug, label }) => (
             <li key={slug}>
               <button
                 onClick={() => updateParam('category', slug)}

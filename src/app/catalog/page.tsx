@@ -4,7 +4,7 @@ import { supabase, EquipmentWithPrice, inferCategory } from '@/lib/supabase';
 import ProductCard from '@/components/ui/ProductCard';
 import FilterSidebar from '@/components/ui/FilterSidebar';
 import { Search, Loader2, SlidersHorizontal } from 'lucide-react';
-import { CATEGORY_LABELS } from '@/lib/utils';
+import { NAV_CATEGORIES } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'קטלוג מוצרים',
@@ -42,7 +42,9 @@ async function fetchCatalogProducts(params: {
        equipment_prices!left(price, currency)`,
       { count: 'exact' }
     )
-    .eq('is_active', true);
+    .eq('is_active', true)
+    // Always exclude internal service records from public catalog
+    .not('category', 'in', '("services")');
 
   // Price tier filter — only tier=1
   // We'll filter in memory after fetch since left join with eq doesn't chain well for optional join
@@ -55,7 +57,14 @@ async function fetchCatalogProducts(params: {
   }
 
   if (category) {
-    query = query.eq('category', category);
+    // Translate nav slug to the array of DB categories it covers
+    const navEntry = NAV_CATEGORIES.find((c) => c.slug === category);
+    if (navEntry) {
+      query = query.in('category', navEntry.dbCategories);
+    } else {
+      // Fallback: treat as a raw DB category name
+      query = query.eq('category', category);
+    }
   }
 
   if (manufacturer) {
@@ -101,7 +110,9 @@ function CatalogContent({ items, total, page, q, category, manufacturer }: {
   manufacturer: string;
 }) {
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const catLabel = category ? (CATEGORY_LABELS[category] || category) : '';
+  const catLabel = category
+    ? (NAV_CATEGORIES.find((c) => c.slug === category)?.label || category)
+    : '';
 
   return (
     <div className="flex-1 min-w-0">
