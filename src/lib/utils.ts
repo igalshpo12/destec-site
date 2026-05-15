@@ -52,7 +52,7 @@ export const NAV_CATEGORIES = [
   {
     slug: 'sterilization',
     label: 'סטריליזציה ותחזוקה',
-    dbCategories: ['sterilization', 'consumables'],
+    dbCategories: ['sterilization'],
   },
   {
     slug: 'restorative',
@@ -76,7 +76,10 @@ export const NAV_CATEGORIES = [
   },
 ];
 
-export const HIDDEN_CATEGORIES = ['services'];
+// Categories never shown on the public catalog
+// spare_parts / consumables / services are internal repair/service items
+// not purchased directly by clinics or healthcare centers
+export const HIDDEN_CATEGORIES = ['services', 'spare_parts', 'consumables'];
 
 export const SUPPLIERS = [
   'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT',

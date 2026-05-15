@@ -1,8 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase, EquipmentWithPrice } from '@/lib/supabase';
+import { HIDDEN_CATEGORIES } from '@/lib/utils';
 import ProductCard from '@/components/ui/ProductCard';
 import Link from 'next/link';
+
+const HIDDEN_FILTER = `(${HIDDEN_CATEGORIES.map((c) => `"${c}"`).join(',')})` as const;
 
 const TABS = [
   { id: 'featured', label: 'מומלצים' },
@@ -38,7 +41,9 @@ async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
       .from('equipment').select(BASE_SELECT)
-      .eq('is_active', true).eq('is_public', true).limit(80);
+      .eq('is_active', true)
+      .not('category', 'in', HIDDEN_FILTER)
+      .limit(80);
     if (error || !data) return [];
     const withPrices = mapRows(data).filter((item) => item.price != null);
     withPrices.sort((a, b) => {
@@ -54,7 +59,8 @@ async function fetchNew(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
       .from('equipment').select(BASE_SELECT)
-      .eq('is_active', true).eq('is_public', true)
+      .eq('is_active', true)
+      .not('category', 'in', HIDDEN_FILTER)
       .order('created_at', { ascending: false }).limit(12);
     if (error || !data) return [];
     return mapRows(data);
@@ -65,7 +71,9 @@ async function fetchSale(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
       .from('equipment').select(BASE_SELECT)
-      .eq('is_active', true).eq('is_public', true).limit(80);
+      .eq('is_active', true)
+      .not('category', 'in', HIDDEN_FILTER)
+      .limit(80);
     if (error || !data) return [];
     const withPrices = mapRows(data).filter((item) => item.price != null);
     withPrices.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));

@@ -4,7 +4,7 @@ import { supabase, EquipmentWithPrice, inferCategory } from '@/lib/supabase';
 import ProductCard from '@/components/ui/ProductCard';
 import FilterSidebar from '@/components/ui/FilterSidebar';
 import { Search, Loader2, SlidersHorizontal } from 'lucide-react';
-import { NAV_CATEGORIES } from '@/lib/utils';
+import { NAV_CATEGORIES, HIDDEN_CATEGORIES } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'קטלוג מוצרים',
@@ -43,7 +43,7 @@ async function fetchCatalogProducts(params: {
       { count: 'exact' }
     )
     .eq('is_active', true)
-    .eq('is_public', true);
+    .not('category', 'in', `(${HIDDEN_CATEGORIES.map((c) => `"${c}"`).join(',')})`);
 
   // Price tier filter — only tier=1
   // We'll filter in memory after fetch since left join with eq doesn't chain well for optional join
