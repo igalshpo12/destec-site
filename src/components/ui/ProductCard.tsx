@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { EquipmentWithPrice } from '@/lib/supabase';
 import { formatPrice, CATEGORY_LABELS, shortName } from '@/lib/utils';
@@ -168,6 +170,8 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
   const brand = BRAND_COLORS[mfr] || FALLBACK;
   const categoryLabel = item.category ? (CATEGORY_LABELS[item.category] || item.category) : null;
   const displayName = shortName(item);
+  const categoryImage = item.category ? `/images/categories/${item.category}.jpg` : null;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <article
@@ -197,15 +201,25 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
         el.style.borderRightWidth = '2px';
       }}
     >
-      {/* Image area — light grey background with category icon */}
+      {/* Image area — Nano Banana 2 generated category image, fallback to SVG icon */}
       <div
         className="relative aspect-[4/3] flex items-center justify-center overflow-hidden"
         style={{ background: '#f0f4f8' }}
       >
-        {/* Category icon — centered, navy at 40% opacity */}
-        <div className="flex items-center justify-center w-full h-full">
-          {getCategoryIcon(item.category || '')}
-        </div>
+        {categoryImage && !imgError ? (
+          <Image
+            src={categoryImage}
+            alt={categoryLabel || item.category || ''}
+            fill
+            className="object-cover"
+            onError={() => setImgError(true)}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full">
+            {getCategoryIcon(item.category || '')}
+          </div>
+        )}
 
         {/* Manufacturer pill — top right */}
         {mfr && (
