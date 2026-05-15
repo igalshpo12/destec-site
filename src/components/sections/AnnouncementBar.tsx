@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { X, Truck } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
@@ -9,14 +9,20 @@ export default function AnnouncementBar() {
   return (
     <div
       dir="rtl"
-      className="bg-[#1e90ff] text-white text-sm font-medium py-2.5 px-4 flex items-center justify-center relative"
+      className="relative flex items-center justify-center py-2.5 px-4 text-sm"
+      style={{
+        background: '#1e90ff',
+        color: '#fff',
+      }}
     >
-      <Truck className="w-4 h-4 ml-2 flex-shrink-0" />
-      <span>משלוחים חינם ברכישה החל מ &#x2005;500 &#8362;</span>
+      <span className="font-medium">
+        משלוחים חינם ברכישה מעל ₪500 &nbsp;·&nbsp; 9,000+ מוצרים במלאי מיידי
+      </span>
       <button
         onClick={() => setVisible(false)}
         aria-label="סגור הודעה"
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors"
+        className="absolute left-4 top-1/2 -translate-y-1/2 transition-opacity hover:opacity-60"
+        style={{ color: '#fff' }}
       >
         <X className="w-4 h-4" />
       </button>

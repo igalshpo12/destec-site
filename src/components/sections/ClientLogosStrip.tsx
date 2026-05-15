@@ -1,38 +1,54 @@
 const CLIENTS = [
-  { name: 'שירותי בריאות כללית', short: 'כללית', color: '#e74c3c' },
-  { name: 'מכבי דנט', short: 'מכבי', color: '#27ae60' },
-  { name: 'איכילוב', short: 'איכילוב', color: '#2980b9' },
-  { name: 'בית חולים ברזילי', short: 'ברזילי', color: '#8e44ad' },
-  { name: 'Atidant', short: 'Atidant', color: '#d35400' },
-  { name: 'Lorian Medic', short: 'Lorian', color: '#16a085' },
-  { name: 'Schwartz', short: 'Schwartz', color: '#2c3e50' },
-  { name: 'Mardent', short: 'Mardent', color: '#c0392b' },
-  { name: 'המרכז הרפואי ת"א', short: 'ת"א מד', color: '#1e3a6e' },
+  { name: 'שירותי בריאות כללית', color: '#e74c3c' },
+  { name: 'מכבי דנט',            color: '#27ae60' },
+  { name: 'איכילוב',              color: '#2980b9' },
+  { name: 'Atidant',              color: '#d35400' },
+  { name: 'Lorian Medic',         color: '#16a085' },
+  { name: 'Schwartz',             color: '#2c3e50' },
+  { name: 'Mardent',              color: '#c0392b' },
+  { name: 'המרכז הרפואי ת"א',    color: '#1e3a6e' },
 ];
 
 export default function ClientLogosStrip() {
   return (
-    <section dir="rtl" className="py-12 bg-gray-50 border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-center text-xl font-bold text-[#1a2b4a] mb-2">לקוחות DES</h2>
-        <p className="text-center text-gray-500 text-sm mb-8">
-          בין לקוחותינו הנאמנים נמנים בתי חולים, קופות חולים וקליניקות פרטיות מובילות
+    <section
+      dir="rtl"
+      className="py-12"
+      style={{ background: '#f7f8fa', borderTop: '1px solid #eaecf0' }}
+    >
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        {/* Label */}
+        <p
+          className="text-center text-xs font-semibold tracking-[0.2em] uppercase mb-6"
+          style={{ color: '#9ba3af' }}
+        >
+          לקוחות מרכזיים
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        {/* Client tags */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
           {CLIENTS.map((c) => (
             <div
               key={c.name}
-              className="bg-white border border-gray-100 rounded-xl px-5 py-3 flex items-center gap-3 hover:shadow-md transition-shadow"
-              title={c.name}
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg transition-all duration-200"
+              style={{
+                background: '#fff',
+                border: '1px solid #eaecf0',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+              }}
             >
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                style={{ background: c.color }}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
+                style={{ background: c.color, fontSize: '0.6rem' }}
               >
-                {c.short.charAt(0)}
+                {c.name.charAt(0)}
               </div>
-              <span className="text-gray-700 font-medium text-sm whitespace-nowrap">{c.name}</span>
+              <span
+                className="text-sm font-medium whitespace-nowrap"
+                style={{ color: '#374151' }}
+              >
+                {c.name}
+              </span>
             </div>
           ))}
         </div>
