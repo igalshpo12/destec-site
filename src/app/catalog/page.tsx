@@ -43,8 +43,8 @@ async function fetchCatalogProducts(params: {
       { count: 'exact' }
     )
     .eq('is_active', true)
-    // Always exclude internal service records from public catalog
-    .not('category', 'in', '("services")');
+    // Exclude internal records and spare parts from public catalog
+    .not('category', 'in', '("services","spare_parts")');
 
   // Price tier filter — only tier=1
   // We'll filter in memory after fetch since left join with eq doesn't chain well for optional join
