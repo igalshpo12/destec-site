@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["cdg1"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://likaubaiqrojlwqzoepp.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_gIlCUf4i2Ne9VznqP4g8Vw_nZqZqx00"
+  }
+}
