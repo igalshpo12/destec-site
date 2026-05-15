@@ -18,9 +18,10 @@ const MANUFACTURER_COLORS: Record<string, { bg: string; text: string }> = {
 
 interface Props {
   item: EquipmentWithPrice;
+  showSaleBadge?: boolean;
 }
 
-export default function ProductCard({ item }: Props) {
+export default function ProductCard({ item, showSaleBadge = false }: Props) {
   const mfr = item.manufacturer || '';
   const mfrColors = MANUFACTURER_COLORS[mfr] || { bg: 'bg-gray-100', text: 'text-gray-700' };
   const categoryLabel = item.category ? (CATEGORY_LABELS[item.category] || item.category) : null;
@@ -54,6 +55,12 @@ export default function ProductCard({ item }: Props) {
             className={`absolute top-2.5 right-2.5 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm ${mfrColors.bg} ${mfrColors.text}`}
           >
             {mfr}
+          </span>
+        )}
+        {/* Sale badge top-left */}
+        {showSaleBadge && (
+          <span className="absolute top-2.5 left-2.5 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm bg-amber-100 text-amber-700">
+            {'מחיר מיוחד'}
           </span>
         )}
         {categoryLabel && (
