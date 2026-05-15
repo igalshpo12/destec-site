@@ -25,117 +25,75 @@ function extractPrice(
   return { price: p.price, currency: p.currency };
 }
 
-async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
-  // Active items with tier-1 price, stable pseudo-random order (id % 97)
-  // Use a left join so items without prices are included but we filter them below
-  const { data, error } = await supabase
-    .from('equipment')
-    .select(
-      `id, item_number, name_he, name_en, manufacturer, model, category,
-       description_he, description_en, is_active, created_at, updated_at,
-       equipment_prices(price, currency)`,
-    )
-    .eq('is_active', true)
-    .eq('equipment_prices.tier', 1)
-    .limit(80); // fetch extra then sort/slice in JS
-
-  if (error || !data) return [];
-
-  const withPrices = (data as unknown[])
-    .map((row) => {
-      const r = row as Record<string, unknown>;
-      const { price, currency } = extractPrice(r.equipment_prices);
-      const { equipment_prices: _ep, ...rest } = r;
-      void _ep;
-      return { ...rest, price, currency } as EquipmentWithPrice;
-    })
-    .filter((item) => item.price !== undefined && item.price !== null);
-
-  // Stable pseudo-random order: sort by (numeric part of id) % 97
-  withPrices.sort((a, b) => {
-    const numA = parseInt(String(a.id).replace(/\D/g, '').slice(-6) || '0', 10);
-    const numB = parseInt(String(b.id).replace(/\D/g, '').slice(-6) || '0', 10);
-    return (numA % 97) - (numB % 97);
+function mapRows(data: unknown[]): EquipmentWithPrice[] {
+  return data.map((row) => {
+    const r = row as Record<string, unknown>;
+    const { price, currency } = extractPrice(r.equipment_prices);
+    const { equipment_prices: _ep, ...rest } = r;
+    void _ep;
+    return { ...rest, price, currency } as EquipmentWithPrice;
   });
+}
 
-  return withPrices.slice(0, 12);
+// tier included in select so extractPrice can filter tier=1 in JS (more reliable than .eq filter)
+const PRICE_SELECT = 'equipment_prices(tier, price, currency)';
+const BASE_SELECT = `id, item_number, name_he, name_en, manufacturer, model, category,
+  description_he, description_en, is_active, created_at, updated_at, ${PRICE_SELECT}`;
+
+async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
+  try {
+    const { data, error } = await supabase
+      .from('equipment')
+      .select(BASE_SELECT)
+      .eq('is_active', true)
+      .limit(80);
+
+    if (error || !data) return [];
+
+    const withPrices = mapRows(data).filter((item) => item.price != null);
+    withPrices.sort((a, b) => {
+      const numA = parseInt(String(a.id).replace(/\D/g, '').slice(-6) || '0', 10);
+      const numB = parseInt(String(b.id).replace(/\D/g, '').slice(-6) || '0', 10);
+      return (numA % 97) - (numB % 97);
+    });
+    return withPrices.slice(0, 12);
+  } catch {
+    return [];
+  }
 }
 
 async function fetchNew(): Promise<EquipmentWithPrice[]> {
-  // Newest active items regardless of price
-  const { data, error } = await supabase
-    .from('equipment')
-    .select(
-      `id, item_number, name_he, name_en, manufacturer, model, category,
-       description_he, description_en, is_active, created_at, updated_at,
-       equipment_prices(price, currency)`,
-    )
-    .eq('is_active', true)
-    .eq('equipment_prices.tier', 1)
-    .order('created_at', { ascending: false })
-    .limit(12);
+  try {
+    const { data, error } = await supabase
+      .from('equipment')
+      .select(BASE_SELECT)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(12);
 
-  if (error || !data) return [];
-
-  return (data as unknown[]).map((row) => {
-    const r = row as Record<string, unknown>;
-    const { price, currency } = extractPrice(r.equipment_prices);
-    const { equipment_prices: _ep, ...rest } = r;
-    void _ep;
-    return { ...rest, price, currency } as EquipmentWithPrice;
-  });
+    if (error || !data) return [];
+    return mapRows(data);
+  } catch {
+    return [];
+  }
 }
 
 async function fetchSale(): Promise<EquipmentWithPrice[]> {
-  // Cheapest active items with a known tier-1 price (stand-in until real sale flags exist)
-  const { data, error } = await supabase
-    .from('equipment')
-    .select(
-      `id, item_number, name_he, name_en, manufacturer, model, category,
-       description_he, description_en, is_active, created_at, updated_at,
-       equipment_prices!inner(price, currency)`,
-    )
-    .eq('is_active', true)
-    .eq('equipment_prices.tier', 1)
-    .order('equipment_prices(price)', { ascending: true })
-    .limit(12);
-
-  if (error || !data) {
-    // Fallback: if ordering by nested column fails, fetch and sort in JS
-    const { data: fallback, error: fallbackError } = await supabase
+  try {
+    const { data, error } = await supabase
       .from('equipment')
-      .select(
-        `id, item_number, name_he, name_en, manufacturer, model, category,
-         description_he, description_en, is_active, created_at, updated_at,
-         equipment_prices!inner(price, currency)`,
-      )
+      .select(BASE_SELECT)
       .eq('is_active', true)
-      .eq('equipment_prices.tier', 1)
       .limit(80);
 
-    if (fallbackError || !fallback) return [];
+    if (error || !data) return [];
 
-    const items = (fallback as unknown[])
-      .map((row) => {
-        const r = row as Record<string, unknown>;
-        const { price, currency } = extractPrice(r.equipment_prices);
-        const { equipment_prices: _ep, ...rest } = r;
-        void _ep;
-        return { ...rest, price, currency } as EquipmentWithPrice;
-      })
-      .filter((item) => item.price !== undefined && item.price !== null);
-
-    items.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
-    return items.slice(0, 12);
+    const withPrices = mapRows(data).filter((item) => item.price != null);
+    withPrices.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+    return withPrices.slice(0, 12);
+  } catch {
+    return [];
   }
-
-  return (data as unknown[]).map((row) => {
-    const r = row as Record<string, unknown>;
-    const { price, currency } = extractPrice(r.equipment_prices);
-    const { equipment_prices: _ep, ...rest } = r;
-    void _ep;
-    return { ...rest, price, currency } as EquipmentWithPrice;
-  });
 }
 
 async function fetchProducts(
@@ -158,11 +116,13 @@ export default function ProductTabs() {
 
   useEffect(() => {
     setLoading(true);
-    fetchProducts(activeTab).then(({ items, showSaleBadge: badge }) => {
-      setProducts(items);
-      setShowSaleBadge(badge);
-      setLoading(false);
-    });
+    fetchProducts(activeTab)
+      .then(({ items, showSaleBadge: badge }) => {
+        setProducts(items);
+        setShowSaleBadge(badge);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [activeTab]);
 
   return (
