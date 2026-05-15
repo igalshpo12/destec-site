@@ -52,7 +52,7 @@ export const NAV_CATEGORIES = [
   {
     slug: 'sterilization',
     label: 'סטריליזציה ותחזוקה',
-    dbCategories: ['sterilization', 'spare_parts', 'consumables'],
+    dbCategories: ['sterilization', 'consumables'],
   },
   {
     slug: 'restorative',
@@ -79,5 +79,5 @@ export const NAV_CATEGORIES = [
 export const HIDDEN_CATEGORIES = ['services'];
 
 export const SUPPLIERS = [
-  'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME',
+  'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT',
 ];
