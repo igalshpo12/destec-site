@@ -26,7 +26,7 @@ const INFO = [
     icon: MessageCircle,
     label: 'WhatsApp',
     value: 'שלח הודעה',
-    href: 'https://wa.me/97235081868',
+    href: 'https://wa.me/972548818681',
     target: '_blank',
   },
   {
