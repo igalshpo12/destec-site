@@ -46,7 +46,7 @@ function FloatingPaths() {
       <style>{`
         ${PATHS.map((p, i) => `
           @keyframes pathDrift${i} {
-            0%   { transform: translate(0px, 0px) opacity: 1; opacity: ${0.06 + (i % 5) * 0.015}; }
+            0%   { transform: translate(0px, 0px); opacity: ${0.06 + (i % 5) * 0.015}; }
             33%  { transform: translate(${p.tx * 0.5}px, ${p.ty * 0.5}px); opacity: ${0.04 + (i % 5) * 0.01}; }
             66%  { transform: translate(${p.tx}px, ${p.ty}px); opacity: ${0.08 + (i % 5) * 0.018}; }
             100% { transform: translate(0px, 0px); opacity: ${0.06 + (i % 5) * 0.015}; }
@@ -80,7 +80,7 @@ function FloatingPaths() {
 }
 
 /* ─── Letter-by-letter entrance animation ───────────────────────────────── */
-function AnimatedHeadline({ text }: { text: string }) {
+function AnimatedLine({ text, baseDelay = 0 }: { text: string; baseDelay?: number }) {
   return (
     <>
       <style>{`
@@ -89,16 +89,16 @@ function AnimatedHeadline({ text }: { text: string }) {
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-      <span aria-label={text}>
+      <span dir="rtl" className="block" aria-label={text}>
         {text.split('').map((char, i) => (
           <span
             key={i}
             aria-hidden="true"
             style={{
-              display: 'inline-block',
+              display: 'inline',
               opacity: 0,
               animation: 'letterEntrance 0.5s ease forwards',
-              animationDelay: `${i * 0.04}s`,
+              animationDelay: `${(baseDelay + i) * 0.04}s`,
               whiteSpace: char === ' ' ? 'pre' : undefined,
             }}
           >
@@ -197,7 +197,8 @@ function TurbineIllustration() {
 
 /* ─── Main hero (BackgroundPaths variant) ───────────────────────────────── */
 export default function HeroSlider() {
-  const HEADLINE_PREFIX = 'מעבדת הציוד המקיפה של';
+  const LINE1 = 'מעבדת הציוד המקיפה'; // מעבדת הציוד המקיפה
+  const LINE2 = 'של '; // של (with trailing space before DES)
 
   return (
     <section
@@ -234,21 +235,23 @@ export default function HeroSlider() {
                 className="text-xs font-semibold tracking-[0.25em] uppercase"
                 style={{ color: '#1e90ff' }}
               >
-                ISO 9001 &nbsp;&middot;&nbsp; אמ&quot;ר &nbsp;&middot;&nbsp; משנת 1998
+                ISO 9001 &nbsp;&middot;&nbsp; {'אמי"ר'} &nbsp;&middot;&nbsp; {'משנת 1998'}
               </span>
             </div>
 
-            {/* Main heading with letter-by-letter animation */}
+            {/* Main heading — two lines, no mid-word break */}
             <h1
               className="font-black leading-[1.15] mb-5"
               style={{
-                fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+                fontSize: 'clamp(1.8rem, 5vw, 4.5rem)',
                 color: '#1a2b4a',
               }}
             >
-              <AnimatedHeadline text={HEADLINE_PREFIX} />
-              {' '}
-              <GradientText>DES</GradientText>
+              <AnimatedLine text={LINE1} baseDelay={0} />
+              <span dir="rtl" className="block">
+                <AnimatedLine text={LINE2} baseDelay={LINE1.length} />
+                <GradientText>DES</GradientText>
+              </span>
             </h1>
 
             {/* Subtitle */}
@@ -257,17 +260,17 @@ export default function HeroSlider() {
               style={{ color: '#6b7280', fontSize: '1.1rem', maxWidth: '36rem' }}
             >
               NSK &middot; W&amp;H &middot; KaVo &middot; Nouvag &middot; Bien-Air —{' '}
-              יבואן מורשה ומפיץ רשמי מ-1998
+              {'יבואן מורשה ומפיץ רשמי מ-1998'}
             </p>
 
-            {/* CTA row */}
-            <div className="flex flex-wrap gap-4 mb-8">
+            {/* CTA row — stacked on mobile, side-by-side on sm+ */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Link
                 href="/catalog"
                 className="group relative inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: '#1a2b4a', color: '#fff' }}
               >
-                <span className="relative z-10">לקטלוג המוצרים</span>
+                <span className="relative z-10">{'לקטלוג המוצרים'}</span>
                 <span
                   className="relative z-10 text-lg font-light"
                   style={{ transform: 'scaleX(-1)', display: 'inline-block' }}
@@ -299,7 +302,7 @@ export default function HeroSlider() {
                   el.style.color = '#1a2b4a';
                 }}
               >
-                צור קשר
+                {'צור קשר'}
               </Link>
             </div>
 
@@ -308,12 +311,12 @@ export default function HeroSlider() {
               className="text-xs"
               style={{ color: '#9ba3af', letterSpacing: '0.05em' }}
             >
-              ISO 9001 ✓ &nbsp;&middot;&nbsp; רישיון אמ&quot;ר ✓ &nbsp;&middot;&nbsp; 9,000+ מוצרים
+              ISO 9001 {'✓'} &nbsp;&middot;&nbsp; {'רישיון אמ"ר'} {'✓'} &nbsp;&middot;&nbsp; 9,000+ {'מוצרים'}
             </p>
           </div>
 
-          {/* ── Illustration column (left in RTL) ── */}
-          <div className="hidden lg:flex items-center justify-center relative">
+          {/* ── Illustration column (left in RTL) — hidden on mobile ── */}
+          <div className="hidden md:flex items-center justify-center relative">
             {/* Faint circular glow */}
             <div
               className="absolute inset-0 m-auto w-[380px] h-[380px] rounded-full"

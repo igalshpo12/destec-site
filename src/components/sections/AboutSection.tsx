@@ -20,8 +20,8 @@ function CertCard({
       className="relative rounded-xl p-5 overflow-hidden"
       style={{
         background: '#fff',
-        border: `1px solid ${color}30`,
-        boxShadow: `0 2px 16px rgba(0,0,0,0.06), inset 0 0 0 1px ${color}18`,
+        border: '1px solid #e2e8f0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       }}
     >
       {/* Corner watermark */}
@@ -63,7 +63,8 @@ export default function AboutSection() {
   return (
     <section
       dir="rtl"
-      className="py-16 lg:py-24 bg-white overflow-hidden"
+      className="py-16 lg:py-24 overflow-hidden"
+      style={{ background: '#f7f8fa' }}
       aria-label="אודות DES"
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
@@ -76,8 +77,8 @@ export default function AboutSection() {
               className="font-black select-none leading-none mb-6"
               style={{
                 fontSize: 'clamp(5rem, 14vw, 10rem)',
-                color: 'transparent',
-                WebkitTextStroke: '2px #e8eaed',
+                color: '#1a2b4a',
+                opacity: 0.08,
                 letterSpacing: '-0.04em',
                 lineHeight: 0.85,
               }}

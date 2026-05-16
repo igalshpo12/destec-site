@@ -1,68 +1,63 @@
 'use client';
+import { useRef, useState } from 'react';
 
-import React, { useRef, useState, MouseEvent } from 'react';
-
-interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SpotlightCardProps {
   children: React.ReactNode;
-  spotlightColor?: string;
   className?: string;
+  spotlightColor?: string;
+  style?: React.CSSProperties;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-/**
- * SpotlightCard — white card with mouse-tracking radial gradient glow.
- * Inspired by 21st.dev SpotlightCard pattern.
- */
 export function SpotlightCard({
   children,
   className = '',
   spotlightColor = 'rgba(30,144,255,0.15)',
   style,
-  ...props
+  onMouseEnter,
+  onMouseLeave,
 }: SpotlightCardProps) {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleMouseLeave = () => {
+    setPos(null);
+    onMouseLeave?.();
+  };
+
+  const handleMouseEnter = () => {
+    onMouseEnter?.();
   };
 
   return (
     <div
-      ref={divRef}
+      ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setOpacity(1)}
-      onMouseLeave={() => setOpacity(0)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={className}
       style={{
         position: 'relative',
         overflow: 'hidden',
-        background: '#ffffff',
+        background: pos
+          ? `radial-gradient(300px circle at ${pos.x}px ${pos.y}px, ${spotlightColor}, transparent 70%), #ffffff`
+          : '#ffffff',
+        transition: 'background 0.1s, transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease',
         border: '1px solid #e8ecf0',
-        borderRadius: '0.75rem',
+        borderRadius: '12px',
         ...style,
       }}
-      {...props}
     >
-      {/* Glow overlay */}
-      <div
-        aria-hidden="true"
-        style={{
-          pointerEvents: 'none',
-          position: 'absolute',
-          inset: 0,
-          transition: 'opacity 300ms ease',
-          opacity,
-          background: `radial-gradient(300px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 70%)`,
-          zIndex: 0,
-        }}
-      />
-      {/* Content above glow */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
+
+export default SpotlightCard;

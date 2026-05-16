@@ -4,6 +4,26 @@ import Link from 'next/link';
 import { Search, MessageCircle, Wrench, Menu, X } from 'lucide-react';
 import { NAV_CATEGORIES } from '@/lib/utils';
 
+function DesLogo() {
+  return (
+    <svg width="72" height="36" viewBox="0 0 72 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Oval border */}
+      <ellipse cx="36" cy="18" rx="34" ry="16" stroke="#1a2b4a" strokeWidth="2" fill="white"/>
+      {/* "des" lowercase italic text centered */}
+      <text
+        x="36" y="23"
+        textAnchor="middle"
+        fontFamily="Georgia, 'Times New Roman', serif"
+        fontStyle="italic"
+        fontWeight="700"
+        fontSize="16"
+        fill="#1a2b4a"
+        letterSpacing="1"
+      >des</text>
+    </svg>
+  );
+}
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,11 +47,11 @@ export default function Header() {
       }}
     >
       {/* Main header row */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex items-center gap-4">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex items-center gap-4 overflow-hidden">
 
         {/* Mobile menu toggle */}
         <button
-          className="lg:hidden p-2 transition-colors rounded-lg"
+          className="lg:hidden p-2 transition-colors rounded-lg flex-shrink-0"
           style={{ color: '#4a5568' }}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="תפריט"
@@ -42,7 +62,7 @@ export default function Header() {
         </button>
 
         {/* Search */}
-        <div className="flex-1 max-w-xs hidden sm:block">
+        <div className="flex-1 max-w-[120px] sm:max-w-xs hidden sm:block">
           <form action="/catalog" method="get" className="relative">
             <input
               type="search"
@@ -74,30 +94,14 @@ export default function Header() {
 
         {/* Logo — center */}
         <div className="flex-1 flex justify-center">
-          <Link href="/" aria-label="DES - דף הבית" className="flex items-center gap-3 group">
-            <div
-              className="rounded-lg px-4 py-1.5 flex items-center justify-center transition-all duration-200 group-hover:bg-[#1e90ff]"
-              style={{ background: '#1a2b4a', border: '1px solid rgba(30,144,255,0.3)' }}
-            >
-              <span
-                className="font-black tracking-[0.15em]"
-                style={{ color: '#fff', fontSize: '1.1rem' }}
-              >
-                DES
-              </span>
-            </div>
+          <Link href="/" aria-label="DES - דף הבית" className="flex items-center gap-2 group">
+            <DesLogo />
             <div className="hidden sm:block">
-              <div
-                className="text-xs font-medium leading-tight"
-                style={{ color: '#1a2b4a' }}
-              >
-                שירותי ציוד
+              <div className="text-xs font-medium leading-tight" style={{ color: '#6b7280' }}>
+                {'שירותי ציוד'}
               </div>
-              <div
-                className="text-xs font-medium leading-tight"
-                style={{ color: '#6b7280' }}
-              >
-                רפואי ודנטלי
+              <div className="text-xs font-medium leading-tight" style={{ color: '#9ca3af' }}>
+                {'רפואי ודנטלי'}
               </div>
             </div>
           </Link>
@@ -148,7 +152,7 @@ export default function Header() {
             }}
           >
             <Wrench className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>איסוף לתיקון</span>
+            <span>{'איסוף לתיקון'}</span>
           </Link>
         </div>
       </div>
@@ -237,7 +241,7 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 <Wrench className="w-4 h-4" />
-                <span>איסוף מכשיר לתיקון</span>
+                <span>{'איסוף מכשיר לתיקון'}</span>
               </Link>
             </li>
           </ul>
