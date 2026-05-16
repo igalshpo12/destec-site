@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { GradientText } from '@/components/ui/GradientText';
 
@@ -333,51 +332,53 @@ export default function HeroSlider() {
 
           {/* ── Product image column (left in RTL) — hidden on mobile ── */}
           <div className="hidden md:flex items-center justify-center relative">
-            {/* Soft radial glow — light blue wash behind the handpiece */}
+            {/* Soft blue glow behind the handpiece */}
             <div
-              className="absolute inset-0 m-auto w-[480px] h-[480px] rounded-full"
+              className="absolute rounded-full pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, rgba(30,144,255,0.07) 0%, rgba(30,144,255,0.02) 55%, transparent 75%)',
+                width: 440,
+                height: 440,
+                background: 'radial-gradient(circle, rgba(30,144,255,0.08) 0%, transparent 70%)',
               }}
             />
             {/* Slow outer ring */}
             <div
-              className="absolute w-[420px] h-[420px] rounded-full"
+              className="absolute rounded-full pointer-events-none"
               style={{
+                width: 400,
+                height: 400,
                 border: '1px dashed rgba(30,144,255,0.07)',
                 animation: 'spinSlow 40s linear infinite',
               }}
             />
-            {/* W&H Synea Vision — mix-blend-mode:multiply removes white bg seamlessly */}
-            <div
-              className="relative z-10"
+            {/* Plain <img> — mix-blend-mode:multiply works directly on img, not Next.js wrappers */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/suppliers/wh/product.jpg"
+              alt="W&H Synea Vision TK-97L — distributed by DES"
               style={{
-                width: 340,
-                height: 500,
+                position: 'relative',
+                zIndex: 10,
+                height: 420,
+                width: 'auto',
+                maxWidth: '100%',
+                objectFit: 'contain',
+                mixBlendMode: 'multiply',
                 animation: 'floatY 6s ease-in-out infinite',
                 transform: 'rotate(8deg)',
+                filter: 'drop-shadow(0 20px 40px rgba(26,43,74,0.15))',
               }}
-            >
-              <Image
-                src="/suppliers/wh/product.jpg"
-                alt="W&H Synea Vision TK-97L — distributed by DES"
-                fill
-                style={{
-                  objectFit: 'contain',
-                  objectPosition: 'center',
-                  mixBlendMode: 'multiply',
-                  filter: 'drop-shadow(0 32px 56px rgba(26,43,74,0.22))',
-                }}
-                priority
-                sizes="340px"
-              />
-            </div>
+            />
             {/* Ground shadow */}
             <div
-              className="absolute bottom-6 w-[100px] h-[14px] rounded-full"
+              className="absolute pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse, rgba(26,43,74,0.10) 0%, transparent 70%)',
-                filter: 'blur(10px)',
+                bottom: 24,
+                width: 90,
+                height: 12,
+                borderRadius: '50%',
+                background: 'radial-gradient(ellipse, rgba(26,43,74,0.09) 0%, transparent 70%)',
+                filter: 'blur(8px)',
               }}
             />
           </div>
