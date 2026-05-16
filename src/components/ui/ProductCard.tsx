@@ -170,7 +170,16 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
   const brand = BRAND_COLORS[mfr] || FALLBACK;
   const categoryLabel = item.category ? (CATEGORY_LABELS[item.category] || item.category) : null;
   const displayName = shortName(item);
-  const categoryImage = item.category ? `/images/categories/${item.category}.jpg` : null;
+
+  // Only reference local category images that actually exist in /public/images/categories/
+  const CATEGORIES_WITH_IMAGES = new Set([
+    'turbines', 'angles', 'handpieces', 'drills', 'motors',
+    'sterilization', 'electrosurgery', 'surgery',
+  ]);
+  const categoryImage =
+    item.category && CATEGORIES_WITH_IMAGES.has(item.category)
+      ? `/images/categories/${item.category}.jpg`
+      : null;
   const [imgError, setImgError] = useState(false);
 
   return (

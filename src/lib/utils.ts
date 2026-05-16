@@ -12,14 +12,12 @@ export function cn(...inputs: ClassValue[]) {
  * Trims whitespace. Caps at 40 characters with "…" if truncated.
  */
 export function shortName(item: { name_he?: string | null; name_en?: string | null }): string {
-  const raw = (item.name_he && item.name_he.trim()) ? item.name_he : (item.name_en ?? '');
-  // Split at first occurrence of any delimiter
+  const raw = (item.name_he?.trim()) ? item.name_he.trim() : (item.name_en?.trim() ?? '');
   const delimiterRe = / - | \/ |,| – /;
   const match = delimiterRe.exec(raw);
-  const part = match ? raw.slice(0, match.index) : raw;
-  const trimmed = part.trim();
-  if (trimmed.length > 40) return trimmed.slice(0, 40) + '…';
-  return trimmed;
+  const part = match ? raw.slice(0, match.index).trim() : raw.trim();
+  if (part.length > 40) return part.slice(0, 40) + '…';
+  return part;
 }
 
 export function formatPrice(price: number, currency = 'ILS'): string {

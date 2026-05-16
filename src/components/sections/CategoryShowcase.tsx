@@ -214,7 +214,7 @@ function CategoryTile({ cat }: { cat: Category }) {
 
 export default function CategoryShowcase() {
   return (
-    <section dir="rtl" className="py-16 bg-white">
+    <section dir="rtl" className="py-16 bg-white" style={{ overflowX: 'clip' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Header */}
         <div className="flex items-end justify-between mb-8">
@@ -244,8 +244,8 @@ export default function CategoryShowcase() {
           </Link>
         </div>
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        {/* Bento grid — 3-col desktop so col-span-2 tile fills row 1 correctly */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
           {CATEGORIES.map((cat) => (
             <CategoryTile key={cat.slug} cat={cat} />
           ))}

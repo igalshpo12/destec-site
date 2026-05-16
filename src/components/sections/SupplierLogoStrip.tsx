@@ -22,7 +22,7 @@ const SUPPLIERS: SupplierData[] = [
   { name: 'Anthogyr',        flag: '🇫🇷', countryHe: 'צרפת',     initials: 'ANT',  accentColor: '#8e44ad' },
   { name: 'Dentsply Sirona', flag: '🇺🇸', countryHe: 'ארה״ב',   initials: 'DS',   accentColor: '#00589b' },
   { name: 'JINME',           flag: '🇨🇳', countryHe: 'סין',      initials: 'JME',  accentColor: '#c0392b' },
-  { name: 'Tuttnauer',       flag: '🇮🇱', countryHe: 'ישראל',   initials: 'TUT',  accentColor: '#1a6bcf' },
+  { name: 'MDT',             flag: '🇮🇱', countryHe: 'ישראל',   initials: 'MDT',  accentColor: '#1a6bcf' },
 ];
 
 interface CountMap {
@@ -166,7 +166,7 @@ export default function SupplierLogoStrip() {
     <section
       dir="rtl"
       style={{ background: '#ffffff', borderTop: '1px solid #e8ecf0', borderBottom: '1px solid #e8ecf0' }}
-      className="relative overflow-hidden py-16"
+      className="relative py-16"
       aria-label="הספקים המובילים שלנו"
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-8">

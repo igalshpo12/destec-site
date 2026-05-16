@@ -13,10 +13,10 @@ interface Stat {
 
 const STATS: Stat[] = [
   {
-    value: '9,000+',
-    numericEnd: 9000,
+    value: '4,600+',
+    numericEnd: 4600,
     suffix: '+',
-    label: 'מוצרים במלאי',
+    label: 'מוצרים למכירה',
     sublabel: 'זמינות מיידית',
   },
   {
@@ -68,8 +68,8 @@ function StatBlock({ stat, active, index }: { stat: Stat; active: boolean; index
         : count + stat.suffix
       : stat.value;
 
-  // For the 9000+ stat number use GradientText
-  const isGradientStat = stat.numericEnd === 9000;
+  // For the 4600+ stat number use GradientText
+  const isGradientStat = stat.numericEnd === 4600;
 
   return (
     <div
@@ -176,7 +176,7 @@ export default function TrustBar() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.75rem' }}
         >
           <ShimmerText shimmerColor="#1e90ff" duration={4} className="text-xs">
-            ISO 9001 מוסמך &nbsp;&middot;&nbsp; רישיון אמ&quot;ר &nbsp;&middot;&nbsp; 9,000+ מוצרים &nbsp;&middot;&nbsp; ניסיון של עשרות שנים
+            ISO 9001 מוסמך &nbsp;&middot;&nbsp; רישיון אמ&quot;ר &nbsp;&middot;&nbsp; 4,600+ מוצרים &nbsp;&middot;&nbsp; ניסיון של עשרות שנים
           </ShimmerText>
         </div>
       </div>
