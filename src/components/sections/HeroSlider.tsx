@@ -333,47 +333,51 @@ export default function HeroSlider() {
 
           {/* ── Product image column (left in RTL) — hidden on mobile ── */}
           <div className="hidden md:flex items-center justify-center relative">
-            {/* Soft radial glow behind image */}
+            {/* Soft radial glow — light blue wash behind the handpiece */}
             <div
-              className="absolute inset-0 m-auto w-[420px] h-[420px] rounded-full"
+              className="absolute inset-0 m-auto w-[480px] h-[480px] rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(30,144,255,0.09) 0%, rgba(30,144,255,0.03) 50%, transparent 75%)',
+                background: 'radial-gradient(circle, rgba(30,144,255,0.07) 0%, rgba(30,144,255,0.02) 55%, transparent 75%)',
               }}
             />
-            {/* Subtle outer ring */}
+            {/* Slow outer ring */}
             <div
-              className="absolute w-[380px] h-[380px] rounded-full"
+              className="absolute w-[420px] h-[420px] rounded-full"
               style={{
-                border: '1px dashed rgba(30,144,255,0.08)',
-                animation: 'spinSlow 30s linear infinite',
+                border: '1px dashed rgba(30,144,255,0.07)',
+                animation: 'spinSlow 40s linear infinite',
               }}
             />
-            {/* Turbine product image */}
+            {/* W&H Synea Vision — mix-blend-mode:multiply removes white bg seamlessly */}
             <div
               className="relative z-10"
               style={{
-                width: 420,
-                height: 460,
-                animation: 'floatY 5s ease-in-out infinite',
-                transform: 'rotate(-5deg)',
-                filter: 'drop-shadow(0 24px 48px rgba(26,43,74,0.18)) drop-shadow(0 8px 16px rgba(30,144,255,0.10))',
+                width: 340,
+                height: 500,
+                animation: 'floatY 6s ease-in-out infinite',
+                transform: 'rotate(8deg)',
               }}
             >
               <Image
-                src="/images/categories/turbines.jpg"
-                alt="DES — NSK turbine dental handpiece"
+                src="/suppliers/wh/product.jpg"
+                alt="W&H Synea Vision TK-97L — distributed by DES"
                 fill
-                style={{ objectFit: 'contain', objectPosition: 'center' }}
+                style={{
+                  objectFit: 'contain',
+                  objectPosition: 'center',
+                  mixBlendMode: 'multiply',
+                  filter: 'drop-shadow(0 32px 56px rgba(26,43,74,0.22))',
+                }}
                 priority
-                sizes="460px"
+                sizes="340px"
               />
             </div>
-            {/* Ground reflection */}
+            {/* Ground shadow */}
             <div
-              className="absolute bottom-8 w-[120px] h-[18px] rounded-full"
+              className="absolute bottom-6 w-[100px] h-[14px] rounded-full"
               style={{
-                background: 'radial-gradient(ellipse, rgba(30,144,255,0.12) 0%, transparent 70%)',
-                filter: 'blur(8px)',
+                background: 'radial-gradient(ellipse, rgba(26,43,74,0.10) 0%, transparent 70%)',
+                filter: 'blur(10px)',
               }}
             />
           </div>
