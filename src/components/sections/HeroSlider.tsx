@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { GradientText } from '@/components/ui/GradientText';
 
@@ -248,8 +249,23 @@ export default function HeroSlider() {
               }}
             >
               <AnimatedLine text={LINE1} baseDelay={0} />
-              <span dir="rtl" className="block">
-                <AnimatedLine text={LINE2} baseDelay={LINE1.length} />
+              {/* "של DES" must stay on one line — whitespace-nowrap prevents break */}
+              <span dir="rtl" className="block whitespace-nowrap">
+                {'של '.split('').map((char, i) => (
+                  <span
+                    key={i}
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline',
+                      opacity: 0,
+                      animation: 'letterEntrance 0.5s ease forwards',
+                      animationDelay: `${(LINE1.length + i) * 0.04}s`,
+                      whiteSpace: char === ' ' ? 'pre' : undefined,
+                    }}
+                  >
+                    {char}
+                  </span>
+                ))}
                 <GradientText>DES</GradientText>
               </span>
             </h1>
@@ -315,43 +331,49 @@ export default function HeroSlider() {
             </p>
           </div>
 
-          {/* ── Illustration column (left in RTL) — hidden on mobile ── */}
+          {/* ── Product image column (left in RTL) — hidden on mobile ── */}
           <div className="hidden md:flex items-center justify-center relative">
-            {/* Faint circular glow */}
+            {/* Soft radial glow behind image */}
             <div
-              className="absolute inset-0 m-auto w-[380px] h-[380px] rounded-full"
+              className="absolute inset-0 m-auto w-[420px] h-[420px] rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(30,144,255,0.06) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(30,144,255,0.09) 0%, rgba(30,144,255,0.03) 50%, transparent 75%)',
               }}
             />
-            {/* Rotating ring */}
+            {/* Subtle outer ring */}
             <div
-              className="absolute w-[320px] h-[320px] rounded-full"
+              className="absolute w-[380px] h-[380px] rounded-full"
               style={{
-                border: '1px solid rgba(26,43,74,0.08)',
-                animation: 'spinSlow 18s linear infinite',
+                border: '1px dashed rgba(30,144,255,0.08)',
+                animation: 'spinSlow 30s linear infinite',
               }}
             />
+            {/* Turbine product image */}
             <div
-              className="absolute w-[400px] h-[400px] rounded-full"
+              className="relative z-10"
               style={{
-                border: '1px dashed rgba(30,144,255,0.06)',
-                animation: 'spinSlow 30s linear infinite reverse',
+                width: 420,
+                height: 460,
+                animation: 'floatY 5s ease-in-out infinite',
+                transform: 'rotate(-5deg)',
+                filter: 'drop-shadow(0 24px 48px rgba(26,43,74,0.18)) drop-shadow(0 8px 16px rgba(30,144,255,0.10))',
               }}
-            />
-            {/* Turbine illustration */}
-            <div
-              className="relative z-10 w-[200px] h-[400px]"
-              style={{ animation: 'floatY 4s ease-in-out infinite' }}
             >
-              <TurbineIllustration />
+              <Image
+                src="/images/categories/turbines.jpg"
+                alt="DES — NSK turbine dental handpiece"
+                fill
+                style={{ objectFit: 'contain', objectPosition: 'center' }}
+                priority
+                sizes="460px"
+              />
             </div>
-            {/* Reflection blur */}
+            {/* Ground reflection */}
             <div
-              className="absolute bottom-12 w-[80px] h-[16px] rounded-full"
+              className="absolute bottom-8 w-[120px] h-[18px] rounded-full"
               style={{
-                background: 'radial-gradient(ellipse, rgba(30,144,255,0.15) 0%, transparent 70%)',
-                filter: 'blur(6px)',
+                background: 'radial-gradient(ellipse, rgba(30,144,255,0.12) 0%, transparent 70%)',
+                filter: 'blur(8px)',
               }}
             />
           </div>
