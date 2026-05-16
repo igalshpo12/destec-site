@@ -61,7 +61,7 @@ export default function SplineSection() {
         overflow: 'hidden',
       }}
     >
-      {/* Top accent line */}
+      {/* Top accent line — amber for coming-soon */}
       <div
         style={{
           position: 'absolute',
@@ -69,7 +69,7 @@ export default function SplineSection() {
           left: 0,
           right: 0,
           height: '1px',
-          background: 'linear-gradient(90deg, transparent, #1e90ff40, transparent)',
+          background: 'linear-gradient(90deg, transparent, #f59e0b60, transparent)',
         }}
       />
 
@@ -103,15 +103,15 @@ export default function SplineSection() {
               gap: '1.25rem',
             }}
           >
-            {/* Pill badge */}
+            {/* Pill badge — amber to signal coming-soon */}
             <span
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: 'rgba(30,144,255,0.12)',
-                border: '1px solid rgba(30,144,255,0.3)',
-                color: '#1e90ff',
+                background: 'rgba(245,158,11,0.12)',
+                border: '1px solid rgba(245,158,11,0.35)',
+                color: '#f59e0b',
                 fontSize: '0.7rem',
                 fontWeight: 700,
                 letterSpacing: '0.15em',
@@ -126,7 +126,7 @@ export default function SplineSection() {
                   width: '6px',
                   height: '6px',
                   borderRadius: '50%',
-                  background: '#1e90ff',
+                  background: '#f59e0b',
                   animation: 'pulse 2s ease-in-out infinite',
                   display: 'inline-block',
                 }}
@@ -145,7 +145,7 @@ export default function SplineSection() {
             >
               הדמיה תלת-ממדית
               <br />
-              <span style={{ color: '#1e90ff' }}>של ציוד DES</span>
+              <span style={{ color: '#f59e0b' }}>אינטראקטיבית</span>
             </h2>
 
             <p
@@ -157,8 +157,8 @@ export default function SplineSection() {
                 maxWidth: '380px',
               }}
             >
-              סובבו, בדקו פרטים, חוו את המוצר לפני הרכישה.
-              הדמיה אינטראקטיבית מלאה של הציוד הדנטלי שלנו.
+              ציוד DES בהדמיה 3D — בפיתוח.
+              הזמינו היום וחוו את הציוד לפני הרכישה.
             </p>
 
             <p
@@ -169,7 +169,7 @@ export default function SplineSection() {
                 margin: 0,
               }}
             >
-              * הדמיה לצורך המחשה — Phase 2B תכלול מודלים של המוצרים הממשיים
+              * מודלים תלת-ממדיים של מוצרי NSK, W&H, KaVo, Bien-Air — בקרוב
             </p>
           </div>
 
@@ -203,14 +203,14 @@ export default function SplineSection() {
           left: 0,
           right: 0,
           height: '1px',
-          background: 'linear-gradient(90deg, transparent, #1e90ff30, transparent)',
+          background: 'linear-gradient(90deg, transparent, #f59e0b30, transparent)',
         }}
       />
 
       <style>{`
         @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50%       { opacity: 0.5; transform: scale(0.8); }
+          0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+          50%       { opacity: 0.7; transform: scale(0.85); box-shadow: 0 0 0 6px rgba(245,158,11,0); }
         }
         @media (max-width: 1023px) {
           .max-lg\\:grid-cols-1 { grid-template-columns: 1fr !important; }

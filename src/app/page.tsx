@@ -3,6 +3,7 @@ import SplineSection from '@/components/sections/SplineSection';
 import TrustBar from '@/components/sections/TrustBar';
 import ProductTabs from '@/components/sections/ProductTabs';
 import CategoryShowcase from '@/components/sections/CategoryShowcase';
+import ProductShowcase3D from '@/components/sections/ProductShowcase3D';
 import FeaturedSystems from '@/components/sections/FeaturedSystems';
 import SupplierLogoStrip from '@/components/sections/SupplierLogoStrip';
 import AboutSection from '@/components/sections/AboutSection';
@@ -16,6 +17,7 @@ export default function HomePage() {
       <TrustBar />
       <ProductTabs />
       <CategoryShowcase />
+      <ProductShowcase3D />
       <FeaturedSystems />
       <SupplierLogoStrip />
       <AboutSection />

@@ -1,0 +1,215 @@
+{
+  "extractedAt": "2026-05-16",
+  "suppliers": {
+    "nsk": {
+      "name": "NSK",
+      "site": "https://www.nsk-dental.com/",
+      "productPage": "https://www.nsk-dental.com/products/turbines/turbines-s-max_m/",
+      "priority": "S-Max M turbine",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://www.nsk-dental.com/admin/wp-content/uploads/naviTurbine_smax_m_no_text.png",
+            "description": "S-Max M turbine navigation image, 532x300px",
+            "downloaded": true,
+            "localPath": "/public/suppliers/nsk/product.png",
+            "format": "PNG",
+            "dimensions": "532x300"
+          },
+          {
+            "url": "https://www.nsk-dental.com/admin/wp-content/uploads/smax_m_m900l.png",
+            "description": "S-Max M 900L product detail, 500x275px",
+            "downloaded": true,
+            "localPath": "/public/suppliers/nsk/product-detail.png",
+            "format": "PNG",
+            "dimensions": "500x275"
+          }
+        ],
+        "notes": "No .glb or .gltf found. No Sketchfab or Spline embeds. Images served from WordPress /admin/wp-content/uploads/"
+      }
+    },
+    "wh": {
+      "name": "W&H",
+      "site": "https://www.wh.com/en_global/",
+      "productPage": "https://www.wh.com/en_global/dental-products/restoration-prosthetics/turbines/synea/",
+      "priority": "Synea Vision TK-97L turbine",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://a.storyblok.com/f/45617/550x700/43094bf24d/tk-97l_550x700.jpg",
+            "description": "Synea Vision TK-97L turbine, 550x700px, served via Storyblok CDN",
+            "downloaded": true,
+            "localPath": "/public/suppliers/wh/product.jpg",
+            "format": "JPEG",
+            "dimensions": "550x700"
+          },
+          {
+            "url": "https://a.storyblok.com/f/45617/550x700/7c299d997f/tk-94l_550x700.jpg",
+            "description": "Synea Vision TK-94L microturbine, 550x700px",
+            "downloaded": false,
+            "localPath": null,
+            "format": "JPEG"
+          },
+          {
+            "url": "https://a.storyblok.com/f/45617/550x700/d42256d6b0/tk-100l_550x700.jpg",
+            "description": "Synea Vision TK-100L power turbine, 550x700px",
+            "downloaded": false,
+            "localPath": null,
+            "format": "JPEG"
+          }
+        ],
+        "notes": "Images served via Storyblok CDN (a.storyblok.com). No .glb or .gltf found. No Sketchfab or Spline embeds."
+      }
+    },
+    "kavo": {
+      "name": "KaVo",
+      "site": "https://www.kavo.com/en-us/",
+      "productPage": "https://www.kavo.com/en-us/products/instruments/air-driven-collections/mastertorque",
+      "priority": "MASTERtorque LUX M8900 L turbine",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://www.kavo.com/sites/default/files/styles/og_image/public/mq_acquia_dam/MASTERtorque-LUX-M8900-L_1-008-7800-hb-v01-c-16-7-1920px-840px.jpg",
+            "description": "MASTERtorque LUX M8900L, 1200x525px, OG image from Acquia DAM",
+            "downloaded": true,
+            "localPath": "/public/suppliers/kavo/product.jpg",
+            "format": "JPEG",
+            "dimensions": "1200x525"
+          }
+        ],
+        "notes": "Images dynamically loaded via Widen/Acquia DAM. OG image URL extracted from raw HTML. No .glb or .gltf found."
+      }
+    },
+    "mk-dent": {
+      "name": "MK-dent",
+      "site": "https://www.mk-dent.com/en/",
+      "productPage": "https://mk-dent.com/en/turbines/",
+      "priority": "Prime Line turbine HP21KL",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://www.mk-dent.com/wp-content/uploads/2021/06/MKD-Image-Turbines-Prime-Line-Floating-v1-RGB-scaled-1.jpg",
+            "description": "MK-dent Prime Line turbines floating product shot, 2560x1511px",
+            "downloaded": true,
+            "localPath": "/public/suppliers/mk-dent/product.jpg",
+            "format": "JPEG",
+            "dimensions": "2560x1511"
+          },
+          {
+            "url": "https://www.mk-dent.com/wp-content/uploads/2021/06/mk-dent_prime_line_turbine_hp21kl_web.jpg",
+            "description": "MK-dent Prime Line HP21KL individual turbine",
+            "downloaded": false,
+            "localPath": null,
+            "format": "JPEG"
+          }
+        ],
+        "notes": "Images served from WordPress. No .glb or .gltf found."
+      }
+    },
+    "nouvag": {
+      "name": "Nouvag",
+      "site": "https://www.nouvag.com/en/",
+      "productPage": "https://www.nouvag.com/en/product/highspeed-handpieces/",
+      "priority": "High-Speed Handpieces REF_1903-1906",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://www.nouvag.com/fileadmin/user_upload/images/products/REF_1903-1906_Highspeed-Handstuecke_2800x1600.jpg",
+            "description": "Nouvag High-Speed Handpieces, 2800x1600px — NOTE: These are surgical/ENT handpieces, not dental implant motors. TC-300 not found on site.",
+            "downloaded": true,
+            "localPath": "/public/suppliers/nouvag/product.jpg",
+            "format": "JPEG",
+            "dimensions": "2800x1600"
+          }
+        ],
+        "notes": "TC-300 implant motor not found on nouvag.com. Site appears to focus on surgical (ENT, neuro) handpieces, not dental implant motors. Image is of surgical handpieces. No .glb or .gltf found."
+      }
+    },
+    "bien-air": {
+      "name": "Bien-Air",
+      "site": "https://dental.bienair.com/en/",
+      "productPage": "https://dental.bienair.com/en/products/oral-surgery-implantology.html",
+      "priority": "iCHIROPRO implant physiodispenser",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://dental.bienair.com/media/catalog/product/1/6/1600784-001_bienair_is_ichiropro.png",
+            "description": "Bien-Air iCHIROPRO implant system, 1200x1200px — high resolution product photography",
+            "downloaded": true,
+            "localPath": "/public/suppliers/bien-air/product.png",
+            "format": "PNG",
+            "dimensions": "1200x1200"
+          },
+          {
+            "url": "https://dental.bienair.com/media/catalog/product/cache/a49cbcff8a8b10d0dc3fc4851e5b46f3/n/e/new_chiropro_plus_1.png",
+            "description": "CHIROPRO PLUS (cached thumbnail), 280x190px",
+            "downloaded": false,
+            "localPath": null,
+            "format": "PNG"
+          },
+          {
+            "url": "https://dental.bienair.com/media/catalog/product/cache/a49cbcff8a8b10d0dc3fc4851e5b46f3/n/e/new_chiropro3.png",
+            "description": "CHIROPRO standard (cached thumbnail), 204x190px",
+            "downloaded": false,
+            "localPath": null,
+            "format": "PNG"
+          }
+        ],
+        "notes": "Product images hosted on Magento catalog CDN. iCHIROPRO full-size at 1200x1200 without cache path. No .glb or .gltf found."
+      }
+    },
+    "anthogyr": {
+      "name": "Anthogyr",
+      "site": "https://www.anthogyr.com/ (redirects to straumann.com/anthogyr)",
+      "productPage": null,
+      "priority": "Implanteo+ implant system",
+      "assets": {
+        "3d": null,
+        "images": [],
+        "notes": "Anthogyr domain redirects to straumann.com/anthogyr which returns 403 Forbidden. No product images extractable. Straumann CDN paths did not yield usable images. BLOCKED — no downloadable assets."
+      }
+    },
+    "dentsply-sirona": {
+      "name": "Dentsply Sirona",
+      "site": "https://www.dentsplysirona.com/en-us",
+      "productPage": "https://www.dentsplysirona.com/en-us/shop/categories/instruments/handpieces.html",
+      "priority": "Turbine handpiece",
+      "assets": {
+        "3d": null,
+        "images": [
+          {
+            "url": "https://www.dentsplysirona.com/content/dam/master/regions-countries/north-america/usa/product-categories/instruments/instruments-shop-banneres/Instrument%20Hero-LLC-Handpieces.png",
+            "description": "Dentsply Sirona Instruments/Handpieces category hero banner, 1920x720px",
+            "downloaded": true,
+            "localPath": "/public/suppliers/dentsply-sirona/product.png",
+            "format": "PNG",
+            "dimensions": "1920x720"
+          }
+        ],
+        "notes": "Product catalog uses dynamic JS loading. Category hero banner image extracted from static HTML. AEM DAM paths accessible. No .glb or .gltf found. Product listing page returned empty (JS-driven)."
+      }
+    }
+  },
+  "summary": {
+    "totalSuppliers": 8,
+    "withDownloadedAssets": 7,
+    "blocked": ["anthogyr"],
+    "has3DModels": [],
+    "decision": "CSS 3D card-flip — no .glb or .gltf files found on any supplier site. No Sketchfab or Spline dental scenes discovered. Implementing ProductCard3D with CSS perspective transform.",
+    "downloadedImages": {
+      "nsk": "/public/suppliers/nsk/product.png (532x300, PNG)",
+      "wh": "/public/suppliers/wh/product.jpg (550x700, JPEG)",
+      "kavo": "/public/suppliers/kavo/product.jpg (1200x525, JPEG)",
+      "mk-dent": "/public/suppliers/mk-dent/product.jpg (2560x1511, JPEG)",
+      "nouvag": "/public/suppliers/nouvag/product.jpg (2800x1600, JPEG)",
+      "bien-air": "/public/suppliers/bien-air/product.png (1200x1200, PNG)",
+      "dentsply-sirona": "/public/suppliers/dentsply-sirona/product.png (1920x720, PNG)"
+    }
+  }
+}
