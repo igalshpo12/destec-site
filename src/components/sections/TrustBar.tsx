@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { ShimmerText } from '@/components/ui/ShimmerText';
+import { GradientText } from '@/components/ui/GradientText';
 
 interface Stat {
   value: string;
@@ -66,6 +68,9 @@ function StatBlock({ stat, active, index }: { stat: Stat; active: boolean; index
         : count + stat.suffix
       : stat.value;
 
+  // For the 9000+ stat number use GradientText
+  const isGradientStat = stat.numericEnd === 9000;
+
   return (
     <div
       className="flex flex-col items-center justify-center py-8 px-4 relative"
@@ -75,26 +80,33 @@ function StatBlock({ stat, active, index }: { stat: Stat; active: boolean; index
         transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s`,
       }}
     >
-      {/* Big number */}
+      {/* Big number / value */}
       <div
         className="font-black mb-1 tabular-nums"
         style={{
           fontSize: 'clamp(2rem, 4vw, 2.8rem)',
-          color: '#1e90ff',
           lineHeight: 1,
           fontVariantNumeric: 'tabular-nums',
         }}
         dir="ltr"
       >
-        {displayValue}
+        {isGradientStat ? (
+          <GradientText>{displayValue}</GradientText>
+        ) : (
+          <span style={{ color: '#1e90ff' }}>{displayValue}</span>
+        )}
       </div>
-      {/* Label */}
+
+      {/* Label with shimmer sweep */}
       <div
-        className="font-semibold text-white text-sm text-center leading-tight"
+        className="font-semibold text-sm text-center leading-tight"
         style={{ letterSpacing: '0.02em' }}
       >
-        {stat.label}
+        <ShimmerText shimmerColor="#ffffff" duration={3 + index * 0.5}>
+          {stat.label}
+        </ShimmerText>
       </div>
+
       {/* Sublabel */}
       <div className="text-xs text-center mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>
         {stat.sublabel}
@@ -146,7 +158,7 @@ export default function TrustBar() {
         <div className="grid grid-cols-2 lg:grid-cols-4">
           {STATS.map((stat, i) => (
             <div key={stat.label} className="relative">
-              {/* Vertical divider (except first in row) */}
+              {/* Vertical divider (except first) */}
               {i > 0 && (
                 <div
                   className="absolute right-0 top-6 bottom-6 w-px"
@@ -156,6 +168,16 @@ export default function TrustBar() {
               <StatBlock stat={stat} active={active} index={i} />
             </div>
           ))}
+        </div>
+
+        {/* ShimmerText divider line */}
+        <div
+          className="text-center pb-5"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.75rem' }}
+        >
+          <ShimmerText shimmerColor="#1e90ff" duration={4} className="text-xs">
+            ISO 9001 מוסמך &nbsp;&middot;&nbsp; רישיון אמ&quot;ר &nbsp;&middot;&nbsp; 9,000+ מוצרים &nbsp;&middot;&nbsp; ניסיון של עשרות שנים
+          </ShimmerText>
         </div>
       </div>
     </section>

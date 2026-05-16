@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^2.3.0",
+    "@splinetool/react-spline": "^4.1.0",
     "@supabase/supabase-js": "^2.105.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",

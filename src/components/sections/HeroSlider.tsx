@@ -1,8 +1,116 @@
 'use client';
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
 
-/* ─── Animated dental turbine SVG ──────────────────────────────────────── */
+import Link from 'next/link';
+import { GradientText } from '@/components/ui/GradientText';
+
+/* ─── Animated SVG path data ────────────────────────────────────────────────
+   30 bezier curves at low navy opacity, varying stroke widths.
+   Each path drifts via CSS @keyframes — no framer-motion.
+──────────────────────────────────────────────────────────────────────────── */
+const PATHS = [
+  { d: 'M-100 80 C 120 20, 300 160, 500 60 S 700 180, 900 80',       dur: 28, delay: 0,  w: 0.8, tx: 60,  ty: -20 },
+  { d: 'M-60 200 C 80 120, 250 300, 450 180 S 680 320, 950 200',      dur: 35, delay: 3,  w: 1.2, tx: -40, ty: 30  },
+  { d: 'M0 350 C 150 280, 320 420, 550 300 S 750 440, 980 350',       dur: 42, delay: 6,  w: 0.6, tx: 80,  ty: -15 },
+  { d: 'M-80 500 C 100 430, 280 560, 500 460 S 700 580, 960 500',     dur: 38, delay: 1,  w: 1.5, tx: -50, ty: 25  },
+  { d: 'M50 650 C 200 580, 380 710, 600 600 S 800 740, 1020 650',     dur: 50, delay: 8,  w: 0.5, tx: 70,  ty: -30 },
+  { d: 'M-120 750 C 80 680, 260 800, 480 720 S 680 840, 940 750',     dur: 33, delay: 2,  w: 1.0, tx: -60, ty: 20  },
+  { d: 'M30 850 C 180 780, 360 900, 580 820 S 780 940, 1050 850',     dur: 45, delay: 10, w: 0.7, tx: 50,  ty: -25 },
+  { d: 'M-90 150 C 110 80, 290 220, 510 140 S 710 260, 970 150',      dur: 31, delay: 5,  w: 1.8, tx: -30, ty: 40  },
+  { d: 'M20 420 C 170 350, 350 480, 560 390 S 760 520, 1000 420',     dur: 47, delay: 12, w: 0.9, tx: 90,  ty: -10 },
+  { d: 'M-50 600 C 120 530, 300 660, 520 570 S 720 700, 990 600',     dur: 36, delay: 4,  w: 1.3, tx: -70, ty: 35  },
+  { d: 'M70 100 C 220 30, 400 160, 620 80 S 820 200, 1080 100',       dur: 53, delay: 15, w: 0.4, tx: 40,  ty: -40 },
+  { d: 'M-110 300 C 90 230, 270 360, 490 280 S 690 400, 950 300',     dur: 29, delay: 7,  w: 2.0, tx: -45, ty: 15  },
+  { d: 'M40 450 C 190 380, 370 510, 590 430 S 790 560, 1060 450',     dur: 44, delay: 9,  w: 0.6, tx: 65,  ty: -20 },
+  { d: 'M-70 700 C 100 630, 280 760, 500 680 S 700 800, 960 700',     dur: 60, delay: 18, w: 1.1, tx: -55, ty: 30  },
+  { d: 'M10 250 C 160 180, 340 310, 560 230 S 760 360, 1030 250',     dur: 37, delay: 11, w: 0.8, tx: 75,  ty: -35 },
+  { d: 'M-130 800 C 70 730, 250 860, 470 780 S 670 900, 930 800',     dur: 41, delay: 13, w: 1.6, tx: -35, ty: 45  },
+  { d: 'M60 550 C 210 480, 390 610, 610 530 S 810 660, 1070 550',     dur: 25, delay: 20, w: 0.5, tx: 55,  ty: -15 },
+  { d: 'M-40 380 C 110 310, 290 440, 510 360 S 710 490, 970 380',     dur: 56, delay: 2,  w: 1.4, tx: -65, ty: 20  },
+  { d: 'M80 750 C 230 680, 410 810, 630 730 S 830 860, 1090 750',     dur: 32, delay: 16, w: 0.7, tx: 45,  ty: -30 },
+  { d: 'M-100 500 C 100 430, 280 560, 500 460 S 700 580, 960 500',    dur: 48, delay: 6,  w: 1.9, tx: -80, ty: 25  },
+  { d: 'M20 170 C 170 100, 350 230, 570 150 S 770 280, 1040 170',     dur: 39, delay: 14, w: 0.6, tx: 85,  ty: -45 },
+  { d: 'M-60 620 C 100 550, 280 680, 500 600 S 700 720, 960 620',     dur: 27, delay: 19, w: 1.2, tx: -40, ty: 35  },
+  { d: 'M50 320 C 200 250, 380 380, 600 300 S 800 430, 1060 320',     dur: 52, delay: 3,  w: 0.8, tx: 60,  ty: -20 },
+  { d: 'M-90 720 C 80 650, 260 780, 480 700 S 680 820, 940 720',      dur: 34, delay: 17, w: 1.5, tx: -50, ty: 30  },
+  { d: 'M30 400 C 180 330, 360 460, 580 380 S 780 510, 1050 400',     dur: 43, delay: 8,  w: 0.9, tx: 70,  ty: -25 },
+  { d: 'M-120 200 C 60 130, 240 260, 460 180 S 660 300, 920 200',     dur: 30, delay: 21, w: 1.7, tx: -60, ty: 40  },
+  { d: 'M70 870 C 220 800, 400 930, 620 850 S 820 970, 1080 870',     dur: 58, delay: 5,  w: 0.5, tx: 50,  ty: -35 },
+  { d: 'M-50 470 C 120 400, 300 530, 520 450 S 720 580, 990 470',     dur: 46, delay: 11, w: 1.3, tx: -70, ty: 20  },
+  { d: 'M40 680 C 190 610, 370 740, 590 660 S 790 790, 1060 680',     dur: 22, delay: 23, w: 0.6, tx: 80,  ty: -15 },
+  { d: 'M-80 300 C 90 230, 270 360, 490 280 S 690 400, 950 300',      dur: 55, delay: 0,  w: 1.0, tx: -45, ty: 30  },
+];
+
+function FloatingPaths() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        ${PATHS.map((p, i) => `
+          @keyframes pathDrift${i} {
+            0%   { transform: translate(0px, 0px) opacity: 1; opacity: ${0.06 + (i % 5) * 0.015}; }
+            33%  { transform: translate(${p.tx * 0.5}px, ${p.ty * 0.5}px); opacity: ${0.04 + (i % 5) * 0.01}; }
+            66%  { transform: translate(${p.tx}px, ${p.ty}px); opacity: ${0.08 + (i % 5) * 0.018}; }
+            100% { transform: translate(0px, 0px); opacity: ${0.06 + (i % 5) * 0.015}; }
+          }
+        `).join('')}
+      `}</style>
+      <svg
+        className="absolute w-full h-full"
+        viewBox="0 0 1000 900"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        aria-hidden="true"
+      >
+        {PATHS.map((p, i) => (
+          <path
+            key={i}
+            d={p.d}
+            stroke="#1a2b4a"
+            strokeWidth={p.w}
+            strokeOpacity={0.06 + (i % 8) * 0.01}
+            strokeLinecap="round"
+            fill="none"
+            style={{
+              animation: `pathDrift${i} ${p.dur}s ease-in-out ${p.delay}s infinite`,
+            }}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/* ─── Letter-by-letter entrance animation ───────────────────────────────── */
+function AnimatedHeadline({ text }: { text: string }) {
+  return (
+    <>
+      <style>{`
+        @keyframes letterEntrance {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+      <span aria-label={text}>
+        {text.split('').map((char, i) => (
+          <span
+            key={i}
+            aria-hidden="true"
+            style={{
+              display: 'inline-block',
+              opacity: 0,
+              animation: 'letterEntrance 0.5s ease forwards',
+              animationDelay: `${i * 0.04}s`,
+              whiteSpace: char === ' ' ? 'pre' : undefined,
+            }}
+          >
+            {char === ' ' ? ' ' : char}
+          </span>
+        ))}
+      </span>
+    </>
+  );
+}
+
+/* ─── Dental turbine SVG illustration (preserved from original) ─────────── */
 function TurbineIllustration() {
   return (
     <svg
@@ -13,244 +121,151 @@ function TurbineIllustration() {
       aria-hidden="true"
     >
       <defs>
-        {/* Metallic body gradient */}
-        <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#2a2f3a" />
-          <stop offset="20%" stopColor="#5c6370" />
-          <stop offset="40%" stopColor="#9aa0aa" />
-          <stop offset="55%" stopColor="#c8ccd4" />
-          <stop offset="70%" stopColor="#9aa0aa" />
-          <stop offset="85%" stopColor="#4a5060" />
+        <linearGradient id="bodyGradH" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stopColor="#2a2f3a" />
+          <stop offset="20%"  stopColor="#5c6370" />
+          <stop offset="40%"  stopColor="#9aa0aa" />
+          <stop offset="55%"  stopColor="#c8ccd4" />
+          <stop offset="70%"  stopColor="#9aa0aa" />
+          <stop offset="85%"  stopColor="#4a5060" />
           <stop offset="100%" stopColor="#1e2230" />
         </linearGradient>
-        {/* Head chrome gradient */}
-        <linearGradient id="headGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#c0c8d8" />
-          <stop offset="35%" stopColor="#e8ecf4" />
-          <stop offset="60%" stopColor="#a0a8b8" />
+        <linearGradient id="headGradH" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stopColor="#c0c8d8" />
+          <stop offset="35%"  stopColor="#e8ecf4" />
+          <stop offset="60%"  stopColor="#a0a8b8" />
           <stop offset="100%" stopColor="#606878" />
         </linearGradient>
-        {/* Bur gradient */}
-        <linearGradient id="burGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#d0d8e8" />
-          <stop offset="50%" stopColor="#a8b0c0" />
+        <linearGradient id="burGradH" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#d0d8e8" />
+          <stop offset="50%"  stopColor="#a8b0c0" />
           <stop offset="100%" stopColor="#606878" />
         </linearGradient>
-        {/* Grip ring gradient */}
-        <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#1e90ff" stopOpacity="0.6" />
-          <stop offset="50%" stopColor="#1e90ff" stopOpacity="0.9" />
+        <linearGradient id="ringGradH" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stopColor="#1e90ff" stopOpacity="0.6" />
+          <stop offset="50%"  stopColor="#1e90ff" stopOpacity="0.9" />
           <stop offset="100%" stopColor="#1e90ff" stopOpacity="0.4" />
         </linearGradient>
-        <filter id="glow">
+        <filter id="glowH">
           <feGaussianBlur stdDeviation="3" result="blur" />
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
-        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="4" dy="4" stdDeviation="8" floodColor="#000" floodOpacity="0.5" />
+        <filter id="softShadowH" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="4" dy="4" stdDeviation="8" floodColor="#000" floodOpacity="0.35" />
         </filter>
       </defs>
 
-      {/* ── Handpiece body (long cylinder) ── */}
-      {/* Main shaft */}
-      <rect x="100" y="90" width="80" height="310" rx="40" fill="url(#bodyGrad)" filter="url(#softShadow)" />
-      {/* Highlight stripe */}
-      <rect x="126" y="95" width="12" height="300" rx="6" fill="white" opacity="0.12" />
-      {/* Texture rings — grip zone */}
-      {[190, 200, 210, 220, 230, 240, 250, 260, 270, 280].map((y) => (
-        <rect key={y} x="100" y={y} width="80" height="3" rx="1.5" fill="#1a1e28" opacity="0.25" />
+      <rect x="100" y="90" width="80" height="310" rx="40" fill="url(#bodyGradH)" filter="url(#softShadowH)" />
+      <rect x="126" y="95" width="12" height="300" rx="6" fill="white" opacity="0.10" />
+      {[190,200,210,220,230,240,250,260,270,280].map((y) => (
+        <rect key={y} x="100" y={y} width="80" height="3" rx="1.5" fill="#1a1e28" opacity="0.2" />
       ))}
-      {/* Blue accent ring at top of grip */}
-      <rect x="100" y="182" width="80" height="5" rx="2.5" fill="url(#ringGrad)" />
-      {/* Blue accent ring at bottom of grip */}
-      <rect x="100" y="290" width="80" height="5" rx="2.5" fill="url(#ringGrad)" />
+      <rect x="100" y="182" width="80" height="5" rx="2.5" fill="url(#ringGradH)" />
+      <rect x="100" y="290" width="80" height="5" rx="2.5" fill="url(#ringGradH)" />
 
-      {/* ── Turbine head ── */}
-      {/* Neck taper */}
-      <path d="M118 90 Q140 74 162 90" fill="url(#headGrad)" />
-      {/* Head housing */}
-      <ellipse cx="140" cy="68" rx="34" ry="34" fill="url(#headGrad)" filter="url(#softShadow)" />
-      {/* Head highlight */}
-      <ellipse cx="128" cy="56" rx="14" ry="10" fill="white" opacity="0.2" />
-      {/* Head center hole */}
+      <path d="M118 90 Q140 74 162 90" fill="url(#headGradH)" />
+      <ellipse cx="140" cy="68" rx="34" ry="34" fill="url(#headGradH)" filter="url(#softShadowH)" />
+      <ellipse cx="128" cy="56" rx="14" ry="10" fill="white" opacity="0.18" />
       <circle cx="140" cy="68" r="10" fill="#1a1e28" />
-      <circle cx="140" cy="68" r="7" fill="#0d1118" />
+      <circle cx="140" cy="68" r="7"  fill="#0d1118" />
       <circle cx="137" cy="65" r="2.5" fill="#3a4050" />
 
-      {/* ── Bur (drill bit) ── */}
-      {/* Collar */}
       <rect x="133" y="34" width="14" height="8" rx="3" fill="#8890a0" />
-      {/* Shank */}
-      <rect x="136" y="6" width="8" height="30" rx="4" fill="url(#burGrad)" />
-      {/* Cutting flutes */}
-      <rect x="136.5" y="6" width="1.5" height="28" rx="0.5" fill="white" opacity="0.3" />
-      <rect x="139" y="6" width="1.5" height="28" rx="0.5" fill="#606878" opacity="0.4" />
-      {/* Bur tip */}
+      <rect x="136" y="6"  width="8"  height="30" rx="4" fill="url(#burGradH)" />
+      <rect x="136.5" y="6" width="1.5" height="28" rx="0.5" fill="white" opacity="0.28" />
+      <rect x="139"   y="6" width="1.5" height="28" rx="0.5" fill="#606878" opacity="0.35" />
       <ellipse cx="140" cy="6" rx="4" ry="3" fill="#c0c8d8" />
 
-      {/* ── Connector end ── */}
-      <rect x="108" y="390" width="64" height="16" rx="8" fill="#2a3040" />
-      <rect x="114" y="406" width="52" height="10" rx="5" fill="#1a2030" />
-      {/* Connector pins */}
-      {[124, 132, 140, 148, 156].map((x) => (
+      <rect x="108" y="390" width="64" height="16" rx="8"  fill="#2a3040" />
+      <rect x="114" y="406" width="52" height="10" rx="5"  fill="#1a2030" />
+      {[124,132,140,148,156].map((x) => (
         <circle key={x} cx={x} cy="411" r="2.5" fill="#4a5060" />
       ))}
 
-      {/* ── Tubing connector ── */}
-      <path d="M140 416 Q140 450 120 470 Q105 485 105 500" stroke="#3a4050" strokeWidth="12" strokeLinecap="round" fill="none" />
-      <path d="M140 416 Q140 450 120 470 Q105 485 105 500" stroke="#5a6070" strokeWidth="4" strokeLinecap="round" fill="none" />
-      {/* Tube highlight */}
-      <path d="M140 416 Q140 450 122 469 Q108 483 108 497" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.15" />
+      <path d="M140 416 Q140 450 120 470 Q105 485 105 500"
+            stroke="#3a4050" strokeWidth="12" strokeLinecap="round" fill="none" />
+      <path d="M140 416 Q140 450 120 470 Q105 485 105 500"
+            stroke="#5a6070" strokeWidth="4"  strokeLinecap="round" fill="none" />
+      <path d="M140 416 Q140 450 122 469 Q108 483 108 497"
+            stroke="white"   strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.12" />
 
-      {/* ── Glow effects ── */}
-      {/* Blue LED glow from head */}
-      <ellipse cx="140" cy="68" rx="40" ry="40" fill="#1e90ff" opacity="0.06" filter="url(#glow)" />
-      {/* Subtle reflection on shaft */}
-      <rect x="170" y="100" width="3" height="280" rx="1.5" fill="white" opacity="0.04" />
+      <ellipse cx="140" cy="68" rx="40" ry="40" fill="#1e90ff" opacity="0.05" filter="url(#glowH)" />
+      <rect x="170" y="100" width="3" height="280" rx="1.5" fill="white" opacity="0.03" />
     </svg>
   );
 }
 
-/* ─── Scroll indicator ──────────────────────────────────────────────────── */
-function ScrollIndicator() {
-  return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
-      <span className="text-xs tracking-[0.2em] uppercase font-light" style={{ fontSize: '10px' }}>
-        גלול
-      </span>
-      <div className="w-px h-10 bg-gradient-to-b from-white/30 to-transparent relative overflow-hidden">
-        <div
-          className="absolute top-0 left-0 w-full bg-white/70 rounded-full"
-          style={{
-            height: '40%',
-            animation: 'scrollDrop 1.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─── Main Hero ─────────────────────────────────────────────────────────── */
+/* ─── Main hero (BackgroundPaths variant) ───────────────────────────────── */
 export default function HeroSlider() {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    // Entrance animation
-    const el = headingRef.current;
-    if (!el) return;
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      });
-    });
-  }, []);
+  const HEADLINE_PREFIX = 'מעבדת הציוד המקיפה של';
 
   return (
     <section
       dir="rtl"
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: '#0d1929' }}
+      style={{ background: '#ffffff' }}
       aria-label="Hero — DES ציוד דנטלי"
     >
-      {/* ── Subtle grid texture ── */}
+      {/* ── Animated SVG paths background ── */}
+      <FloatingPaths />
+
+      {/* ── Subtle radial glow on right (where text sits) ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(30,144,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(30,144,255,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
+          background: 'radial-gradient(ellipse 70% 60% at 75% 40%, rgba(30,144,255,0.04) 0%, transparent 70%)',
         }}
-      />
-
-      {/* ── Radial glow — top right ── */}
-      <div
-        className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at top right, rgba(30,144,255,0.12) 0%, transparent 65%)',
-        }}
-      />
-      {/* ── Radial glow — bottom left ── */}
-      <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at bottom left, rgba(30,144,255,0.07) 0%, transparent 65%)',
-        }}
-      />
-
-      {/* ── Thin accent line ── */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, #1e90ff, transparent)' }}
       />
 
       {/* ── Content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-24 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center min-h-screen lg:min-h-0 lg:h-screen max-h-[900px]">
 
-          {/* ── Text column ── */}
-          <div className="flex flex-col justify-center pt-12 lg:pt-0">
+          {/* ── Text column (right side in RTL) ── */}
+          <div className="flex flex-col justify-center pt-16 lg:pt-0">
+
             {/* Pre-heading badge */}
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-6">
               <div
                 className="h-px flex-1 max-w-[48px]"
-                style={{ background: 'linear-gradient(90deg, transparent, #1e90ff)' }}
+                style={{ background: 'linear-gradient(90deg, #1e90ff, transparent)' }}
               />
               <span
                 className="text-xs font-semibold tracking-[0.25em] uppercase"
                 style={{ color: '#1e90ff' }}
               >
-                ISO 9001 &nbsp;·&nbsp; אמ&quot;ר &nbsp;·&nbsp; משנת 1998
+                ISO 9001 &nbsp;&middot;&nbsp; אמ&quot;ר &nbsp;&middot;&nbsp; משנת 1998
               </span>
             </div>
 
-            {/* Main heading */}
+            {/* Main heading with letter-by-letter animation */}
             <h1
-              ref={headingRef}
-              className="font-black text-white leading-[1.1] mb-6"
-              style={{ fontSize: 'clamp(2.4rem, 5vw, 3.8rem)' }}
-            >
-              ציוד דנטלי
-              <br />
-              <span style={{ color: '#1e90ff' }}>מהמותגים</span>
-              <br />
-              המובילים בעולם
-            </h1>
-
-            {/* Supplier names */}
-            <p
-              className="font-semibold tracking-[0.12em] mb-8"
+              className="font-black leading-[1.15] mb-5"
               style={{
-                color: '#1e90ff',
-                fontSize: '0.78rem',
-                opacity: 0.85,
-                letterSpacing: '0.15em',
+                fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+                color: '#1a2b4a',
               }}
             >
-              NSK &nbsp;·&nbsp; W&amp;H &nbsp;·&nbsp; KaVo &nbsp;·&nbsp; Nouvag &nbsp;·&nbsp; Bien-Air
-            </p>
+              <AnimatedHeadline text={HEADLINE_PREFIX} />
+              {' '}
+              <GradientText>DES</GradientText>
+            </h1>
 
-            {/* Body copy */}
+            {/* Subtitle */}
             <p
-              className="text-lg leading-relaxed mb-10 max-w-lg"
-              style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 300 }}
+              className="mb-8 leading-relaxed"
+              style={{ color: '#6b7280', fontSize: '1.1rem', maxWidth: '36rem' }}
             >
-              יבואן מורשה ומפיץ רשמי לישראל.
-              מעל 9,000 מוצרים במלאי מיידי — לקליניקות, בתי חולים ומרפאות שיניים.
+              NSK &middot; W&amp;H &middot; KaVo &middot; Nouvag &middot; Bien-Air —{' '}
+              יבואן מורשה ומפיץ רשמי מ-1998
             </p>
 
             {/* CTA row */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mb-8">
               <Link
                 href="/catalog"
-                className="group relative inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
-                style={{ background: '#1e90ff', color: '#fff' }}
+                className="group relative inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                style={{ background: '#1a2b4a', color: '#fff' }}
               >
                 <span className="relative z-10">לקטלוג המוצרים</span>
                 <span
@@ -259,102 +274,86 @@ export default function HeroSlider() {
                 >
                   →
                 </span>
-                {/* Hover shimmer */}
                 <span
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%)' }}
+                  style={{ background: 'linear-gradient(135deg, rgba(30,144,255,0.25) 0%, transparent 60%)' }}
                 />
               </Link>
 
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                 style={{
-                  color: '#fff',
-                  border: '1.5px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(4px)',
+                  color: '#1a2b4a',
+                  border: '1.5px solid #1a2b4a',
+                  background: 'transparent',
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.6)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)';
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = '#1a2b4a';
+                  el.style.color = '#ffffff';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.3)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = 'transparent';
+                  el.style.color = '#1a2b4a';
                 }}
               >
                 צור קשר
               </Link>
             </div>
 
-            {/* Bottom trust micro-line */}
-            <div
-              className="flex items-center gap-6 mt-12 pt-8"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+            {/* Trust line */}
+            <p
+              className="text-xs"
+              style={{ color: '#9ba3af', letterSpacing: '0.05em' }}
             >
-              {[
-                { num: '9,000+', label: 'מוצרים' },
-                { num: '27', label: 'שנות ניסיון' },
-                { num: '5', label: 'ספקים עולמיים' },
-              ].map((s) => (
-                <div key={s.label} className="text-center">
-                  <div className="font-black text-white" style={{ fontSize: '1.4rem', lineHeight: 1 }}>
-                    {s.num}
-                  </div>
-                  <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+              ISO 9001 ✓ &nbsp;&middot;&nbsp; רישיון אמ&quot;ר ✓ &nbsp;&middot;&nbsp; 9,000+ מוצרים
+            </p>
           </div>
 
-          {/* ── Illustration column ── */}
+          {/* ── Illustration column (left in RTL) ── */}
           <div className="hidden lg:flex items-center justify-center relative">
-            {/* Circular glow backdrop */}
+            {/* Faint circular glow */}
             <div
               className="absolute inset-0 m-auto w-[380px] h-[380px] rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(30,144,255,0.08) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(30,144,255,0.06) 0%, transparent 70%)',
               }}
             />
             {/* Rotating ring */}
             <div
               className="absolute w-[320px] h-[320px] rounded-full"
               style={{
-                border: '1px solid rgba(30,144,255,0.15)',
+                border: '1px solid rgba(26,43,74,0.08)',
                 animation: 'spinSlow 18s linear infinite',
               }}
             />
             <div
               className="absolute w-[400px] h-[400px] rounded-full"
               style={{
-                border: '1px dashed rgba(30,144,255,0.08)',
+                border: '1px dashed rgba(30,144,255,0.06)',
                 animation: 'spinSlow 30s linear infinite reverse',
               }}
             />
-            {/* The turbine */}
+            {/* Turbine illustration */}
             <div
               className="relative z-10 w-[200px] h-[400px]"
               style={{ animation: 'floatY 4s ease-in-out infinite' }}
             >
               <TurbineIllustration />
             </div>
-            {/* Reflection */}
+            {/* Reflection blur */}
             <div
               className="absolute bottom-12 w-[80px] h-[16px] rounded-full"
               style={{
-                background: 'radial-gradient(ellipse, rgba(30,144,255,0.25) 0%, transparent 70%)',
+                background: 'radial-gradient(ellipse, rgba(30,144,255,0.15) 0%, transparent 70%)',
                 filter: 'blur(6px)',
               }}
             />
           </div>
         </div>
       </div>
-
-      <ScrollIndicator />
-
     </section>
   );
 }
