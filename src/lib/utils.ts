@@ -91,6 +91,9 @@ export const NAV_CATEGORIES = [
   },
 ];
 
+// Set to true to show catalog items publicly
+export const CATALOG_LIVE = false;
+
 // Categories never shown on the public catalog
 // spare_parts / consumables / services are internal repair/service items
 // not purchased directly by clinics or healthcare centers

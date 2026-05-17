@@ -4,7 +4,7 @@ import { supabase, EquipmentWithPrice, inferCategory } from '@/lib/supabase';
 import ProductCard from '@/components/ui/ProductCard';
 import FilterSidebar from '@/components/ui/FilterSidebar';
 import { Search, Loader2, SlidersHorizontal } from 'lucide-react';
-import { NAV_CATEGORIES, HIDDEN_CATEGORIES } from '@/lib/utils';
+import { NAV_CATEGORIES, HIDDEN_CATEGORIES, CATALOG_LIVE } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'קטלוג מוצרים',
@@ -30,6 +30,7 @@ async function fetchCatalogProducts(params: {
   manufacturer?: string;
   page?: number;
 }): Promise<{ items: EquipmentWithPrice[]; total: number }> {
+  if (!CATALOG_LIVE) return { items: [], total: 0 };
   const { q, category, manufacturer, page = 1 } = params;
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;

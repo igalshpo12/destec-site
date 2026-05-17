@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase, EquipmentWithPrice } from '@/lib/supabase';
-import { HIDDEN_CATEGORIES } from '@/lib/utils';
+import { HIDDEN_CATEGORIES, CATALOG_LIVE } from '@/lib/utils';
 import ProductCard from '@/components/ui/ProductCard';
 import Link from 'next/link';
 
@@ -82,6 +82,7 @@ async function fetchSale(): Promise<EquipmentWithPrice[]> {
 }
 
 async function fetchProducts(tab: string): Promise<{ items: EquipmentWithPrice[]; showSaleBadge: boolean }> {
+  if (!CATALOG_LIVE) return { items: [], showSaleBadge: false };
   if (tab === 'new')  return { items: await fetchNew(),      showSaleBadge: false };
   if (tab === 'sale') return { items: await fetchSale(),     showSaleBadge: true  };
   return                    { items: await fetchFeatured(),  showSaleBadge: false };
