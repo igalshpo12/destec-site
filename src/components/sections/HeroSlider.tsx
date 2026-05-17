@@ -332,26 +332,47 @@ export default function HeroSlider() {
 
           {/* ── Product image column (left in RTL) — hidden on mobile ── */}
           <div className="hidden md:flex items-center justify-center relative">
-            {/* Soft blue glow behind the handpiece */}
+            {/* Studio dark panel — gives the handpiece a dark backdrop so
+                drop-shadow renders cinematic and the white of the product image
+                dissolves naturally into the surrounding atmosphere */}
+            <div
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              style={{
+                background: 'radial-gradient(ellipse 80% 90% at 50% 50%, #0d1929 0%, #0d1929 55%, rgba(13,25,41,0.6) 75%, transparent 100%)',
+              }}
+            />
+
+            {/* Concentric orbit rings */}
             <div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: 440,
-                height: 440,
-                background: 'radial-gradient(circle, rgba(30,144,255,0.08) 0%, transparent 70%)',
+                width: 460,
+                height: 460,
+                border: '1px solid rgba(30,144,255,0.10)',
+                animation: 'spinSlow 60s linear infinite',
               }}
             />
-            {/* Slow outer ring */}
             <div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: 400,
-                height: 400,
-                border: '1px dashed rgba(30,144,255,0.07)',
-                animation: 'spinSlow 40s linear infinite',
+                width: 340,
+                height: 340,
+                border: '1px dashed rgba(30,144,255,0.08)',
+                animation: 'spinSlow 40s linear infinite reverse',
               }}
             />
-            {/* Plain <img> — mix-blend-mode:multiply works directly on img, not Next.js wrappers */}
+
+            {/* Blue accent glow at centre */}
+            <div
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                width: 220,
+                height: 220,
+                background: 'radial-gradient(circle, rgba(30,144,255,0.18) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* The handpiece — floats against the dark radial zone */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/suppliers/wh/product.jpg"
@@ -363,22 +384,25 @@ export default function HeroSlider() {
                 width: 'auto',
                 maxWidth: '100%',
                 objectFit: 'contain',
+                /* multiply dissolves the white background of the jpg into the
+                   dark radial panel behind it, leaving the handpiece floating */
                 mixBlendMode: 'multiply',
                 animation: 'floatY 6s ease-in-out infinite',
                 transform: 'rotate(8deg)',
-                filter: 'drop-shadow(0 20px 40px rgba(26,43,74,0.15))',
+                filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(30,144,255,0.18))',
               }}
             />
-            {/* Ground shadow */}
+
+            {/* Ground reflection */}
             <div
               className="absolute pointer-events-none"
               style={{
-                bottom: 24,
-                width: 90,
-                height: 12,
+                bottom: 30,
+                width: 110,
+                height: 16,
                 borderRadius: '50%',
-                background: 'radial-gradient(ellipse, rgba(26,43,74,0.09) 0%, transparent 70%)',
-                filter: 'blur(8px)',
+                background: 'radial-gradient(ellipse, rgba(30,144,255,0.20) 0%, transparent 70%)',
+                filter: 'blur(10px)',
               }}
             />
           </div>
