@@ -76,36 +76,28 @@ export default function VacusonShowcase() {
       }}>
 
         {/* ── LEFT: Product image + hotspots ── */}
-        <div style={{ position:'relative', height:'500px' }}>
+        <div style={{ position:'relative', height:'500px', overflow:'hidden' }}>
 
-          {/* Parallax image wrapper */}
-          <div
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/suppliers/nouvag/vacuson.jpg"
+            alt="Nouvag Vacuson 60 LP"
             style={{
-              position:'absolute', inset:'-20px',
+              width:'100%', height:'100%',
+              objectFit:'contain', objectPosition:'center',
+              animation: 'vacFloat 7s ease-in-out infinite',
               transition: ready ? 'transform 0.12s ease-out' : 'none',
               transform: `translate3d(${mouse.x}px, ${mouse.y}px, 0)`,
+              display:'block',
             }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/suppliers/nouvag/vacuson.jpg"
-              alt="Nouvag Vacuson 60 LP"
-              style={{
-                width:'100%', height:'100%',
-                objectFit:'contain', objectPosition:'center',
-                animation: 'vacFloat 7s ease-in-out infinite',
-              }}
-            />
+          />
 
-            {/* Vignette — fades white bg into dark page */}
-            <div style={{
-              position:'absolute', inset:0,
-              background:`
-                radial-gradient(ellipse 70% 80% at 50% 50%, transparent 40%, #070e1a 100%)
-              `,
-              pointerEvents:'none',
-            }}/>
-          </div>
+          {/* Vignette — fades white bg into dark page */}
+          <div style={{
+            position:'absolute', inset:0,
+            background:`radial-gradient(ellipse 75% 85% at 50% 50%, transparent 35%, #070e1a 90%)`,
+            pointerEvents:'none',
+          }}/>
 
           {/* ── Hotspot callouts ── */}
           {HOTSPOTS.map(h => (
