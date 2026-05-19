@@ -223,7 +223,7 @@ export default function HeroSlider() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center min-h-screen lg:min-h-0 lg:h-screen max-h-[900px]">
 
           {/* ── Text column (right side in RTL) ── */}
-          <div className="flex flex-col justify-center pt-16 lg:pt-0">
+          <div className="flex flex-col justify-center pt-16 lg:pt-0 relative" style={{ zIndex: 20 }}>
 
             {/* Pre-heading badge */}
             <div className="flex items-center gap-3 mb-6">
@@ -333,7 +333,7 @@ export default function HeroSlider() {
           {/* ── Product image column ── */}
           <div
             className="hidden md:flex items-end justify-center relative overflow-hidden"
-            style={{ height: '100%', minHeight: '600px' }}
+            style={{ height: '100%', minHeight: '600px', zIndex: 10, isolation: 'isolate' }}
           >
             {/* Bottom fade — blends chair into page, hides white background edge */}
             <div
