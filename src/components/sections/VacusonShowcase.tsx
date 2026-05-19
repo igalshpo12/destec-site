@@ -141,7 +141,7 @@ export default function VacusonShowcase() {
               <div style={{
                 position:'absolute',
                 [h.lineDir === 'right' ? 'left' : 'right']: '20px',
-                top: '50%', transform: 'translateY(-50%)',
+                top: '50%',
                 background: 'rgba(7,14,26,0.92)',
                 border: '1px solid rgba(30,140,212,0.35)',
                 borderRadius: '8px',
