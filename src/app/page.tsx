@@ -1,5 +1,5 @@
 import HeroSlider from '@/components/sections/HeroSlider';
-import SplineSection from '@/components/sections/SplineSection';
+import VacusonShowcase from '@/components/sections/VacusonShowcase';
 import TrustBar from '@/components/sections/TrustBar';
 import ProductTabs from '@/components/sections/ProductTabs';
 import CategoryShowcase from '@/components/sections/CategoryShowcase';
@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSlider />
-      <SplineSection />
+      <VacusonShowcase />
       <TrustBar />
       <ProductTabs />
       <CategoryShowcase />
