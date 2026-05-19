@@ -46,18 +46,16 @@ export default function Footer() {
           <div>
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm tracking-wider transition-colors duration-200 group-hover:bg-[#1e90ff]"
-                style={{ background: '#1a2b4a', color: '#fff' }}
-              >
-                DES
-              </div>
-              <div>
-                <div className="text-white text-sm font-bold leading-tight">DES</div>
-                <div className="text-xs leading-tight" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  ציוד רפואי ודנטלי
-                </div>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/des_logo.png"
+                alt="DES"
+                style={{
+                  height: '48px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                }}
+              />
             </Link>
 
             <p
