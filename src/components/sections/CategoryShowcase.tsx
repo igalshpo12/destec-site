@@ -52,7 +52,7 @@ const CATEGORIES: Category[] = [
     labelEn: 'Scalers',
     desc: 'סקילרים אולטרסוניים',
     count: '148',
-    image: '/images/categories/sterilization.jpg',
+    image: '/images/categories/scalers.jpg',
   },
 ];
 
