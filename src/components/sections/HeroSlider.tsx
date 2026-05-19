@@ -330,79 +330,43 @@ export default function HeroSlider() {
             </p>
           </div>
 
-          {/* ── Product image column (left in RTL) — hidden on mobile ── */}
-          <div className="hidden md:flex items-center justify-center relative">
-            {/* Studio dark panel — gives the handpiece a dark backdrop so
-                drop-shadow renders cinematic and the white of the product image
-                dissolves naturally into the surrounding atmosphere */}
+          {/* ── Product image column ── */}
+          <div
+            className="hidden md:flex items-end justify-center relative overflow-hidden"
+            style={{ height: '100%', minHeight: '600px' }}
+          >
+            {/* Bottom fade — blends chair into page, hides white background edge */}
             <div
-              className="absolute inset-0 rounded-2xl pointer-events-none"
+              className="absolute bottom-0 left-0 right-0 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse 80% 90% at 50% 50%, #0d1929 0%, #0d1929 55%, rgba(13,25,41,0.6) 75%, transparent 100%)',
+                height: '30%',
+                background: 'linear-gradient(to top, #ffffff 0%, transparent 100%)',
+                zIndex: 2,
               }}
             />
-
-            {/* Concentric orbit rings */}
+            {/* Right edge fade — prevents image bleeding into text column */}
             <div
-              className="absolute rounded-full pointer-events-none"
+              className="absolute top-0 bottom-0 right-0 pointer-events-none"
               style={{
-                width: 460,
-                height: 460,
-                border: '1px solid rgba(30,144,255,0.10)',
-                animation: 'spinSlow 60s linear infinite',
+                width: '18%',
+                background: 'linear-gradient(to left, #ffffff 0%, transparent 100%)',
+                zIndex: 2,
               }}
             />
-            <div
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: 340,
-                height: 340,
-                border: '1px dashed rgba(30,144,255,0.08)',
-                animation: 'spinSlow 40s linear infinite reverse',
-              }}
-            />
-
-            {/* Blue accent glow at centre */}
-            <div
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: 220,
-                height: 220,
-                background: 'radial-gradient(circle, rgba(30,144,255,0.18) 0%, transparent 70%)',
-              }}
-            />
-
-            {/* The handpiece — floats against the dark radial zone */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/suppliers/wh/product.jpg"
-              alt="W&H Synea Vision TK-97L — distributed by DES"
+              src="/hero-chair.png"
+              alt="Dental chair — distributed by DES"
               style={{
-                position: 'relative',
-                zIndex: 10,
-                height: 420,
-                width: 'auto',
-                maxWidth: '100%',
+                width: '100%',
+                height: 'auto',
+                maxHeight: '90vh',
                 objectFit: 'contain',
-                /* multiply dissolves the white background of the jpg into the
-                   dark radial panel behind it, leaving the handpiece floating */
+                objectPosition: 'bottom center',
                 mixBlendMode: 'multiply',
-                animation: 'floatY 6s ease-in-out infinite',
-                transform: 'rotate(8deg)',
-                filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(30,144,255,0.18))',
-              }}
-            />
-
-            {/* Ground reflection */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                bottom: 30,
-                width: 110,
-                height: 16,
-                borderRadius: '50%',
-                background: 'radial-gradient(ellipse, rgba(30,144,255,0.20) 0%, transparent 70%)',
-                filter: 'blur(10px)',
+                filter: 'drop-shadow(0 32px 48px rgba(26,43,74,0.10))',
+                position: 'relative',
+                zIndex: 1,
               }}
             />
           </div>
