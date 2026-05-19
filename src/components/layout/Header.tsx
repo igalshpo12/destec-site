@@ -6,21 +6,7 @@ import { NAV_CATEGORIES } from '@/lib/utils';
 
 function DesLogo() {
   return (
-    <svg width="72" height="36" viewBox="0 0 72 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Oval border */}
-      <ellipse cx="36" cy="18" rx="34" ry="16" stroke="#1a2b4a" strokeWidth="2" fill="white"/>
-      {/* "des" lowercase italic text centered */}
-      <text
-        x="36" y="23"
-        textAnchor="middle"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontStyle="italic"
-        fontWeight="700"
-        fontSize="16"
-        fill="#1a2b4a"
-        letterSpacing="1"
-      >des</text>
-    </svg>
+    <img src="/des_logo.png" alt="DES" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
   );
 }
 
@@ -94,16 +80,13 @@ export default function Header() {
 
         {/* Logo — center */}
         <div className="flex-1 flex justify-center">
-          <Link href="/" aria-label="DES - דף הבית" className="flex items-center gap-2 group">
-            <DesLogo />
-            <div className="hidden sm:block">
-              <div className="text-xs font-medium leading-tight" style={{ color: '#6b7280' }}>
-                {'שירותי ציוד'}
-              </div>
-              <div className="text-xs font-medium leading-tight" style={{ color: '#9ca3af' }}>
-                {'רפואי ודנטלי'}
-              </div>
-            </div>
+          <Link href="/" aria-label="DES - דף הבית">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/des_logo.png"
+              alt="DES"
+              style={{ height: '52px', width: 'auto', objectFit: 'contain', display: 'block' }}
+            />
           </Link>
         </div>
 
