@@ -467,10 +467,11 @@
 
   /* ── ANIMATIONS ── */
   .fade-in {
-    opacity: 0; transform: translateY(20px);
+    opacity: 1; transform: translateY(0);
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .fade-anim { opacity: 0; transform: translateY(20px); }
+  .fade-anim.visible { opacity: 1; transform: translateY(0); }
 
   /* ── TWO-COL ── */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -1718,15 +1719,18 @@ ollama run llama3.2
     document.getElementById('sidebar').classList.toggle('open');
   }
 
-  // ── FADE IN ANIMATIONS ──
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+  // ── FADE IN ANIMATIONS (progressive enhancement only) ──
+  if ('IntersectionObserver' in window) {
+    document.querySelectorAll('.fade-in').forEach(el => {
+      el.classList.add('fade-anim');
     });
-  }, { rootMargin: '0px 0px -60px 0px' });
-  document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.fade-anim').forEach(el => fadeObserver.observe(el));
+  }
 
   // ── GLOSSARY SEARCH ──
   function filterGlossary(query) {
