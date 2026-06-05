@@ -16,6 +16,7 @@ const SERVICES = [
   { label: 'צור קשר',            href: '/contact'              },
   { label: 'איסוף לתיקון',       href: '/contact?service=repair'},
   { label: 'אודות DES',          href: '/#about'               },
+  { label: 'הצהרת נגישות',       href: '/accessibility'        },
 ];
 
 function WhatsAppIcon() {

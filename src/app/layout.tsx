@@ -5,6 +5,18 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/sections/AnnouncementBar';
 import SiteAnalytics from '@/components/analytics/SiteAnalytics';
+import AccessibilityWidget from '@/components/a11y/AccessibilityWidget';
+
+// Restore saved accessibility settings before paint (no flash of unstyled content)
+const A11Y_INIT = `(function(){try{var s=JSON.parse(localStorage.getItem('des-a11y')||'{}'),d=document.documentElement;
+if(s.color)d.classList.add('a11y-'+s.color);
+if(s.readable)d.classList.add('a11y-readable');
+if(s.links)d.classList.add('a11y-links');
+if(s.headings)d.classList.add('a11y-headings');
+if(s.noAnim)d.classList.add('a11y-no-anim');
+if(s.bigCursor)d.classList.add('a11y-big-cursor');
+if(s.kbd)d.classList.add('a11y-kbd');
+if(s.font&&s.font!==100)d.style.fontSize=s.font+'%';}catch(e){}})();`;
 
 const notoSansHebrew = Noto_Sans_Hebrew({
   subsets: ['hebrew', 'latin'],
@@ -38,10 +50,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl" className={notoSansHebrew.variable}>
       <body className={`${notoSansHebrew.variable} font-sans antialiased bg-gray-50 text-gray-900`}>
-        <AnnouncementBar />
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <script dangerouslySetInnerHTML={{ __html: A11Y_INIT }} />
+        <a href="#main-content" className="skip-link">דלג לתוכן הראשי</a>
+        <div id="site">
+          <AnnouncementBar />
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+        </div>
+        <AccessibilityWidget />
         <SiteAnalytics />
       </body>
     </html>
