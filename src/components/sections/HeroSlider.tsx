@@ -1,291 +1,340 @@
 'use client';
 
 import Link from 'next/link';
-import { GradientText } from '@/components/ui/GradientText';
+import { useEffect, useRef } from 'react';
+import { GradientText } from '@/components/ui/gradient-text';
 
-/* ─── Animated SVG path data ────────────────────────────────────────────────
-   30 bezier curves at low navy opacity, varying stroke widths.
-   Each path drifts via CSS @keyframes — no framer-motion.
-──────────────────────────────────────────────────────────────────────────── */
-const PATHS = [
-  { d: 'M-100 80 C 120 20, 300 160, 500 60 S 700 180, 900 80',       dur: 28, delay: 0,  w: 0.8, tx: 60,  ty: -20 },
-  { d: 'M-60 200 C 80 120, 250 300, 450 180 S 680 320, 950 200',      dur: 35, delay: 3,  w: 1.2, tx: -40, ty: 30  },
-  { d: 'M0 350 C 150 280, 320 420, 550 300 S 750 440, 980 350',       dur: 42, delay: 6,  w: 0.6, tx: 80,  ty: -15 },
-  { d: 'M-80 500 C 100 430, 280 560, 500 460 S 700 580, 960 500',     dur: 38, delay: 1,  w: 1.5, tx: -50, ty: 25  },
-  { d: 'M50 650 C 200 580, 380 710, 600 600 S 800 740, 1020 650',     dur: 50, delay: 8,  w: 0.5, tx: 70,  ty: -30 },
-  { d: 'M-120 750 C 80 680, 260 800, 480 720 S 680 840, 940 750',     dur: 33, delay: 2,  w: 1.0, tx: -60, ty: 20  },
-  { d: 'M30 850 C 180 780, 360 900, 580 820 S 780 940, 1050 850',     dur: 45, delay: 10, w: 0.7, tx: 50,  ty: -25 },
-  { d: 'M-90 150 C 110 80, 290 220, 510 140 S 710 260, 970 150',      dur: 31, delay: 5,  w: 1.8, tx: -30, ty: 40  },
-  { d: 'M20 420 C 170 350, 350 480, 560 390 S 760 520, 1000 420',     dur: 47, delay: 12, w: 0.9, tx: 90,  ty: -10 },
-  { d: 'M-50 600 C 120 530, 300 660, 520 570 S 720 700, 990 600',     dur: 36, delay: 4,  w: 1.3, tx: -70, ty: 35  },
-  { d: 'M70 100 C 220 30, 400 160, 620 80 S 820 200, 1080 100',       dur: 53, delay: 15, w: 0.4, tx: 40,  ty: -40 },
-  { d: 'M-110 300 C 90 230, 270 360, 490 280 S 690 400, 950 300',     dur: 29, delay: 7,  w: 2.0, tx: -45, ty: 15  },
-  { d: 'M40 450 C 190 380, 370 510, 590 430 S 790 560, 1060 450',     dur: 44, delay: 9,  w: 0.6, tx: 65,  ty: -20 },
-  { d: 'M-70 700 C 100 630, 280 760, 500 680 S 700 800, 960 700',     dur: 60, delay: 18, w: 1.1, tx: -55, ty: 30  },
-  { d: 'M10 250 C 160 180, 340 310, 560 230 S 760 360, 1030 250',     dur: 37, delay: 11, w: 0.8, tx: 75,  ty: -35 },
-  { d: 'M-130 800 C 70 730, 250 860, 470 780 S 670 900, 930 800',     dur: 41, delay: 13, w: 1.6, tx: -35, ty: 45  },
-  { d: 'M60 550 C 210 480, 390 610, 610 530 S 810 660, 1070 550',     dur: 25, delay: 20, w: 0.5, tx: 55,  ty: -15 },
-  { d: 'M-40 380 C 110 310, 290 440, 510 360 S 710 490, 970 380',     dur: 56, delay: 2,  w: 1.4, tx: -65, ty: 20  },
-  { d: 'M80 750 C 230 680, 410 810, 630 730 S 830 860, 1090 750',     dur: 32, delay: 16, w: 0.7, tx: 45,  ty: -30 },
-  { d: 'M-100 500 C 100 430, 280 560, 500 460 S 700 580, 960 500',    dur: 48, delay: 6,  w: 1.9, tx: -80, ty: 25  },
-  { d: 'M20 170 C 170 100, 350 230, 570 150 S 770 280, 1040 170',     dur: 39, delay: 14, w: 0.6, tx: 85,  ty: -45 },
-  { d: 'M-60 620 C 100 550, 280 680, 500 600 S 700 720, 960 620',     dur: 27, delay: 19, w: 1.2, tx: -40, ty: 35  },
-  { d: 'M50 320 C 200 250, 380 380, 600 300 S 800 430, 1060 320',     dur: 52, delay: 3,  w: 0.8, tx: 60,  ty: -20 },
-  { d: 'M-90 720 C 80 650, 260 780, 480 700 S 680 820, 940 720',      dur: 34, delay: 17, w: 1.5, tx: -50, ty: 30  },
-  { d: 'M30 400 C 180 330, 360 460, 580 380 S 780 510, 1050 400',     dur: 43, delay: 8,  w: 0.9, tx: 70,  ty: -25 },
-  { d: 'M-120 200 C 60 130, 240 260, 460 180 S 660 300, 920 200',     dur: 30, delay: 21, w: 1.7, tx: -60, ty: 40  },
-  { d: 'M70 870 C 220 800, 400 930, 620 850 S 820 970, 1080 870',     dur: 58, delay: 5,  w: 0.5, tx: 50,  ty: -35 },
-  { d: 'M-50 470 C 120 400, 300 530, 520 450 S 720 580, 990 470',     dur: 46, delay: 11, w: 1.3, tx: -70, ty: 20  },
-  { d: 'M40 680 C 190 610, 370 740, 590 660 S 790 790, 1060 680',     dur: 22, delay: 23, w: 0.6, tx: 80,  ty: -15 },
-  { d: 'M-80 300 C 90 230, 270 360, 490 280 S 690 400, 950 300',      dur: 55, delay: 0,  w: 1.0, tx: -45, ty: 30  },
+const BG = '#fbfcfe';
+
+const DECK = [
+  { img: '/hero/vacuson.jpg',     t: 'Nouvag Vacuson 60 LP', s: 'מערכת שאיבה כירורגית' },
+  { img: '/hero/surgical.jpg',    t: 'Nouvag · מנוע ניתוחי',  s: 'כירורגיה אוראלית והשתלות' },
+  { img: '/hero/contra-15.jpg',   t: 'Jinme · זוויתן 1:5',    s: 'מגדיל לטיפולי שיקום' },
+  { img: '/hero/implant-201.jpg', t: 'Jinme · זוויתן 20:1',   s: 'להשתלות שיניים' },
+  { img: '/hero/straight.jpg',    t: 'Jinme · ידית ישרה',     s: 'טיפול ושיקום מדויק' },
 ];
 
-function FloatingPaths() {
+const STATS = [
+  { n: '10', suf: '+', l: 'מותגים מובילים' },
+  { n: '28', suf: '', l: 'שנות ניסיון' },
+  { n: 'ISO 9001', suf: '', l: 'מערכת איכות מוסמכת' },
+  { n: 'אמ״ר', suf: '', l: 'רישיון יבואן · משרד הבריאות' },
+];
+
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+/* ── shuffle deck ── */
+function ProductDeck() {
+  const deckRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck) return;
+    let order = Array.from(deck.querySelectorAll<HTMLElement>('[data-card]'));
+    const pos = [
+      { x: 0, y: 0, r: 0, s: 1, z: 50, o: 1 },
+      { x: -14, y: 14, r: -3, s: 0.965, z: 40, o: 1 },
+      { x: -26, y: 26, r: -5.5, s: 0.935, z: 30, o: 1 },
+      { x: -36, y: 36, r: -8, s: 0.91, z: 20, o: 0.9 },
+      { x: -44, y: 44, r: -10, s: 0.89, z: 10, o: 0.78 },
+    ];
+    const at = (i: number) => pos[Math.min(i, pos.length - 1)];
+    const place = (card: HTMLElement, i: number, animate: boolean) => {
+      const p = at(i);
+      card.style.transition = animate
+        ? 'transform .55s cubic-bezier(.2,.7,.2,1),opacity .5s'
+        : 'none';
+      card.style.zIndex = String(p.z);
+      card.style.opacity = String(p.o);
+      card.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg) scale(${p.s})`;
+    };
+    order.forEach((c, i) => place(c, i, false));
+
+    let busy = false;
+    const advance = () => {
+      if (busy) return;
+      busy = true;
+      const front = order[0];
+      front.style.transition = 'transform .5s cubic-bezier(.55,0,.7,.25),opacity .45s';
+      front.style.transform = 'translate(40px,-120px) rotate(11deg) scale(.92)';
+      front.style.opacity = '0';
+      for (let i = 1; i < order.length; i++) place(order[i], i - 1, true);
+      window.setTimeout(() => {
+        order = [...order.slice(1), front];
+        const p = at(order.length - 1);
+        front.style.transition = 'none';
+        front.style.zIndex = String(p.z);
+        front.style.opacity = '0';
+        front.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg) scale(${p.s})`;
+        void front.offsetWidth;
+        front.style.transition = 'opacity .55s';
+        front.style.opacity = String(p.o);
+        busy = false;
+      }, 510);
+    };
+
+    const onClick = () => advance();
+    deck.addEventListener('click', onClick);
+    let timer = window.setInterval(advance, 3400);
+    const stop = () => window.clearInterval(timer);
+    const start = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(advance, 3400);
+    };
+    deck.addEventListener('mouseenter', stop);
+    deck.addEventListener('mouseleave', start);
+    return () => {
+      window.clearInterval(timer);
+      deck.removeEventListener('click', onClick);
+      deck.removeEventListener('mouseenter', stop);
+      deck.removeEventListener('mouseleave', start);
+    };
+  }, []);
+
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <style>{`
-        ${PATHS.map((p, i) => `
-          @keyframes pathDrift${i} {
-            0%   { transform: translate(0px, 0px); opacity: ${0.06 + (i % 5) * 0.015}; }
-            33%  { transform: translate(${p.tx * 0.5}px, ${p.ty * 0.5}px); opacity: ${0.04 + (i % 5) * 0.01}; }
-            66%  { transform: translate(${p.tx}px, ${p.ty}px); opacity: ${0.08 + (i % 5) * 0.018}; }
-            100% { transform: translate(0px, 0px); opacity: ${0.06 + (i % 5) * 0.015}; }
-          }
-        `).join('')}
-      `}</style>
-      <svg
-        className="absolute w-full h-full"
-        viewBox="0 0 1000 900"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        aria-hidden="true"
-      >
-        {PATHS.map((p, i) => (
-          <path
-            key={i}
-            d={p.d}
-            stroke="#1a2b4a"
-            strokeWidth={p.w}
-            strokeOpacity={0.06 + (i % 8) * 0.01}
-            strokeLinecap="round"
-            fill="none"
-            style={{
-              animation: `pathDrift${i} ${p.dur}s ease-in-out ${p.delay}s infinite`,
-            }}
+    <div
+      ref={deckRef}
+      title="לחצו לדפדוף בין המוצרים"
+      style={{
+        position: 'relative',
+        width: '92%',
+        maxWidth: 500,
+        aspectRatio: '3 / 2',
+        margin: 'auto',
+        cursor: 'pointer',
+        zIndex: 2,
+      }}
+    >
+      {DECK.map((d) => (
+        <div
+          key={d.img}
+          data-card
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 22,
+            overflow: 'hidden',
+            background: '#eef0f3',
+            boxShadow: '0 34px 74px -34px rgba(26,43,74,.62),inset 0 1px 0 rgba(255,255,255,.5)',
+            border: '1px solid rgba(255,255,255,.6)',
+            willChange: 'transform,opacity',
+            backfaceVisibility: 'hidden',
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={d.img}
+            alt={d.t}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none' }}
           />
-        ))}
-      </svg>
+          <div
+            style={{
+              position: 'absolute',
+              insetInline: 0,
+              bottom: 0,
+              padding: '32px 18px 16px',
+              color: '#fff',
+              background: 'linear-gradient(to top,rgba(7,14,26,.85),rgba(7,14,26,.12) 70%,transparent)',
+            }}
+          >
+            <b style={{ display: 'block', fontSize: '1.06rem', fontWeight: 800 }}>{d.t}</b>
+            <span style={{ fontSize: '.78rem', color: 'rgba(255,255,255,.74)' }}>{d.s}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
-/* ─── Letter-by-letter entrance animation ───────────────────────────────── */
-function AnimatedLine({ text, baseDelay = 0 }: { text: string; baseDelay?: number }) {
-  return (
-    <>
-      <style>{`
-        @keyframes letterEntrance {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-      <span dir="rtl" className="block" aria-label={text}>
-        {text.split('').map((char, i) => (
-          <span
-            key={i}
-            aria-hidden="true"
-            style={{
-              display: 'inline',
-              opacity: 0,
-              animation: 'letterEntrance 0.5s ease forwards',
-              animationDelay: `${(baseDelay + i) * 0.04}s`,
-              whiteSpace: char === ' ' ? 'pre' : undefined,
-            }}
-          >
-            {char === ' ' ? ' ' : char}
-          </span>
-        ))}
-      </span>
-    </>
-  );
-}
-
-/* ─── Main hero (BackgroundPaths variant) ───────────────────────────────── */
 export default function HeroSlider() {
-  const LINE1 = 'מעבדת הציוד המקיפה'; // מעבדת הציוד המקיפה
-
   return (
     <section
       dir="rtl"
-      className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: '#ffffff' }}
       aria-label="Hero — DES ציוד דנטלי"
+      className="relative overflow-hidden"
+      style={{ background: BG }}
     >
-      {/* ── Animated SVG paths background ── */}
-      <FloatingPaths />
-
-      {/* ── Subtle radial glow on right (where text sits) ── */}
+      {/* atmosphere */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 75% 40%, rgba(30,144,255,0.04) 0%, transparent 70%)',
+          background:
+            'radial-gradient(46% 50% at 84% 8%,rgba(30,144,255,.12),transparent 70%),radial-gradient(40% 45% at 6% 92%,rgba(26,43,74,.06),transparent 70%)',
         }}
       />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#1a2b4a14 1.1px,transparent 1.1px)',
+          backgroundSize: '26px 26px',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 72% 38%,#000,transparent 78%)',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 72% 38%,#000,transparent 78%)',
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: 0.045, mixBlendMode: 'multiply', backgroundImage: GRAIN }}
+      />
+      {/* soft-blue DES ghost */}
+      <div
+        aria-hidden
+        className="absolute select-none pointer-events-none"
+        style={{
+          top: '5%',
+          left: '-3%',
+          fontSize: '26vw',
+          fontWeight: 900,
+          lineHeight: 0.8,
+          letterSpacing: '-.04em',
+          backgroundImage: 'linear-gradient(125deg,#1e90ff,#6fc0ff)',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          color: 'transparent',
+          opacity: 0.12,
+          filter: 'blur(2px)',
+        }}
+      >
+        DES
+      </div>
 
-      {/* ── Content ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-24 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center min-h-screen lg:min-h-0 lg:h-screen max-h-[900px]">
-
-          {/* ── Text column (right side in RTL) ── */}
-          <div className="flex flex-col justify-center pt-16 lg:pt-0 relative" style={{ zIndex: 20 }}>
-
-            {/* Pre-heading badge */}
-            <div className="flex items-center gap-3 mb-6">
-              <div
-                className="h-px flex-1 max-w-[48px]"
-                style={{ background: 'linear-gradient(90deg, #1e90ff, transparent)' }}
-              />
-              <span
-                className="text-xs font-semibold tracking-[0.25em] uppercase"
-                style={{ color: '#1e90ff' }}
-              >
-                ISO 9001 &nbsp;&middot;&nbsp; {'אמ"ר'} &nbsp;&middot;&nbsp; {'משנת 1998'}
-              </span>
-            </div>
-
-            {/* Main heading — two lines, no mid-word break */}
-            <h1
-              className="font-black leading-[1.15] mb-5"
-              style={{
-                fontSize: 'clamp(1.8rem, 5vw, 4.5rem)',
-                color: '#1a2b4a',
-              }}
-            >
-              <AnimatedLine text={LINE1} baseDelay={0} />
-              {/* "של DES" must stay on one line — whitespace-nowrap prevents break */}
-              <span dir="rtl" className="block whitespace-nowrap">
-                {'של '.split('').map((char, i) => (
-                  <span
-                    key={i}
-                    aria-hidden="true"
-                    style={{
-                      display: 'inline',
-                      opacity: 0,
-                      animation: 'letterEntrance 0.5s ease forwards',
-                      animationDelay: `${(LINE1.length + i) * 0.04}s`,
-                      whiteSpace: char === ' ' ? 'pre' : undefined,
-                    }}
-                  >
-                    {char}
-                  </span>
-                ))}
-                <GradientText>DES</GradientText>
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="mb-8 leading-relaxed"
-              style={{ color: '#6b7280', fontSize: '1.1rem', maxWidth: '36rem' }}
-            >
-              NSK &middot; W&amp;H &middot; KaVo &middot; Nouvag &middot; Bien-Air —{' '}
-              {'יבואן מורשה ומפיץ רשמי מ-1998'}
-            </p>
-
-            {/* CTA row — stacked on mobile, side-by-side on sm+ */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link
-                href="/catalog"
-                className="group relative inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
-                style={{ background: '#1a2b4a', color: '#fff' }}
-              >
-                <span className="relative z-10">{'לקטלוג המוצרים'}</span>
-                <span
-                  className="relative z-10 text-lg font-light"
-                  style={{ transform: 'scaleX(-1)', display: 'inline-block' }}
-                >
-                  →
-                </span>
-                <span
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'linear-gradient(135deg, rgba(30,144,255,0.25) 0%, transparent 60%)' }}
-                />
-              </Link>
-
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
-                style={{
-                  color: '#1a2b4a',
-                  border: '1.5px solid #1a2b4a',
-                  background: 'transparent',
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = '#1a2b4a';
-                  el.style.color = '#ffffff';
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = 'transparent';
-                  el.style.color = '#1a2b4a';
-                }}
-              >
-                {'צור קשר'}
-              </Link>
-            </div>
-
-            {/* Trust line */}
-            <p
-              className="text-xs"
-              style={{ color: '#9ba3af', letterSpacing: '0.05em' }}
-            >
-              ISO 9001 {'✓'} &nbsp;&middot;&nbsp; {'רישיון אמ"ר'} {'✓'} &nbsp;&middot;&nbsp; {'יבואן מורשה'} {'✓'}
-            </p>
+      {/* content */}
+      <div
+        className="relative z-[3] grid grid-cols-1 lg:grid-cols-[1.02fr_.98fr] items-center gap-8 lg:gap-8 max-w-[1300px] mx-auto px-6 lg:px-12 pt-10 pb-9"
+        style={{ minHeight: '72vh' }}
+      >
+        {/* text */}
+        <div>
+          <div
+            className="inline-flex items-center gap-3 mb-6 text-xs font-bold uppercase"
+            style={{ color: '#1e90ff', letterSpacing: '.22em', animation: 'heroUp .8s cubic-bezier(.2,.7,.2,1) both' }}
+          >
+            <span style={{ width: 46, height: 2, background: 'linear-gradient(90deg,#1e90ff,transparent)' }} />
+            יבואן מורשה · ISO 9001 · מאז 1998
           </div>
 
-          {/* ── Product image column ── */}
-          <div
-            className="hidden md:flex items-end justify-center relative overflow-hidden"
-            style={{ height: '100%', minHeight: '600px', zIndex: 10, isolation: 'isolate' }}
+          <h1
+            className="font-black"
+            style={{
+              fontSize: 'clamp(2.6rem,5.3vw,5.1rem)',
+              lineHeight: 1.03,
+              letterSpacing: '-.022em',
+              color: '#0d1929',
+              animation: 'heroUp .8s cubic-bezier(.2,.7,.2,1) .1s both',
+            }}
           >
-            {/* Bottom fade — blends chair into page, hides white background edge */}
-            <div
-              className="absolute bottom-0 left-0 right-0 pointer-events-none"
-              style={{
-                height: '30%',
-                background: 'linear-gradient(to top, #ffffff 0%, transparent 100%)',
-                zIndex: 2,
-              }}
-            />
-            {/* Right edge fade — prevents image bleeding into text column */}
-            <div
-              className="absolute top-0 bottom-0 right-0 pointer-events-none"
-              style={{
-                width: '18%',
-                background: 'linear-gradient(to left, #ffffff 0%, transparent 100%)',
-                zIndex: 2,
-              }}
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/hero-chair.png"
-              alt="Dental chair — distributed by DES"
-              style={{
-                width: '100%',
-                height: 'auto',
-                maxHeight: '90vh',
-                objectFit: 'contain',
-                objectPosition: 'bottom center',
-                mixBlendMode: 'multiply',
-                filter: 'drop-shadow(0 32px 48px rgba(26,43,74,0.10))',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            />
+            מעבדת הציוד
+            <br />
+            המקיפה של{' '}
+            <GradientText className="rounded-lg align-baseline bg-[#fbfcfe]">DES</GradientText>
+          </h1>
+
+          <p
+            className="leading-relaxed"
+            style={{
+              margin: '26px 0 34px',
+              fontSize: '1.2rem',
+              color: '#5b6677',
+              maxWidth: '29rem',
+              animation: 'heroUp .8s cubic-bezier(.2,.7,.2,1) .2s both',
+            }}
+          >
+            יבוא, אספקה ושירות לציוד דנטלי ורפואי מהמותגים המובילים בעולם — NSK · W&amp;H · KaVo · Nouvag · Bien-Air.
+          </p>
+
+          <div
+            className="flex flex-wrap items-center gap-3.5"
+            style={{ animation: 'heroUp .8s cubic-bezier(.2,.7,.2,1) .3s both' }}
+          >
+            <Link
+              href="/catalog"
+              className="inline-flex items-center gap-2 font-bold rounded-xl transition-all hover:-translate-y-0.5"
+              style={{ background: '#1a2b4a', color: '#fff', padding: '14px 26px', boxShadow: '0 16px 34px -14px rgba(26,43,74,.7)' }}
+            >
+              לקטלוג המוצרים
+              <span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>→</span>
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center font-bold rounded-xl transition-all hover:-translate-y-0.5"
+              style={{ color: '#1a2b4a', border: '1.5px solid #e8ecf0', background: '#fff', padding: '14px 26px' }}
+            >
+              דברו איתנו
+            </Link>
+          </div>
+        </div>
+
+        {/* visual */}
+        <div
+          className="relative flex justify-center items-center"
+          style={{ padding: 18, animation: 'heroUp .9s cubic-bezier(.2,.7,.2,1) .2s both' }}
+        >
+          <ProductDeck />
+
+          {/* floating cards */}
+          <div
+            className="absolute z-[6] flex items-center gap-3"
+            style={{
+              top: '7%', right: -10,
+              background: 'rgba(255,255,255,.85)', backdropFilter: 'blur(10px)',
+              border: '1px solid #fff', borderRadius: 16, padding: '13px 16px',
+              boxShadow: '0 22px 50px -22px rgba(26,43,74,.5)', animation: 'heroFloat 6s ease-in-out infinite',
+            }}
+          >
+            <span className="flex items-center justify-center flex-shrink-0" style={{ width: 34, height: 34, borderRadius: 10, background: '#e7f7ee', color: '#16a34a' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            </span>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '.92rem', color: '#1a2b4a', lineHeight: 1.1 }}>ISO 9001 מוסמך</div>
+              <div style={{ fontSize: '.72rem', color: '#9ba3af', marginTop: 2 }}>מערכת ניהול איכות</div>
+            </div>
+          </div>
+
+          <div
+            className="absolute z-[6] flex items-center gap-3"
+            style={{
+              bottom: '9%', left: -6,
+              background: 'rgba(255,255,255,.85)', backdropFilter: 'blur(10px)',
+              border: '1px solid #fff', borderRadius: 16, padding: '13px 16px',
+              boxShadow: '0 22px 50px -22px rgba(26,43,74,.5)', animation: 'heroFloat 6.6s ease-in-out infinite .5s',
+            }}
+          >
+            <span className="flex items-center justify-center flex-shrink-0" style={{ width: 34, height: 34, borderRadius: 10, background: '#e8f1fd', color: '#1e90ff' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 4 7v6c0 5 8 9 8 9s8-4 8-9V7z" /></svg>
+            </span>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '.92rem', color: '#1a2b4a', lineHeight: 1.1 }}>+10 מותגים בלעדיים</div>
+              <div style={{ fontSize: '.72rem', color: '#9ba3af', marginTop: 2 }}>יבוא ושיווק רשמי</div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* stat row */}
+      <div
+        className="relative z-[3] flex max-w-[1300px] mx-auto px-6 lg:px-12"
+        style={{ borderTop: '1px solid #e8ecf0', background: 'linear-gradient(180deg,#f7faff,#fbfcfe 60%)' }}
+      >
+        {STATS.map((s, i) => (
+          <div
+            key={s.l}
+            className="flex-1 text-right"
+            style={{ padding: '26px 10px', borderRight: i === 0 ? 'none' : '1px solid #e8ecf0' }}
+          >
+            <div style={{ fontSize: '2.05rem', fontWeight: 900, color: '#1a2b4a', letterSpacing: '-.02em' }}>
+              {s.n}
+              <span style={{ color: '#1e90ff' }}>{s.suf}</span>
+            </div>
+            <div style={{ fontSize: '.82rem', color: '#9ba3af', marginTop: 3 }}>{s.l}</div>
+          </div>
+        ))}
+      </div>
+
+      <style>{`
+        @keyframes heroUp { from { opacity:0; transform:translateY(26px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes heroFloat { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-9px) } }
+        @media (max-width:1023px){ .hero-stat-hide { display:none } }
+      `}</style>
     </section>
   );
 }

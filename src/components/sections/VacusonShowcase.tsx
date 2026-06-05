@@ -1,321 +1,140 @@
-'use client';
-
-import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { MessageCircle } from 'lucide-react';
 
 const SPECS = [
-  { label: 'קצב זרימה',     value: '60 L/min' },
-  { label: 'ואקום מקסימלי', value: '65 kPa'   },
-  { label: 'רמת רעש',       value: '< 55 dB'  },
-  { label: 'נפח אוסף',      value: '2 × 2 L'  },
-  { label: 'הספק',          value: '180 W'     },
+  { label: 'קצב זרימה', value: '60 L/min' },
+  { label: 'ואקום מקסימלי', value: '65 kPa' },
+  { label: 'רמת רעש', value: '< 55 dB' },
+  { label: 'נפח אוסף', value: '2 × 2 L' },
+  { label: 'הספק', value: '180 W' },
 ];
 
-const HOTSPOTS = [
-  { id: 'gauge',     label: 'מד ואקום',      sub: 'בקרה מדויקת של לחץ',          top: 26, left: 38, lineDir: 'left'  },
-  { id: 'handpiece', label: 'ידית כירורגית', sub: 'ידית מנועית מובנית',           top: 42, left: 62, lineDir: 'right' },
-  { id: 'jars',      label: 'מיכלי איסוף',   sub: '2 × 2 ליטר, פוליקרבונט',      top: 66, left: 22, lineDir: 'left'  },
-  { id: 'pedal',     label: 'דוושת רגל',     sub: 'שליטה חופשת ידיים',            top: 88, left: 68, lineDir: 'right' },
-];
+const WA = 'https://wa.me/972548818681?text=' +
+  encodeURIComponent('שלום, אשמח לפרטים על Nouvag Vacuson 60 LP');
 
 export default function VacusonShowcase() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [mouse, setMouse]   = useState({ x: 0, y: 0 });
-  const [active, setActive] = useState<string | null>(null);
-  const [ready,  setReady]  = useState(false);
-
-  useEffect(() => { setReady(true); }, []);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      setMouse({
-        x: ((e.clientX - r.left) / r.width  - 0.5) * 18,
-        y: ((e.clientY - r.top)  / r.height - 0.5) * 10,
-      });
-    };
-    el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
       dir="rtl"
-      style={{
-        background: '#070e1a',
-        minHeight: '620px',
-        width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-      }}
+      aria-label="Nouvag Vacuson 60 LP"
+      style={{ background: '#070e1a' }}
+      className="relative overflow-hidden"
     >
-      {/* ── Top accent line ── */}
-      <div style={{
-        position:'absolute', top:0, left:0, right:0, height:'1px',
-        background:'linear-gradient(90deg,transparent,rgba(30,140,212,0.5),transparent)',
-      }}/>
+      {/* top + bottom hairlines */}
+      <div className="absolute top-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(30,140,212,0.5),transparent)' }} />
+      <div className="absolute bottom-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(30,140,212,0.3),transparent)' }} />
 
-      {/* ── Ambient glow behind product ── */}
-      <div style={{
-        position:'absolute', left:'50%', top:'50%',
-        transform:'translate(-50%,-50%)',
-        width:'600px', height:'500px', borderRadius:'50%',
-        background:'radial-gradient(ellipse, rgba(30,140,212,0.08) 0%, transparent 70%)',
-        pointerEvents:'none',
-      }}/>
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
-      <div style={{
-        maxWidth:'1280px', margin:'0 auto', padding:'48px 40px',
-        display:'grid', gridTemplateColumns:'1fr 1fr',
-        alignItems:'center', gap:'0', width:'100%',
-      }}>
-
-        {/* ── LEFT: Product image + hotspots ── */}
-        <div style={{ position:'relative', height:'500px', overflow:'hidden' }}>
-
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/suppliers/nouvag/vacuson.jpg"
-            alt="Nouvag Vacuson 60 LP"
-            style={{
-              width:'100%', height:'100%',
-              objectFit:'contain', objectPosition:'center',
-              animation: 'vacFloat 7s ease-in-out infinite',
-              transition: ready ? 'transform 0.12s ease-out' : 'none',
-              transform: `translate3d(${mouse.x}px, ${mouse.y}px, 0)`,
-              display:'block',
-            }}
-          />
-
-          {/* Vignette — fades white bg into dark page */}
-          <div style={{
-            position:'absolute', inset:0,
-            background:`radial-gradient(ellipse 75% 85% at 50% 50%, transparent 35%, #070e1a 90%)`,
-            pointerEvents:'none',
-          }}/>
-
-          {/* ── Hotspot callouts ── */}
-          {HOTSPOTS.map(h => (
+          {/* ── Product stage (renders right in RTL) ── */}
+          <div className="relative order-1">
+            {/* soft blue glow behind the card */}
             <div
-              key={h.id}
+              className="absolute -inset-6 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at 50% 45%, rgba(30,140,212,0.18) 0%, transparent 65%)' }}
+            />
+            <div
+              className="relative rounded-[28px] overflow-hidden"
               style={{
-                position:'absolute',
-                top: `${h.top}%`,
-                left: `${h.left}%`,
-                transform: 'translate(-50%, -50%)',
-                zIndex: 10,
-                cursor: 'pointer',
+                // exact match to the photo's uniform #f0f1f3 studio backdrop → seamless
+                background: '#f0f1f3',
+                boxShadow: '0 30px 70px -25px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.6)',
+                border: '1px solid rgba(255,255,255,0.08)',
               }}
-              onMouseEnter={() => setActive(h.id)}
-              onMouseLeave={() => setActive(null)}
             >
-              {/* Pulsing dot */}
-              <div style={{ position:'relative', width:'12px', height:'12px' }}>
-                <div style={{
-                  width:'12px', height:'12px', borderRadius:'50%',
-                  background:'#1E8CD4',
-                  boxShadow:'0 0 0 0 rgba(30,140,212,0.7)',
-                  animation: 'hotPulse 2s ease-in-out infinite',
-                }}/>
-                <div style={{
-                  position:'absolute', inset:'-4px', borderRadius:'50%',
-                  border:'1px solid rgba(30,140,212,0.4)',
-                  animation: 'hotRing 2s ease-in-out infinite',
-                }}/>
-              </div>
-
-              {/* Label bubble — appears on hover */}
-              <div style={{
-                position:'absolute',
-                [h.lineDir === 'right' ? 'left' : 'right']: '20px',
-                top: '50%',
-                background: 'rgba(7,14,26,0.92)',
-                border: '1px solid rgba(30,140,212,0.35)',
-                borderRadius: '8px',
-                padding: '8px 12px',
-                whiteSpace: 'nowrap',
-                pointerEvents: 'none',
-                opacity: active === h.id ? 1 : 0,
-                transform: active === h.id
-                  ? 'translateY(-50%) translateX(0)'
-                  : `translateY(-50%) translateX(${h.lineDir === 'right' ? '-8px' : '8px'})`,
-                transition: 'all 0.2s ease',
-                backdropFilter: 'blur(8px)',
-              }}>
-                <div style={{
-                  fontFamily:"'Noto Sans', sans-serif",
-                  fontSize:'12px', fontWeight:700,
-                  color:'#fff', marginBottom:'2px',
-                }}>{h.label}</div>
-                <div style={{
-                  fontFamily:"'Noto Sans', sans-serif",
-                  fontSize:'10px', color:'rgba(255,255,255,0.5)',
-                }}>{h.sub}</div>
-              </div>
+              {/* soft studio spotlight behind the unit */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 44%, rgba(255,255,255,0.65) 0%, transparent 70%)' }}
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/suppliers/nouvag/vacuson.jpg"
+                alt="Nouvag Vacuson 60 LP — מערכת שאיבה כירורגית"
+                className="relative w-full h-auto block"
+                style={{ transform: 'scale(1.06)' }}
+              />
+              {/* corner model tag */}
+              <span
+                className="absolute top-4 right-4 text-[11px] font-bold tracking-wide px-3 py-1 rounded-full"
+                style={{ background: '#fff', color: '#0d2b4a', border: '1px solid rgba(13,43,74,0.12)' }}
+              >
+                NOUVAG
+              </span>
             </div>
-          ))}
-        </div>
-
-        {/* ── RIGHT: Text + specs ── */}
-        <div style={{ padding:'0 0 0 40px' }}>
-
-          {/* Badge */}
-          <span style={{
-            display:'inline-flex', alignItems:'center', gap:'8px',
-            background:'rgba(30,140,212,0.1)',
-            border:'1px solid rgba(30,140,212,0.3)',
-            color:'#4BAEE8',
-            fontSize:'10px', fontWeight:700,
-            letterSpacing:'0.2em', textTransform:'uppercase',
-            padding:'5px 14px', borderRadius:'999px',
-            marginBottom:'24px',
-          }}>
-            <span style={{
-              width:'6px', height:'6px', borderRadius:'50%',
-              background:'#4BAEE8',
-              animation:'hotPulse 2s ease-in-out infinite',
-              display:'inline-block',
-            }}/>
-            NOUVAG · יבואן רשמי DES
-          </span>
-
-          {/* Product name */}
-          <h2 style={{
-            fontFamily:"'Figtree', sans-serif",
-            fontWeight:900, color:'#ffffff',
-            fontSize:'clamp(1.8rem, 3vw, 2.8rem)',
-            lineHeight:1.1, marginBottom:'8px',
-          }}>
-            Vacuson 60 LP
-          </h2>
-          <p style={{
-            fontFamily:"'Figtree', sans-serif",
-            fontWeight:700, color:'#1E8CD4',
-            fontSize:'1.1rem', marginBottom:'20px',
-            letterSpacing:'0.02em',
-          }}>
-            מערכת שאיבה כירורגית שקטה
-          </p>
-
-          <p style={{
-            fontFamily:"'Noto Sans', sans-serif",
-            color:'rgba(255,255,255,0.55)',
-            fontSize:'14.5px', lineHeight:1.8,
-            marginBottom:'32px', maxWidth:'380px',
-          }}>
-            מכשיר שאיבה כירורגי עוצמתי ושקט במיוחד (&lt;55 dB).
-            מתאים לניתוחי שתלים, אנדודונטיה וכירורגיה אוראלית.
-            מופץ בישראל באופן בלעדי על ידי DES.
-          </p>
-
-          {/* Specs grid */}
-          <div style={{
-            display:'grid', gridTemplateColumns:'1fr 1fr',
-            gap:'10px', marginBottom:'36px',
-          }}>
-            {SPECS.map(s => (
-              <div key={s.label} style={{
-                background:'rgba(255,255,255,0.04)',
-                border:'1px solid rgba(255,255,255,0.07)',
-                borderRadius:'10px', padding:'14px 16px',
-              }}>
-                <div style={{
-                  fontFamily:"'Noto Sans', sans-serif",
-                  fontSize:'10px', fontWeight:600,
-                  letterSpacing:'0.12em', textTransform:'uppercase',
-                  color:'rgba(255,255,255,0.3)', marginBottom:'5px',
-                }}>{s.label}</div>
-                <div style={{
-                  fontFamily:"'Figtree', sans-serif",
-                  fontSize:'18px', fontWeight:800,
-                  color:'#fff',
-                }}>{s.value}</div>
-              </div>
-            ))}
           </div>
 
-          {/* CTAs */}
-          <div style={{ display:'flex', gap:'12px', flexWrap:'wrap' }}>
-            <Link
-              href="/catalog?category=surgery&brand=nouvag"
-              style={{
-                fontFamily:"'Noto Sans', sans-serif",
-                fontSize:'14px', fontWeight:600,
-                background:'#1E8CD4', color:'#fff',
-                padding:'13px 26px', borderRadius:'8px',
-                textDecoration:'none', display:'inline-block',
-                transition:'background 0.2s',
-              }}
-              onMouseEnter={e=>{(e.currentTarget as HTMLElement).style.background='#2A9FE0';}}
-              onMouseLeave={e=>{(e.currentTarget as HTMLElement).style.background='#1E8CD4';}}
+          {/* ── Info (renders left in RTL) ── */}
+          <div className="order-2 flex flex-col">
+            <span
+              className="inline-flex items-center gap-2 self-start text-[10px] font-bold tracking-[0.2em] uppercase px-3.5 py-1.5 rounded-full mb-6"
+              style={{ background: 'rgba(30,140,212,0.1)', border: '1px solid rgba(30,140,212,0.3)', color: '#4BAEE8' }}
             >
-              פרטים והזמנה
-            </Link>
-            <Link
-              href="/contact"
-              style={{
-                fontFamily:"'Noto Sans', sans-serif",
-                fontSize:'14px', fontWeight:500,
-                color:'rgba(255,255,255,0.7)',
-                border:'1px solid rgba(255,255,255,0.15)',
-                padding:'12px 26px', borderRadius:'8px',
-                textDecoration:'none', display:'inline-block',
-                transition:'all 0.2s',
-              }}
-              onMouseEnter={e=>{
-                const el = e.currentTarget as HTMLElement;
-                el.style.borderColor='rgba(255,255,255,0.4)';
-                el.style.color='#fff';
-              }}
-              onMouseLeave={e=>{
-                const el = e.currentTarget as HTMLElement;
-                el.style.borderColor='rgba(255,255,255,0.15)';
-                el.style.color='rgba(255,255,255,0.7)';
-              }}
-            >
-              צור קשר
-            </Link>
-          </div>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#4BAEE8' }} />
+              NOUVAG · יבואן רשמי DES
+            </span>
 
-          {/* Official distributor note */}
-          <p style={{
-            fontFamily:"'Noto Sans', sans-serif",
-            fontSize:'11px', color:'rgba(255,255,255,0.25)',
-            marginTop:'20px', letterSpacing:'0.04em',
-          }}>
-            * DES הינו היבואן והמפיץ הרשמי של Nouvag בישראל
-          </p>
+            <h2 className="font-black text-white leading-[1.05] mb-2" style={{ fontSize: 'clamp(2rem, 3.4vw, 3rem)' }}>
+              Vacuson 60 LP
+            </h2>
+            <p className="font-bold mb-5" style={{ color: '#1E8CD4', fontSize: '1.1rem' }}>
+              מערכת שאיבה כירורגית שקטה
+            </p>
+
+            <p className="leading-relaxed mb-8 max-w-md" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem' }}>
+              מכשיר שאיבה כירורגי עוצמתי ושקט במיוחד (&lt;55&nbsp;dB). מתאים לניתוחי שתלים,
+              אנדודונטיה וכירורגיה אוראלית. מופץ בישראל באופן בלעדי על ידי DES.
+            </p>
+
+            {/* Specs */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-9">
+              {SPECS.map((s) => (
+                <div
+                  key={s.label}
+                  className="rounded-xl px-3.5 py-3"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <div
+                    className="text-[10px] font-semibold uppercase mb-1.5"
+                    style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}
+                  >
+                    {s.label}
+                  </div>
+                  <div className="font-extrabold text-white" style={{ fontSize: '1.05rem', direction: 'ltr', textAlign: 'right' }}>
+                    {s.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-white transition-transform hover:-translate-y-0.5"
+                style={{ background: '#1E8CD4' }}
+              >
+                <MessageCircle className="w-4.5 h-4.5" />
+                פרטים והזמנה
+              </a>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 font-medium px-6 py-3 rounded-xl transition-colors"
+                style={{ color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.18)' }}
+              >
+                צור קשר
+              </Link>
+            </div>
+
+            <p className="text-[11px] mt-6" style={{ color: 'rgba(255,255,255,0.28)' }}>
+              * DES הינו היבואן והמפיץ הרשמי של Nouvag בישראל
+            </p>
+          </div>
         </div>
       </div>
-
-      {/* ── Bottom accent ── */}
-      <div style={{
-        position:'absolute', bottom:0, left:0, right:0, height:'1px',
-        background:'linear-gradient(90deg,transparent,rgba(30,140,212,0.3),transparent)',
-      }}/>
-
-      <style>{`
-        @keyframes vacFloat {
-          0%,100% { transform: translateY(0px);   }
-          50%      { transform: translateY(-12px); }
-        }
-        @keyframes hotPulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(30,140,212,0.6); }
-          50%      { box-shadow: 0 0 0 6px rgba(30,140,212,0); }
-        }
-        @keyframes hotRing {
-          0%   { transform: scale(1);   opacity: 0.8; }
-          100% { transform: scale(2.2); opacity: 0;   }
-        }
-        @media (max-width:768px) {
-          .vacuson-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   );
 }

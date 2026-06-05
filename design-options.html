@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DES — כיווני עיצוב</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1a2b4a; --deep:#0d1929; --black:#070e1a;
+    --blue:#1e90ff; --blue2:#1E8CD4; --blue-deep:#0b63c4;
+    --ink:#0d1929; --muted:#5b6677; --faint:#9ba3af;
+    --line:#e8ecf0;
+    --font:'Heebo','Assistant',-apple-system,Segoe UI,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:#0b0f14;color:var(--ink);-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+
+  /* ───────── Switcher ───────── */
+  .switcher{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;
+    display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;
+    background:rgba(13,25,41,.74);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 40px rgba(0,0,0,.4);
+  }
+  .switcher b{color:#fff;font-size:12px;font-weight:700;padding:0 10px 0 6px;opacity:.8}
+  .switcher button{
+    font-family:var(--font);cursor:pointer;border:none;border-radius:999px;
+    padding:9px 15px;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.7);
+    background:transparent;transition:.18s;white-space:nowrap;
+  }
+  .switcher button:hover{color:#fff}
+  .switcher button.active{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(30,144,255,.45)}
+  .screen{display:none;min-height:100vh}
+  .screen.show{display:block}
+
+  @keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes floaty2{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+  .show [data-rise]{animation:up .85s cubic-bezier(.2,.7,.2,1) both}
+
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .nav .links{display:flex;gap:26px;font-size:14px;font-weight:600}
+  .pill-cta{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;padding:12px 24px;border-radius:13px;transition:.2s;cursor:pointer}
+
+  /* grain texture (shared) */
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.045;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* ════════════════ OPTION A — EDITORIAL (LAYERED LIGHT) ════════════════ */
+  .a{background:#fbfcfe;color:var(--ink);position:relative;overflow:hidden}
+  .a .glow{position:absolute;inset:0;pointer-events:none;background:
+    radial-gradient(46% 50% at 84% 8%,rgba(30,144,255,.12),transparent 70%),
+    radial-gradient(40% 45% at 6% 92%,rgba(26,43,74,.06),transparent 70%)}
+  .a .dots{position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(#1a2b4a14 1.1px,transparent 1.1px);background-size:26px 26px;
+    mask-image:radial-gradient(ellipse 70% 60% at 72% 38%,#000,transparent 78%)}
+  .a .ghost{position:absolute;top:5%;left:-3%;font-size:26vw;font-weight:900;line-height:.8;
+    letter-spacing:-.04em;pointer-events:none;user-select:none;
+    background:linear-gradient(125deg,#1e90ff,#6fc0ff);-webkit-background-clip:text;background-clip:text;
+    color:transparent;opacity:.12;filter:blur(2px)}
+  .a .wrap{max-width:1300px;margin:0 auto;padding:26px 48px;position:relative;z-index:5}
+  .a .links a{color:#4a5568} .a .links a:hover{color:var(--navy)}
+  .a .logo{height:34px}
+  .a .top-cta{color:var(--navy);border:1.5px solid var(--navy)}
+  .a .top-cta:hover{background:var(--navy);color:#fff}
+
+  .a .hero{position:relative;z-index:4;display:grid;grid-template-columns:1.02fr .98fr;gap:30px;
+    align-items:center;padding:34px 48px 36px;max-width:1300px;margin:0 auto;min-height:72vh}
+  .a .kicker{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:700;
+    letter-spacing:.22em;color:var(--blue);text-transform:uppercase;margin-bottom:24px}
+  .a .kicker .ln{width:46px;height:2px;background:linear-gradient(90deg,var(--blue),transparent)}
+  .a h1{font-size:clamp(2.6rem,5.3vw,5.1rem);font-weight:900;line-height:1.03;letter-spacing:-.022em;color:var(--ink)}
+  .a h1 .blue{color:var(--blue)}
+  .a .sub{margin:26px 0 34px;font-size:1.2rem;color:var(--muted);max-width:29rem;line-height:1.7}
+  .a .ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .a .btn-solid{background:var(--navy);color:#fff;box-shadow:0 16px 34px -14px rgba(26,43,74,.7)}
+  .a .btn-solid:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 20px 40px -14px rgba(30,144,255,.6)}
+  .a .btn-ghost{color:var(--navy);border:1.5px solid var(--line);background:#fff}
+  .a .btn-ghost:hover{border-color:var(--navy);transform:translateY(-2px)}
+
+  /* layered product visual */
+  .a .visual{position:relative;display:flex;justify-content:center;align-items:center;padding:18px}
+  .a .backpanel{position:absolute;inset:18px 42px 30px 8px;border-radius:30px;
+    background:linear-gradient(160deg,#dfeaf8,#eaf1fb);transform:rotate(-2.2deg);
+    box-shadow:0 30px 60px -34px rgba(26,43,74,.5)}
+  .a .panel{position:relative;width:100%;border-radius:26px;padding:7px;
+    background:linear-gradient(160deg,#ffffff,#eef4fb);
+    box-shadow:0 40px 90px -44px rgba(26,43,74,.55),0 2px 0 #fff inset;border:1px solid #fff}
+  .a .panel .spot{position:absolute;inset:0;border-radius:26px;pointer-events:none;
+    background:radial-gradient(ellipse 58% 56% at 50% 42%,rgba(30,144,255,.12),transparent 68%)}
+  .a .stage{position:relative;border-radius:20px;overflow:hidden;
+    background:linear-gradient(180deg,#f2f2f2 0%,#f2f2f2 46%,#fff 74%)}
+  .a .stage img{width:92%;margin:6px auto 0;animation:floaty 7s ease-in-out infinite;
+    filter:drop-shadow(0 22px 26px rgba(26,43,74,.16))}
+  .a .reflect{height:60px;margin:-6px 7px 0;border-radius:0 0 20px 20px;overflow:hidden;opacity:.18;
+    -webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent)}
+  .a .reflect img{width:92%;margin:0 auto;transform:scaleY(-1)}
+  .a .chip{position:absolute;z-index:3;background:#fff;border:1px solid #e6edf6;border-radius:999px;
+    padding:9px 15px;font-size:12px;font-weight:800;color:var(--navy);box-shadow:0 10px 24px rgba(26,43,74,.12)}
+  .a .chip.top{top:20px;right:20px}
+  /* floating glass cards = depth */
+  .a .fcard{position:absolute;z-index:6;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);
+    border:1px solid #fff;border-radius:16px;padding:13px 16px;box-shadow:0 22px 50px -22px rgba(26,43,74,.5);
+    display:flex;align-items:center;gap:11px}
+  .a .fcard .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .a .fcard .t{font-weight:800;font-size:.92rem;color:var(--navy);line-height:1.1}
+  .a .fcard .s{font-size:.72rem;color:var(--faint);margin-top:2px}
+  .a .fc1{top:8%;right:-10px;animation:floaty2 6s ease-in-out infinite}
+  .a .fc1 .ic{background:#e7f7ee;color:#16a34a}
+  .a .fc2{bottom:9%;left:-6px;animation:floaty2 6.6s ease-in-out infinite .5s}
+  .a .fc2 .ic{background:#e8f1fd;color:var(--blue)}
+
+  /* shuffle deck */
+  .a .deck{position:relative;width:92%;max-width:500px;aspect-ratio:3/2;margin:auto;cursor:pointer;z-index:2}
+  .a .dcard{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#eef0f3;
+    box-shadow:0 34px 74px -34px rgba(26,43,74,.62),inset 0 1px 0 rgba(255,255,255,.5);
+    border:1px solid rgba(255,255,255,.6);will-change:transform,opacity;backface-visibility:hidden}
+  .a .dcard img{width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none}
+  .a .dcard .cap{position:absolute;inset:auto 0 0 0;padding:32px 18px 16px;color:#fff;
+    background:linear-gradient(to top,rgba(7,14,26,.85),rgba(7,14,26,.12) 70%,transparent)}
+  .a .dcard .cap b{display:block;font-size:1.06rem;font-weight:800}
+  .a .dcard .cap span{font-size:.78rem;color:rgba(255,255,255,.74)}
+  .a .deck-hint{position:absolute;bottom:6px;right:14px;z-index:7;font-size:.72rem;font-weight:600;
+    color:var(--faint);letter-spacing:.04em}
+  .a .stats{position:relative;z-index:4;display:flex;border-top:1px solid var(--line);
+    max-width:1300px;margin:0 auto;padding:0 48px;background:linear-gradient(180deg,#f7faff,#fbfcfe 60%)}
+  .a .stat{flex:1;padding:26px 10px;border-left:1px solid var(--line);text-align:right;transition:.2s}
+  .a .stat:first-child{border-left:none}
+  .a .stat:hover{background:#fff}
+  .a .stat .n{font-size:2.05rem;font-weight:900;color:var(--navy);letter-spacing:-.02em}
+  .a .stat .n span{color:var(--blue)}
+  .a .stat .l{font-size:.82rem;color:var(--faint);margin-top:3px}
+
+  /* ════════════════ OPTION A2 — EDITORIAL (TONAL DEPTH) ════════════════ */
+  .a2{background:#fbfcfe;color:var(--ink);position:relative;overflow:hidden}
+  .a2 .ghost{position:absolute;top:14%;left:2%;font-size:24vw;font-weight:900;line-height:.8;
+    letter-spacing:-.04em;pointer-events:none;user-select:none;z-index:0;
+    background:linear-gradient(125deg,#1e90ff,#6fc0ff);-webkit-background-clip:text;background-clip:text;
+    color:transparent;opacity:.12;filter:blur(2px)}
+  .a2 .wrap{max-width:1300px;margin:0 auto;padding:26px 48px;position:relative;z-index:5}
+  .a2 .links a{color:#4a5568} .a2 .links a:hover{color:var(--navy)}
+  .a2 .logo{height:34px}
+  .a2 .top-cta{color:var(--navy);border:1.5px solid var(--navy)}
+  .a2 .top-cta:hover{background:var(--navy);color:#fff}
+  .a2 .hero{position:relative;z-index:4;display:grid;grid-template-columns:1fr 1.04fr;gap:0;
+    align-items:stretch;max-width:1300px;margin:0 auto;min-height:74vh}
+  .a2 .copy{display:flex;flex-direction:column;justify-content:center;padding:40px 48px}
+  .a2 .kicker{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:700;
+    letter-spacing:.22em;color:var(--blue);text-transform:uppercase;margin-bottom:24px}
+  .a2 .kicker .ln{width:46px;height:2px;background:linear-gradient(90deg,var(--blue),transparent)}
+  .a2 h1{font-size:clamp(2.5rem,5vw,4.8rem);font-weight:900;line-height:1.04;letter-spacing:-.022em}
+  .a2 h1 .blue{color:var(--blue)}
+  .a2 .sub{margin:24px 0 32px;font-size:1.18rem;color:var(--muted);max-width:29rem;line-height:1.7}
+  .a2 .ctas{display:flex;gap:14px;flex-wrap:wrap}
+  .a2 .btn-solid{background:var(--navy);color:#fff}
+  .a2 .btn-solid:hover{background:var(--blue);transform:translateY(-2px)}
+  .a2 .btn-ghost{color:var(--navy);border:1.5px solid var(--line);background:#fff}
+  .a2 .btn-ghost:hover{border-color:var(--navy);transform:translateY(-2px)}
+  /* dark product block = the depth anchor */
+  .a2 .dark{position:relative;border-radius:30px 0 0 30px;margin:26px 0;overflow:hidden;
+    background:radial-gradient(120% 120% at 30% 10%,#19365f 0%,#0d1929 60%,#070e1a 100%);
+    box-shadow:0 50px 110px -40px rgba(7,14,26,.8);display:flex;align-items:center;justify-content:center}
+  .a2 .dark .gl{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000,transparent 85%)}
+  .a2 .dark .halo{position:absolute;width:80%;height:70%;top:14%;background:radial-gradient(ellipse,rgba(30,144,255,.28),transparent 62%);filter:blur(6px)}
+  .a2 .stagecard{position:relative;z-index:2;width:84%;border-radius:22px;overflow:hidden;background:#f0f1f3;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.6);margin:7%}
+  .a2 .stagecard::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(255,255,255,.6),transparent 70%)}
+  .a2 .stagecard img{position:relative;z-index:0;width:100%;animation:floaty 7s ease-in-out infinite}
+  .a2 .chips{position:absolute;z-index:3;bottom:22px;right:22px;display:flex;gap:8px}
+  .a2 .chips span{font-size:.72rem;font-weight:800;color:#fff;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.2);padding:7px 13px;border-radius:999px;backdrop-filter:blur(6px)}
+
+  /* ════════════════ OPTION B — CINEMATIC DARK ════════════════ */
+  .b{background:var(--black);color:#fff;position:relative;overflow:hidden}
+  .b .mesh{position:absolute;inset:0;background:
+     radial-gradient(60% 50% at 78% 18%,rgba(30,144,255,.22),transparent 60%),
+     radial-gradient(50% 60% at 12% 80%,rgba(11,99,196,.18),transparent 60%);pointer-events:none}
+  .b .gridlines{position:absolute;inset:0;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:54px 54px;mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000,transparent 85%)}
+  .b .wrap{max-width:1280px;margin:0 auto;padding:24px 48px;position:relative;z-index:2}
+  .b .logo{height:34px;filter:brightness(0) invert(1)}
+  .b .links a{color:rgba(255,255,255,.65)} .b .links a:hover{color:#fff}
+  .b .top-cta{color:#fff;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.04);backdrop-filter:blur(8px)}
+  .b .top-cta:hover{border-color:var(--blue);background:rgba(30,144,255,.12)}
+  .b .hero{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;max-width:1280px;margin:0 auto;padding:30px 48px 60px;min-height:78vh}
+  .b .badge{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#7cc2ff;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.3);padding:8px 16px;border-radius:999px;margin-bottom:28px}
+  .b .badge .dot{width:7px;height:7px;border-radius:50%;background:#4BAEE8;animation:glow 2s infinite}
+  .b h1{font-size:clamp(2.6rem,5.4vw,5.2rem);font-weight:900;line-height:1.05;letter-spacing:-.02em}
+  .b h1 .g{background:linear-gradient(120deg,#5db4ff,#1e90ff 60%,#9b8cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .b .sub{margin:26px 0 30px;color:rgba(255,255,255,.62);font-size:1.18rem;line-height:1.7;max-width:30rem}
+  .b .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+  .b .btn-glow{background:linear-gradient(120deg,var(--blue),#3aa0ff);color:#fff;box-shadow:0 12px 36px rgba(30,144,255,.4)}
+  .b .btn-glow:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(30,144,255,.55)}
+  .b .btn-out{color:#fff;border:1px solid rgba(255,255,255,.22)}
+  .b .btn-out:hover{border-color:#fff}
+  .b .feat{display:flex;gap:10px;flex-wrap:wrap}
+  .b .glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 18px;backdrop-filter:blur(10px);min-width:120px}
+  .b .glass .n{font-weight:800;font-size:1.05rem;direction:ltr;text-align:right}
+  .b .glass .l{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;letter-spacing:.06em;text-transform:uppercase}
+  .b .stagewrap{position:relative;display:flex;justify-content:center;align-items:center}
+  .b .halo{position:absolute;width:115%;height:115%;background:radial-gradient(ellipse at 50% 45%,rgba(30,144,255,.3),transparent 62%);filter:blur(10px)}
+  .b .monolith{position:relative;width:100%;border-radius:30px;overflow:hidden;background:#f0f1f3;
+     box-shadow:0 50px 110px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06),inset 0 1px 0 rgba(255,255,255,.7)}
+  .b .monolith::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(255,255,255,.7),transparent 70%);z-index:1;pointer-events:none}
+  .b .monolith img{position:relative;z-index:0;width:100%;animation:floaty 7s ease-in-out infinite}
+  .b .monolith .tag{position:absolute;z-index:2;top:18px;right:18px;background:#fff;color:var(--navy);font-weight:800;font-size:11px;padding:7px 13px;border-radius:999px}
+
+  /* ════════════════ OPTION C — SOFT BENTO ════════════════ */
+  .c{background:radial-gradient(120% 100% at 80% 0%,#eaf2fe 0%,#f6f9fe 55%,#fff 100%);color:var(--ink);position:relative;overflow:hidden}
+  .c .wrap{max-width:1280px;margin:0 auto;padding:26px 40px}
+  .c .logo{height:34px}
+  .c .links a{color:#4a5568} .c .links a:hover{color:var(--navy)}
+  .c .top-cta{background:var(--navy);color:#fff}
+  .c .top-cta:hover{background:var(--blue);transform:translateY(-2px)}
+  .c .bento{max-width:1280px;margin:0 auto;padding:18px 40px 50px;display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(86px,auto);gap:18px}
+  .c .card{background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border:1px solid #fff;border-radius:26px;box-shadow:0 18px 50px -30px rgba(26,43,74,.4);padding:30px;position:relative;overflow:hidden}
+  .c .c-hero{grid-column:span 8;grid-row:span 4;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(160deg,#ffffff 0%,#f3f8ff 100%)}
+  .c .c-hero .kick{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+  .c .c-hero h1{font-size:clamp(2.2rem,4.3vw,3.9rem);font-weight:900;line-height:1.05;letter-spacing:-.02em;max-width:14ch}
+  .c .c-hero h1 .blue{color:var(--blue)}
+  .c .c-hero .sub{margin:20px 0 26px;color:var(--muted);font-size:1.08rem;max-width:32rem;line-height:1.65}
+  .c .c-hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .c .c-hero .prod{position:absolute;left:-4%;bottom:-6%;width:44%;filter:drop-shadow(0 24px 36px rgba(26,43,74,.18));pointer-events:none}
+  .c .btn-solid{background:var(--navy);color:#fff;padding:13px 24px;border-radius:13px;font-weight:700}
+  .c .btn-solid:hover{background:var(--blue);transform:translateY(-2px)}
+  .c .btn-soft{background:#eaf1fb;color:var(--navy);padding:13px 24px;border-radius:13px;font-weight:700}
+  .c .btn-soft:hover{background:#dde9f9}
+  .c .c-iso{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(150deg,var(--navy),#24406e);color:#fff}
+  .c .c-iso .big{font-size:2.4rem;font-weight:900;letter-spacing:-.01em}
+  .c .c-iso .lbl{color:rgba(255,255,255,.6);font-size:.9rem;margin-top:4px}
+  .c .c-iso .chips{display:flex;gap:8px;margin-top:16px}
+  .c .c-iso .chips span{font-size:.72rem;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:999px}
+  .c .c-brands{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column;justify-content:center}
+  .c .c-brands .t{font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  .c .c-brands .row{display:flex;flex-wrap:wrap;gap:8px}
+  .c .c-brands .row b{font-size:.92rem;font-weight:800;color:var(--navy);background:#f1f5fb;border:1px solid #e4ecf6;padding:7px 13px;border-radius:10px}
+  .c .c-svc{grid-column:span 5;grid-row:span 2;display:flex;align-items:center;gap:18px;background:linear-gradient(150deg,#e9f6ef,#f4fbf7)}
+  .c .c-svc .ic{width:54px;height:54px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 8px 20px rgba(34,197,94,.16)}
+  .c .c-svc h3{font-size:1.25rem;font-weight:800;color:var(--ink)}
+  .c .c-svc p{color:var(--muted);font-size:.92rem;margin-top:3px}
+  .c .c-stat{grid-column:span 3;grid-row:span 2;display:flex;flex-direction:column;justify-content:center;text-align:right}
+  .c .c-stat .n{font-size:2.6rem;font-weight:900;color:var(--blue);letter-spacing:-.02em}
+  .c .c-stat .l{color:var(--muted);font-size:.92rem;margin-top:2px}
+
+  @media(max-width:920px){
+    .a .hero,.a2 .hero,.b .hero{grid-template-columns:1fr}
+    .a .visual,.b .stagewrap{order:-1}
+    .a2 .dark{border-radius:0 0 28px 28px;margin:0 0 20px;order:-1}
+    .c .bento{grid-template-columns:repeat(2,1fr)}
+    .c .c-hero{grid-column:1/-1}.c .c-hero .prod{display:none}
+    .nav .links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <b>עיצוב</b>
+  <button data-go="a" class="active">אדיטוריאל</button>
+  <button data-go="a2">אדיטוריאל · עומק</button>
+  <button data-go="b">קולנועי כהה</button>
+  <button data-go="c">בנטו רך</button>
+</div>
+
+<!-- ════════ A · EDITORIAL LAYERED ════════ -->
+<section class="screen a show" id="a">
+  <div class="glow"></div><div class="dots"></div><div class="grain"></div>
+  <div class="ghost">DES</div>
+  <div class="wrap">
+    <nav class="nav">
+      <img class="logo" src="public/des_logo.png" alt="DES" />
+      <div class="links"><a>קטלוג</a><a>כירורגיה</a><a>סטריליזציה</a><a>שירות ותיקונים</a><a>אודות</a></div>
+      <a class="pill-cta top-cta">צור קשר</a>
+    </nav>
+  </div>
+  <div class="hero">
+    <div>
+      <div class="kicker" data-rise style="animation-delay:.05s"><span class="ln"></span>יבואן מורשה · ISO 9001 · מאז 1998</div>
+      <h1 data-rise style="animation-delay:.12s">מעבדת הציוד<br>המקיפה של <span class="blue">DES</span></h1>
+      <p class="sub" data-rise style="animation-delay:.22s">יבוא, אספקה ושירות לציוד דנטלי ורפואי מהמותגים המובילים בעולם — NSK, W&amp;H, KaVo, Nouvag, Bien-Air.</p>
+      <div class="ctas" data-rise style="animation-delay:.3s">
+        <a class="pill-cta btn-solid">לקטלוג המוצרים&nbsp;←</a>
+        <a class="pill-cta btn-ghost">דברו איתנו</a>
+      </div>
+    </div>
+    <div class="visual" data-rise style="animation-delay:.2s">
+      <div class="deck" id="deckA" title="לחצו לדפדוף">
+        <div class="dcard"><img src="public/hero/vacuson.jpg" alt="Nouvag Vacuson"><div class="cap"><b>Nouvag Vacuson 60 LP</b><span>מערכת שאיבה כירורגית</span></div></div>
+        <div class="dcard"><img src="public/hero/surgical.jpg" alt="ידית כירורגית"><div class="cap"><b>Nouvag · מנוע ניתוחי</b><span>כירורגיה אוראלית והשתלות</span></div></div>
+        <div class="dcard"><img src="public/hero/contra-15.jpg" alt="זוויתן 1:5"><div class="cap"><b>Jinme · זוויתן 1:5</b><span>מגדיל לטיפולי שיקום</span></div></div>
+        <div class="dcard"><img src="public/hero/implant-201.jpg" alt="זוויתן 20:1"><div class="cap"><b>Jinme · זוויתן 20:1</b><span>להשתלות שיניים</span></div></div>
+        <div class="dcard"><img src="public/hero/straight.jpg" alt="ידית ישרה"><div class="cap"><b>Jinme · ידית ישרה</b><span>טיפול ושיקום מדויק</span></div></div>
+      </div>
+      <div class="deck-hint">לחצו לדפדוף ←</div>
+      <div class="fcard fc1">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div><div class="t">ISO 9001 מוסמך</div><div class="s">מערכת ניהול איכות</div></div>
+      </div>
+      <div class="fcard fc2">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 8 9 8 9s8-4 8-9V7z"/></svg></div>
+        <div><div class="t">+10 מותגים בלעדיים</div><div class="s">יבוא ושיווק רשמי</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">10<span>+</span></div><div class="l">מותגים מובילים</div></div>
+    <div class="stat"><div class="n">28</div><div class="l">שנות ניסיון</div></div>
+    <div class="stat"><div class="n">ISO 9001</div><div class="l">מערכת איכות מוסמכת</div></div>
+    <div class="stat"><div class="n">אמ"ר</div><div class="l">רישיון יבואן · משרד הבריאות</div></div>
+  </div>
+</section>
+
+<!-- ════════ A2 · EDITORIAL TONAL DEPTH ════════ -->
+<section class="screen a2" id="a2">
+  <div class="grain"></div>
+  <div class="ghost">DES</div>
+  <div class="wrap">
+    <nav class="nav">
+      <img class="logo" src="public/des_logo.png" alt="DES" />
+      <div class="links"><a>קטלוג</a><a>כירורגיה</a><a>סטריליזציה</a><a>שירות ותיקונים</a><a>אודות</a></div>
+      <a class="pill-cta top-cta">צור קשר</a>
+    </nav>
+  </div>
+  <div class="hero">
+    <div class="copy">
+      <div class="kicker" data-rise style="animation-delay:.05s"><span class="ln"></span>יבואן מורשה · ISO 9001 · מאז 1998</div>
+      <h1 data-rise style="animation-delay:.12s">מעבדת הציוד<br>המקיפה<br>של <span class="blue">DES</span></h1>
+      <p class="sub" data-rise style="animation-delay:.22s">יבוא, אספקה ושירות לציוד דנטלי ורפואי מהמותגים המובילים בעולם — עם ליווי מקצועי לאורך כל הדרך.</p>
+      <div class="ctas" data-rise style="animation-delay:.3s">
+        <a class="pill-cta btn-solid">לקטלוג המוצרים&nbsp;←</a>
+        <a class="pill-cta btn-ghost">דברו איתנו</a>
+      </div>
+    </div>
+    <div class="dark" data-rise style="animation-delay:.18s">
+      <div class="gl"></div><div class="halo"></div>
+      <div class="stagecard"><img src="public/hero-chair.png" alt="כיסא טיפולים" /></div>
+      <div class="chips"><span>ISO 9001</span><span>אמ"ר</span><span>מאז 1998</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ B · CINEMATIC DARK ════════ -->
+<section class="screen b" id="b">
+  <div class="mesh"></div><div class="gridlines"></div>
+  <div class="wrap">
+    <nav class="nav">
+      <img class="logo" src="public/des_logo.png" alt="DES" />
+      <div class="links"><a>קטלוג</a><a>כירורגיה</a><a>סטריליזציה</a><a>שירות</a><a>אודות</a></div>
+      <a class="pill-cta top-cta">צור קשר</a>
+    </nav>
+  </div>
+  <div class="hero">
+    <div>
+      <div class="badge" data-rise style="animation-delay:.05s"><span class="dot"></span>ציוד מקצועי · יבואן רשמי</div>
+      <h1 data-rise style="animation-delay:.12s">דיוק רפואי.<br><span class="g">סטנדרט עולמי.</span></h1>
+      <p class="sub" data-rise style="animation-delay:.22s">DES מביאה לישראל את הטכנולוגיה המתקדמת ביותר בתחום הדנטלי והרפואי — עם שירות, תחזוקה וכיול ברמה הגבוהה ביותר.</p>
+      <div class="ctas" data-rise style="animation-delay:.3s">
+        <a class="pill-cta btn-glow">לקטלוג המוצרים&nbsp;←</a>
+        <a class="pill-cta btn-out">איסוף לתיקון</a>
+      </div>
+      <div class="feat" data-rise style="animation-delay:.38s">
+        <div class="glass"><div class="n">10+</div><div class="l">מותגים בלעדיים</div></div>
+        <div class="glass"><div class="n">1998</div><div class="l">פועלים משנת</div></div>
+        <div class="glass"><div class="n">ISO 9001</div><div class="l">מוסמך</div></div>
+      </div>
+    </div>
+    <div class="stagewrap" data-rise style="animation-delay:.2s">
+      <div class="halo"></div>
+      <div class="monolith"><span class="tag">DES</span><img src="public/hero-chair.png" alt="כיסא טיפולים" /></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ C · SOFT BENTO ════════ -->
+<section class="screen c" id="c">
+  <div class="wrap">
+    <nav class="nav">
+      <img class="logo" src="public/des_logo.png" alt="DES" />
+      <div class="links"><a>קטלוג</a><a>כירורגיה</a><a>סטריליזציה</a><a>שירות ותיקונים</a><a>אודות</a></div>
+      <a class="pill-cta top-cta">צור קשר</a>
+    </nav>
+  </div>
+  <div class="bento">
+    <div class="card c-hero" data-rise style="animation-delay:.08s">
+      <div class="kick">יבואן מורשה ומפיץ רשמי · מאז 1998</div>
+      <h1>הציוד הדנטלי המוביל, <span class="blue">בידיים בטוחות</span></h1>
+      <p class="sub">יבוא, אספקה, שירות ותיקונים לציוד דנטלי ורפואי — מהמותגים הגדולים בעולם, עם ליווי מקצועי לאורך כל הדרך.</p>
+      <div class="ctas"><a class="btn-solid">לקטלוג המוצרים&nbsp;←</a><a class="btn-soft">דברו איתנו</a></div>
+      <img class="prod" src="public/hero-chair.png" alt="כיסא טיפולים" />
+    </div>
+    <div class="card c-iso" data-rise style="animation-delay:.16s">
+      <div class="big">ISO 9001</div><div class="lbl">מערכת ניהול איכות מוסמכת</div>
+      <div class="chips"><span>אמ"ר</span><span>יבואן מורשה</span></div>
+    </div>
+    <div class="card c-brands" data-rise style="animation-delay:.22s">
+      <div class="t">מותגים מובילים</div>
+      <div class="row"><b>NSK</b><b>W&amp;H</b><b>KaVo</b><b>Nouvag</b><b>Bien-Air</b><b>MK-dent</b></div>
+    </div>
+    <div class="card c-svc" data-rise style="animation-delay:.28s">
+      <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <div><h3>שירות, תחזוקה ותיקונים</h3><p>מעבדה מוסמכת · איסוף ומסירה · זמני טיפול מהירים</p></div>
+    </div>
+    <div class="card c-stat" data-rise style="animation-delay:.34s">
+      <div class="n">28</div><div class="l">שנות ניסיון בשוק הישראלי</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const btns=[...document.querySelectorAll('.switcher button')];
+  const ids=['a','a2','b','c'];
+  const screens=Object.fromEntries(ids.map(i=>[i,document.getElementById(i)]));
+  function go(k){
+    for(const id in screens) screens[id].classList.toggle('show', id===k);
+    btns.forEach(b=>b.classList.toggle('active', b.dataset.go===k));
+    document.body.style.background = k==='b' ? '#070e1a' : (k==='c' ? '#f6f9fe':'#fbfcfe');
+    window.scrollTo(0,0);
+  }
+  btns.forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+  addEventListener('keydown',e=>{const m={'1':'a','2':'a2','3':'b','4':'c'};if(m[e.key])go(m[e.key]);});
+  go('a');
+
+  /* ── card-shuffle deck ── */
+  (function(){
+    const deck=document.getElementById('deckA'); if(!deck) return;
+    let order=[...deck.querySelectorAll('.dcard')];
+    const pos=[
+      {x:0,y:0,r:0,s:1,z:50,o:1},
+      {x:-14,y:14,r:-3,s:.965,z:40,o:1},
+      {x:-26,y:26,r:-5.5,s:.935,z:30,o:1},
+      {x:-36,y:36,r:-8,s:.91,z:20,o:.9},
+      {x:-44,y:44,r:-10,s:.89,z:10,o:.78},
+    ];
+    const at=i=>pos[Math.min(i,pos.length-1)];
+    function place(card,i,animate){
+      const p=at(i);
+      card.style.transition=animate?'transform .55s cubic-bezier(.2,.7,.2,1),opacity .5s':'none';
+      card.style.zIndex=p.z; card.style.opacity=p.o;
+      card.style.transform=`translate(${p.x}px,${p.y}px) rotate(${p.r}deg) scale(${p.s})`;
+    }
+    order.forEach((c,i)=>place(c,i,false));
+    let busy=false;
+    function advance(){
+      if(busy) return; busy=true;
+      const front=order[0];
+      front.style.transition='transform .5s cubic-bezier(.55,0,.7,.25),opacity .45s';
+      front.style.transform='translate(40px,-120px) rotate(11deg) scale(.92)';
+      front.style.opacity='0';
+      for(let i=1;i<order.length;i++) place(order[i],i-1,true);
+      setTimeout(()=>{
+        order=[...order.slice(1),front];
+        const p=at(order.length-1);
+        front.style.transition='none'; front.style.zIndex=p.z; front.style.opacity='0';
+        front.style.transform=`translate(${p.x}px,${p.y}px) rotate(${p.r}deg) scale(${p.s})`;
+        void front.offsetWidth;
+        front.style.transition='opacity .55s'; front.style.opacity=p.o;
+        busy=false;
+      },510);
+    }
+    deck.addEventListener('click',advance);
+    let timer=setInterval(advance,3200);
+    deck.addEventListener('mouseenter',()=>clearInterval(timer));
+    deck.addEventListener('mouseleave',()=>{clearInterval(timer);timer=setInterval(advance,3200);});
+  })();
+</script>
+</body>
+</html>
