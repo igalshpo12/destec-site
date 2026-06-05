@@ -177,9 +177,10 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
     'sterilization', 'electrosurgery', 'surgery',
   ]);
   const categoryImage =
-    item.category && CATEGORIES_WITH_IMAGES.has(item.category)
+    item.image_url ||
+    (item.category && CATEGORIES_WITH_IMAGES.has(item.category)
       ? `/images/categories/${item.category}.jpg`
-      : null;
+      : null);
   const [imgError, setImgError] = useState(false);
 
   return (

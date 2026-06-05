@@ -16,7 +16,7 @@ export default function AnnouncementBar() {
       }}
     >
       <span className="font-medium">
-        משלוחים חינם ברכישה מעל ₪500 &nbsp;·&nbsp; 9,000+ מוצרים במלאי מיידי
+        משלוחים חינם ברכישה מעל ₪500 &nbsp;·&nbsp; יבואן מורשה ומפיץ רשמי &nbsp;·&nbsp; שירות ותיקונים &nbsp;·&nbsp; ISO 9001
       </span>
       <button
         onClick={() => setVisible(false)}

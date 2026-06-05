@@ -1,14 +1,15 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { supabase, EquipmentWithPrice, inferCategory } from '@/lib/supabase';
 import ProductCard from '@/components/ui/ProductCard';
 import FilterSidebar from '@/components/ui/FilterSidebar';
-import { Search, Loader2, SlidersHorizontal } from 'lucide-react';
+import { Search, Loader2, SlidersHorizontal, Package, MessageCircle } from 'lucide-react';
 import { NAV_CATEGORIES, HIDDEN_CATEGORIES, CATALOG_LIVE } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'קטלוג מוצרים',
-  description: 'קטלוג ציוד דנטלי ורפואי של DES — 9,000+ מוצרים. NSK, W&H, KaVo, MK-dent, Nouvag ועוד.',
+  description: 'קטלוג ציוד דנטלי ורפואי של DES מהמותגים המובילים — NSK, W&H, KaVo, MK-dent, Nouvag ועוד.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -184,7 +185,47 @@ function CatalogContent({ items, total, page, q, category, manufacturer }: {
   );
 }
 
+function CatalogComingSoon() {
+  return (
+    <div dir="rtl" className="max-w-3xl mx-auto px-4 py-24 text-center">
+      <div
+        className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6"
+        style={{ background: '#eaf3ff' }}
+      >
+        <Package className="w-8 h-8" style={{ color: '#1e90ff' }} />
+      </div>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: '#1a2b4a' }}>
+        הקטלוג המקוון שלנו בהקמה
+      </h1>
+      <p className="text-gray-500 leading-relaxed max-w-xl mx-auto mb-8">
+        מגוון רחב של ציוד דנטלי ורפואי מהמותגים המובילים — NSK, W&amp;H, KaVo, Nouvag, Bien-Air ועוד.
+        לקבלת מחירון, בדיקת זמינות והזמנה — צרו קשר ונחזור אליכם במהירות.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="https://wa.me/972548818681"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-white transition-all hover:-translate-y-0.5"
+          style={{ background: '#128c7e' }}
+        >
+          <MessageCircle className="w-5 h-5" />
+          שלחו הודעה ב-WhatsApp
+        </a>
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center gap-2 font-semibold px-6 py-3.5 rounded-xl transition-all hover:-translate-y-0.5"
+          style={{ background: '#1a2b4a', color: '#fff' }}
+        >
+          צור קשר
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default async function CatalogPage({ searchParams }: PageProps) {
+  if (!CATALOG_LIVE) return <CatalogComingSoon />;
   const sp = await searchParams;
   const q = sp.q || '';
   const category = sp.category || '';

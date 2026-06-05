@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { ShimmerText } from '@/components/ui/ShimmerText';
-import { GradientText } from '@/components/ui/GradientText';
 
 interface Stat {
   value: string;
@@ -13,15 +12,15 @@ interface Stat {
 
 const STATS: Stat[] = [
   {
-    value: '6,800+',
-    numericEnd: 6800,
+    value: '10+',
+    numericEnd: 10,
     suffix: '+',
-    label: 'מוצרים למכירה',
-    sublabel: 'זמינות מיידית',
+    label: 'מותגים מובילים',
+    sublabel: 'יבואן ומפיץ מורשה',
   },
   {
-    value: '27',
-    numericEnd: 27,
+    value: '28',
+    numericEnd: 28,
     suffix: '',
     label: 'שנות ניסיון',
     sublabel: 'פועלים מאז 1998',
@@ -68,9 +67,6 @@ function StatBlock({ stat, active, index }: { stat: Stat; active: boolean; index
         : count + stat.suffix
       : stat.value;
 
-  // For the 6800+ stat number use GradientText
-  const isGradientStat = stat.numericEnd === 6800;
-
   return (
     <div
       className="flex flex-col items-center justify-center py-8 px-4 relative"
@@ -90,11 +86,7 @@ function StatBlock({ stat, active, index }: { stat: Stat; active: boolean; index
         }}
         dir="ltr"
       >
-        {isGradientStat ? (
-          <GradientText>{displayValue}</GradientText>
-        ) : (
-          <span style={{ color: '#1e90ff' }}>{displayValue}</span>
-        )}
+        <span style={{ color: '#1e90ff' }}>{displayValue}</span>
       </div>
 
       {/* Label with shimmer sweep */}
@@ -176,7 +168,7 @@ export default function TrustBar() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.75rem' }}
         >
           <ShimmerText shimmerColor="#1e90ff" duration={4} className="text-xs">
-            ISO 9001 מוסמך &nbsp;&middot;&nbsp; רישיון אמ&quot;ר &nbsp;&middot;&nbsp; 6,800+ מוצרים &nbsp;&middot;&nbsp; ניסיון של עשרות שנים
+            ISO 9001 מוסמך &nbsp;&middot;&nbsp; רישיון אמ&quot;ר &nbsp;&middot;&nbsp; יבואן ומפיץ מורשה &nbsp;&middot;&nbsp; ניסיון של עשרות שנים
           </ShimmerText>
         </div>
       </div>

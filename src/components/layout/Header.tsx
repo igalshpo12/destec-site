@@ -4,12 +4,6 @@ import Link from 'next/link';
 import { Search, MessageCircle, Wrench, Menu, X } from 'lucide-react';
 import { NAV_CATEGORIES } from '@/lib/utils';
 
-function DesLogo() {
-  return (
-    <img src="/des_logo.png" alt="DES" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
-  );
-}
-
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/sections/AnnouncementBar';
+import SiteAnalytics from '@/components/analytics/SiteAnalytics';
 
 const notoSansHebrew = Noto_Sans_Hebrew({
   subsets: ['hebrew', 'latin'],
@@ -13,6 +14,7 @@ const notoSansHebrew = Noto_Sans_Hebrew({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://destec.co.il'),
   title: {
     default: 'DES — שירותי ציוד רפואי ודנטלי | destec.co.il',
     template: '%s | DES destec.co.il',
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main-content">{children}</main>
         <Footer />
+        <SiteAnalytics />
       </body>
     </html>
   );

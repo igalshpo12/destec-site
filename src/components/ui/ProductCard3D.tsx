@@ -70,7 +70,7 @@ export default function ProductCard3D({ item, showSaleBadge = false }: Props) {
     item.category && CATEGORY_IMAGES.has(item.category)
       ? `/images/categories/${item.category}.jpg`
       : null;
-  const backImg = imgError ? categoryImg : (supplierImg || categoryImg);
+  const backImg = item.image_url || (imgError ? categoryImg : (supplierImg || categoryImg));
 
   const handleMouseEnter = useCallback(() => setFlipped(true), []);
   const handleMouseLeave = useCallback(() => setFlipped(false), []);

@@ -1,0 +1,80 @@
+# Manual mappings: Excel product name → Supabase item_number
+# These are products where the Excel name and DB name differ too much for auto-matching.
+# Multiple rows for the same excel_name = activate ALL those DB items (e.g. connector variants).
+# Lines starting with # are comments and are ignored.
+excel_name,db_item_number
+
+# --- Jinme turbines (complete units) ---
+"jinme j4","JI-J4QC"
+"jinme j4","JI-J4QCLED"
+"jinme j5","JI-J5"
+"jinme j5","JI-J5QC"
+"jinme j6","JI-J6K"
+"jinme j6","JI-J6N"
+"jinme j45","JI-J45LED"
+"jinme j45","JI-J45LEDQC"
+"jinme j45","JI-J45TU"
+"jinme j1 plus","JI-J1PLUS"
+
+# --- Jinme contra angles (complete units) ---
+"jinme 1 : 5 handpiece","JI-CA15L"
+"jinme 1 : 5 handpiece","JI-CA15LM"
+"jinme 1:1 fiber optic","JI-CA11L"
+"jinme 20 : 1 contra angle handpiece (fo)","JI-CA201L"
+"jinme 20 : 1 contra angle handpiece","JI-CA201"
+"jinme 1:4.2 contra angle","JI-CA142EWL"
+"jinme 1:4.2 contra angle","JI-CA142IWL"
+
+# --- Jinme motors ---
+"jinme air motor","JI-M1"
+"jinme external electric motor set","JI-EM"
+"jinme internal electric motor set","JI-EM"
+
+# --- Jinme quick connectors ---
+"jinme - kavo quick connector","JI-QCK"
+"jinme - nsk quick connector","JI-QCN"
+"mk-dent - w&h quick connector","w&h-r924"
+
+# --- MK-Dent turbines (main connector variants) ---
+"mk - dent classic line","MK-HC20KL"
+"mk-dent prime line","MK-HP21KL"
+"mk-dent prime line","MK-HP21SL"
+"mk-dent prime line","MK-HP21NL"
+"mk-dent prime line","MK-HP21WL"
+"mk-dent prime line","MK-HP22KL"
+
+# --- MK-Dent scaler handpieces ---
+"mk - dent  (ems) - scaler handpiece","MK-SC21E"
+"mk - dent (ems)- scaler handpiece (with light)","MK-SC21EL"
+"mk - dent (satalec) - scaler handpiec","MK-SC21S"
+"mk - dent  satalec - scaler handpiece (with light)","MK-SC21SL"
+"scaler torque key","CN-KEY SAT"
+"טיפ אוניברסלי לסקילר","SC-I-EM"
+"טיפ פריו לסקילר","WP-P1"
+
+# --- Saeshin / Traus systems ---
+"saeshin traus sip 10 - implant motor set (non - optic)","SA-SIP10"
+"saeshin traus sip 20 - implant motor set(optic)","SA-SIP20"
+"traus sus 20 - piezosurgery","SA-SUS20"
+
+# --- Piezosurgery tips (for Traus SuS 20) ---
+"extraction tip","SA-SP-E1"
+"block bone/ridge expension (left)","SA-SP-E1L"
+"block bone/ridge expension (right)","SA-SP-E1R"
+"block bone/ridge expension (rd)","SA-SP-SAWR"
+"block bone/ridge expension","SA-SP-SAW"
+"sinus lifting (ball)","SA-SP-401D"
+
+# --- Electrosurgery (Surtron) ---
+"surtron 50d","LE-10100.051"
+"surtron 80d","LE-10100.081"
+"surtron 80/120/160","LED-10100.301"
+
+# --- Sterilization / maintenance ---
+"autoclave (3l)","YE-E1"
+"yeson ultrasonic cleaner","YE-C200"
+"forte 400 p","SA-FORTE400P"
+
+# --- Safe Relax crown remover ---
+"safe relax","AG-6950C"
+"safe relax","AG-6961C"

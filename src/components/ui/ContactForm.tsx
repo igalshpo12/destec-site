@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { getAttribution, trackEvent, trackMeta } from '@/lib/analytics';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -21,15 +22,23 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
+    // Shared id so the browser pixel + server-side CAPI Lead dedupe to one event.
+    const eventId =
+      typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `lead_${Date.now()}`;
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, attribution: getAttribution(), eventId }),
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('success');
       setFormData({ name: '', company: '', phone: '', email: '', message: '' });
+      // Conversion signals (no-op until the visitor has opted into tracking).
+      trackEvent('contact_form_submit', { form: 'contact' });
+      trackMeta('Lead', { content_name: 'contact_form' }, eventId);
     } catch {
       setStatus('error');
     }

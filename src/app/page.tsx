@@ -8,9 +8,9 @@ import FeaturedSystems from '@/components/sections/FeaturedSystems';
 import TrainingSection from '@/components/sections/TrainingSection';
 import GeneralMedSection from '@/components/sections/GeneralMedSection';
 import WorkshopSection from '@/components/sections/WorkshopSection';
-import SupplierLogoStrip from '@/components/sections/SupplierLogoStrip';
 import AboutSection from '@/components/sections/AboutSection';
 import ClientLogosStrip from '@/components/sections/ClientLogosStrip';
+import { CATALOG_LIVE } from '@/lib/utils';
 
 export default function HomePage() {
   return (
@@ -18,14 +18,14 @@ export default function HomePage() {
       <HeroSlider />
       <VacusonShowcase />
       <TrustBar />
-      <ProductTabs />
+      {/* DB-driven product grid — only shown once the catalog is live */}
+      {CATALOG_LIVE && <ProductTabs />}
       <CategoryShowcase />
       <ProductShowcase3D />
       <FeaturedSystems />
       <TrainingSection />
       <GeneralMedSection />
       <WorkshopSection />
-      <SupplierLogoStrip />
       <AboutSection />
       <ClientLogosStrip />
     </>

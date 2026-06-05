@@ -110,95 +110,9 @@ function AnimatedLine({ text, baseDelay = 0 }: { text: string; baseDelay?: numbe
   );
 }
 
-/* ─── Dental turbine SVG illustration (preserved from original) ─────────── */
-function TurbineIllustration() {
-  return (
-    <svg
-      viewBox="0 0 280 520"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full max-w-[260px] mx-auto drop-shadow-2xl"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="bodyGradH" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%"   stopColor="#2a2f3a" />
-          <stop offset="20%"  stopColor="#5c6370" />
-          <stop offset="40%"  stopColor="#9aa0aa" />
-          <stop offset="55%"  stopColor="#c8ccd4" />
-          <stop offset="70%"  stopColor="#9aa0aa" />
-          <stop offset="85%"  stopColor="#4a5060" />
-          <stop offset="100%" stopColor="#1e2230" />
-        </linearGradient>
-        <linearGradient id="headGradH" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%"   stopColor="#c0c8d8" />
-          <stop offset="35%"  stopColor="#e8ecf4" />
-          <stop offset="60%"  stopColor="#a0a8b8" />
-          <stop offset="100%" stopColor="#606878" />
-        </linearGradient>
-        <linearGradient id="burGradH" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stopColor="#d0d8e8" />
-          <stop offset="50%"  stopColor="#a8b0c0" />
-          <stop offset="100%" stopColor="#606878" />
-        </linearGradient>
-        <linearGradient id="ringGradH" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%"   stopColor="#1e90ff" stopOpacity="0.6" />
-          <stop offset="50%"  stopColor="#1e90ff" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#1e90ff" stopOpacity="0.4" />
-        </linearGradient>
-        <filter id="glowH">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <filter id="softShadowH" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="4" dy="4" stdDeviation="8" floodColor="#000" floodOpacity="0.35" />
-        </filter>
-      </defs>
-
-      <rect x="100" y="90" width="80" height="310" rx="40" fill="url(#bodyGradH)" filter="url(#softShadowH)" />
-      <rect x="126" y="95" width="12" height="300" rx="6" fill="white" opacity="0.10" />
-      {[190,200,210,220,230,240,250,260,270,280].map((y) => (
-        <rect key={y} x="100" y={y} width="80" height="3" rx="1.5" fill="#1a1e28" opacity="0.2" />
-      ))}
-      <rect x="100" y="182" width="80" height="5" rx="2.5" fill="url(#ringGradH)" />
-      <rect x="100" y="290" width="80" height="5" rx="2.5" fill="url(#ringGradH)" />
-
-      <path d="M118 90 Q140 74 162 90" fill="url(#headGradH)" />
-      <ellipse cx="140" cy="68" rx="34" ry="34" fill="url(#headGradH)" filter="url(#softShadowH)" />
-      <ellipse cx="128" cy="56" rx="14" ry="10" fill="white" opacity="0.18" />
-      <circle cx="140" cy="68" r="10" fill="#1a1e28" />
-      <circle cx="140" cy="68" r="7"  fill="#0d1118" />
-      <circle cx="137" cy="65" r="2.5" fill="#3a4050" />
-
-      <rect x="133" y="34" width="14" height="8" rx="3" fill="#8890a0" />
-      <rect x="136" y="6"  width="8"  height="30" rx="4" fill="url(#burGradH)" />
-      <rect x="136.5" y="6" width="1.5" height="28" rx="0.5" fill="white" opacity="0.28" />
-      <rect x="139"   y="6" width="1.5" height="28" rx="0.5" fill="#606878" opacity="0.35" />
-      <ellipse cx="140" cy="6" rx="4" ry="3" fill="#c0c8d8" />
-
-      <rect x="108" y="390" width="64" height="16" rx="8"  fill="#2a3040" />
-      <rect x="114" y="406" width="52" height="10" rx="5"  fill="#1a2030" />
-      {[124,132,140,148,156].map((x) => (
-        <circle key={x} cx={x} cy="411" r="2.5" fill="#4a5060" />
-      ))}
-
-      <path d="M140 416 Q140 450 120 470 Q105 485 105 500"
-            stroke="#3a4050" strokeWidth="12" strokeLinecap="round" fill="none" />
-      <path d="M140 416 Q140 450 120 470 Q105 485 105 500"
-            stroke="#5a6070" strokeWidth="4"  strokeLinecap="round" fill="none" />
-      <path d="M140 416 Q140 450 122 469 Q108 483 108 497"
-            stroke="white"   strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.12" />
-
-      <ellipse cx="140" cy="68" rx="40" ry="40" fill="#1e90ff" opacity="0.05" filter="url(#glowH)" />
-      <rect x="170" y="100" width="3" height="280" rx="1.5" fill="white" opacity="0.03" />
-    </svg>
-  );
-}
-
 /* ─── Main hero (BackgroundPaths variant) ───────────────────────────────── */
 export default function HeroSlider() {
   const LINE1 = 'מעבדת הציוד המקיפה'; // מעבדת הציוד המקיפה
-  const LINE2 = 'של '; // של (with trailing space before DES)
 
   return (
     <section
@@ -235,7 +149,7 @@ export default function HeroSlider() {
                 className="text-xs font-semibold tracking-[0.25em] uppercase"
                 style={{ color: '#1e90ff' }}
               >
-                ISO 9001 &nbsp;&middot;&nbsp; {'אמי"ר'} &nbsp;&middot;&nbsp; {'משנת 1998'}
+                ISO 9001 &nbsp;&middot;&nbsp; {'אמ"ר'} &nbsp;&middot;&nbsp; {'משנת 1998'}
               </span>
             </div>
 
@@ -326,7 +240,7 @@ export default function HeroSlider() {
               className="text-xs"
               style={{ color: '#9ba3af', letterSpacing: '0.05em' }}
             >
-              ISO 9001 {'✓'} &nbsp;&middot;&nbsp; {'רישיון אמ"ר'} {'✓'} &nbsp;&middot;&nbsp; 9,000+ {'מוצרים'}
+              ISO 9001 {'✓'} &nbsp;&middot;&nbsp; {'רישיון אמ"ר'} {'✓'} &nbsp;&middot;&nbsp; {'יבואן מורשה'} {'✓'}
             </p>
           </div>
 

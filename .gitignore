@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# asset generation workspace (large generated PDFs/images — not site source)
+/asset-gen/
+
+# playwright test artifacts
+/test-results/

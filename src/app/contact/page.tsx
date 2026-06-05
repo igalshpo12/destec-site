@@ -19,7 +19,7 @@ const INFO = [
     icon: Phone,
     label: 'טלפון',
     value: '03-5081868',
-    href: 'tel:0350818681',
+    href: 'tel:035081868',
     dir: 'ltr' as const,
   },
   {

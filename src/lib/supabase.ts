@@ -18,6 +18,7 @@ export type Equipment = {
   warranty_purchase_months: number | null;
   warranty_repair_months: number | null;
   warranty_manufacturer_months: number | null;
+  image_url: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
