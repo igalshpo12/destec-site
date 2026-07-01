@@ -84,6 +84,16 @@ export function setConsent(value: ConsentValue) {
   }
 }
 
+/** Withdraw a prior choice — deletes the consent cookie and re-opens the banner. */
+export function clearConsent() {
+  if (typeof document !== 'undefined') {
+    document.cookie = `${CONSENT_COOKIE}=; path=/; max-age=0; samesite=lax`;
+  }
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('des-consent-change', { detail: null }));
+  }
+}
+
 /* -------------------------------------------------------------- attribution */
 
 const TOUCH_KEYS: (keyof TouchData)[] = [

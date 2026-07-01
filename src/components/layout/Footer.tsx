@@ -1,14 +1,14 @@
 'use client';
 import Link from 'next/link';
+import CookieSettingsButton from '@/components/analytics/CookieSettingsButton';
 
 const CATEGORIES = [
-  { label: 'טורבינות',  slug: 'turbines'  },
-  { label: 'זוויתנים',  slug: 'angles'    },
-  { label: 'ידיתנים',   slug: 'handpieces'},
-  { label: 'מקדחים',   slug: 'drills'    },
-  { label: 'סקילרים',   slug: 'scalers'   },
-  { label: 'מנועים',    slug: 'motors'    },
-  { label: 'כלי ניתוח', slug: 'surgery'   },
+  { label: 'מקדחים',             slug: 'drills'        },
+  { label: 'ליטוש וגימור',       slug: 'polishing'     },
+  { label: 'טורבינות וזוויתנים', slug: 'handpieces'    },
+  { label: 'כירורגיה והשתלות',   slug: 'surgery'       },
+  { label: 'מנועים',             slug: 'motors'        },
+  { label: 'סטריליזציה',         slug: 'sterilization' },
 ];
 
 const SERVICES = [
@@ -17,6 +17,7 @@ const SERVICES = [
   { label: 'איסוף לתיקון',       href: '/contact?service=repair'},
   { label: 'אודות DES',          href: '/#about'               },
   { label: 'הצהרת נגישות',       href: '/accessibility'        },
+  { label: 'מדיניות פרטיות',     href: '/privacy'              },
 ];
 
 function WhatsAppIcon() {
@@ -234,12 +235,12 @@ export default function Footer() {
           <span className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
             &copy; {new Date().getFullYear()} DES שירותי ציוד רפואי ודנטלי. כל הזכויות שמורות.
           </span>
-          <div className="flex items-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          <div className="flex items-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <Link href="/privacy" className="hover:text-white transition-colors">מדיניות פרטיות</Link>
+            <span>·</span>
+            <CookieSettingsButton className="hover:text-white transition-colors" />
+            <span>·</span>
             <span dir="ltr">destec.co.il</span>
-            <span>·</span>
-            <span>ISO 9001</span>
-            <span>·</span>
-            <span>אמ&quot;ר מורשה</span>
           </div>
         </div>
       </div>

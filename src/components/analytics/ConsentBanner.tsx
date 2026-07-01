@@ -29,7 +29,8 @@ export default function ConsentBanner({ onAccept, onDecline }: ConsentBannerProp
           <p className="text-sm text-gray-600 leading-relaxed">
             אנו משתמשים בעוגיות לניתוח תנועה ולשיפור חוויית הגלישה. תוכלו לאשר או
             לדחות שימוש בכלי ניתוח ופרסום. פנייה ישירה (טופס, טלפון, וואטסאפ)
-            תמשיך לעבוד בכל מקרה.
+            תמשיך לעבוד בכל מקרה. פרטים נוספים ב
+            <a href="/privacy" className="underline text-[#1a2b4a] hover:text-[#1e90ff]">מדיניות הפרטיות והעוגיות</a>.
           </p>
         </div>
         <div className="flex gap-2 flex-shrink-0">

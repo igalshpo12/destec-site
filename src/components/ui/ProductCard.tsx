@@ -186,7 +186,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
   return (
     <article
       dir="rtl"
-      className="group bg-white flex flex-col overflow-hidden transition-all duration-250"
+      className="group relative cursor-pointer bg-white flex flex-col overflow-hidden transition-all duration-250"
       style={{
         borderRight: `2px solid ${brand.accent}`,
         borderTop: '1px solid #e8ecf0',
@@ -211,6 +211,12 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
         el.style.borderRightWidth = '2px';
       }}
     >
+      {/* Whole-card click target (stretched link) — sits under the visible content */}
+      <Link
+        href={`/catalog/${item.id}`}
+        aria-label={item.name_he || 'פרטי מוצר'}
+        className="absolute inset-0 z-[1]"
+      />
       {/* Image area — real product photo (contain) or category image (cover), fallback to SVG icon */}
       <div
         className="relative aspect-[4/3] flex items-center justify-center overflow-hidden"
@@ -338,7 +344,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
           </div>
           <Link
             href={`/catalog/${item.id}`}
-            className="text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
+            className="relative z-[2] text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
             style={{
               background: '#1a2b4a',
               color: '#fff',

@@ -6,7 +6,6 @@ import Script from 'next/script';
 import {
   GA4_ID,
   META_PIXEL_ID,
-  ANALYTICS_CONFIGURED,
   getConsent,
   setConsent,
   captureAttribution,
@@ -35,10 +34,10 @@ export default function SiteAnalytics() {
     return () => window.removeEventListener('des-consent-change', onChange);
   }, []);
 
-  // First-party attribution capture — independent of consent (no third party).
+  // First-party UTM attribution is a marketing cookie — only after opt-in.
   useEffect(() => {
-    captureAttribution();
-  }, [pathname]);
+    if (consent === 'granted') captureAttribution();
+  }, [pathname, consent]);
 
   // SPA page views (the initial view is sent by the tag's own init).
   useEffect(() => {
@@ -71,8 +70,9 @@ export default function SiteAnalytics() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
-  if (!ANALYTICS_CONFIGURED) return null;
-
+  // Note: the consent banner shows regardless of whether tracking tags are
+  // configured (Israeli transparency requirement). Tracking scripts below only
+  // load when both consent is granted and the relevant tag id is set.
   return (
     <>
       {consent === 'granted' && GA4_ID && (
