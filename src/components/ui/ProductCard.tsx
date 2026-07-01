@@ -211,17 +211,17 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
         el.style.borderRightWidth = '2px';
       }}
     >
-      {/* Image area — Nano Banana 2 generated category image, fallback to SVG icon */}
+      {/* Image area — real product photo (contain) or category image (cover), fallback to SVG icon */}
       <div
         className="relative aspect-[4/3] flex items-center justify-center overflow-hidden"
-        style={{ background: '#f0f4f8' }}
+        style={{ background: item.image_url ? '#ffffff' : '#f0f4f8' }}
       >
         {categoryImage && !imgError ? (
           <Image
             src={categoryImage}
             alt={categoryLabel || item.category || ''}
             fill
-            className="object-cover"
+            className={item.image_url ? 'object-contain p-4' : 'object-cover'}
             onError={() => setImgError(true)}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
