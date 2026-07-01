@@ -37,11 +37,10 @@ async function fetchCatalogProducts(params: {
   const to = from + PAGE_SIZE - 1;
 
   let query = supabase
-    .from('equipment')
+    .from('catalog_products')
     .select(
       `id, item_number, name_he, name_en, manufacturer, model, category,
-       description_he, is_active,
-       equipment_prices!left(price, currency)`,
+       description_he, is_active, image_url, price, currency`,
       { count: 'exact' }
     )
     .eq('is_active', true)
@@ -80,20 +79,9 @@ async function fetchCatalogProducts(params: {
 
   const items = (data as unknown[]).map((row: unknown) => {
     const r = row as Record<string, unknown>;
-    const prices = r.equipment_prices as { price: number; currency: string; tier?: number }[] | null;
-    let price: number | undefined;
-    let currency: string | undefined;
-    if (Array.isArray(prices) && prices.length > 0) {
-      // filter for tier=1 after the fact
-      const tier1 = prices.find((p) => !p.tier || p.tier === 1);
-      if (tier1) {
-        price = tier1.price;
-        currency = tier1.currency;
-      }
-    }
-    const { equipment_prices: _ep, ...rest } = r;
-    void _ep;
-    const item = { ...rest, price, currency } as EquipmentWithPrice;
+    const price = (r.price as number | null) ?? undefined;
+    const currency = (r.currency as string | null) ?? undefined;
+    const item = { ...r, price, currency } as EquipmentWithPrice;
     // Fall back to inferred category
     if (!item.category) item.category = inferCategory(item);
     return item;

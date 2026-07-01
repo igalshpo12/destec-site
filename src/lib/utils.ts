@@ -55,49 +55,54 @@ export const CATEGORY_LABELS: Record<string, string> = {
 
 export const NAV_CATEGORIES = [
   {
+    slug: 'drills',
+    label: 'מקדחים',
+    dbCategories: ['מקדחי יהלום', 'מקדחי טונגסטן קרבייד', 'מקדחים לידיתן (HP)', 'מקדחים לזרקוניה', 'מקדחים לזוויתן (RA)', 'מקדחי הליקס'],
+  },
+  {
+    slug: 'polishing',
+    label: 'ליטוש וגימור',
+    dbCategories: ['דיסקים וסטריפים', 'גומיות ליטוש', 'פרופיג\'ט - MK-DENT'],
+  },
+  {
     slug: 'handpieces',
-    label: 'טורבינות זוויתנים וידיתנים',
-    dbCategories: ['turbines', 'angles', 'handpieces'],
+    label: 'טורבינות, זוויתנים וידיתנים',
+    dbCategories: ['ידיתנים 1:1', 'טורבינות Jinme', 'ידיתנים כירורגיים', 'זוויתנים 1:5 (מגבירי מהירות)', 'טורבינות MK-DENT', 'זוויתנים 1:1', 'זוויתנים 20:1 (השתלות)', 'זוויתני השתלות'],
   },
   {
     slug: 'surgery',
     label: 'כירורגיה והשתלות',
-    dbCategories: ['surgery', 'electrosurgery'],
-  },
-  {
-    slug: 'sterilization',
-    label: 'סטריליזציה ותחזוקה',
-    dbCategories: ['sterilization'],
-  },
-  {
-    slug: 'restorative',
-    label: 'שיקום הפה',
-    dbCategories: ['restorative'],
-  },
-  {
-    slug: 'prophylaxis',
-    label: 'פרופילקטיקה',
-    dbCategories: ['prophylaxis', 'scalers'],
+    dbCategories: ['מערכות שאיבה והזרקה', 'מזרקי אספירציה', 'מברגת טורק חשמלית', 'אלקטרוכירורגיה', 'צינורות לפיזיאודיספנסר', 'פיזיודיספנסרים', 'פיאזוסארג\'רי', 'עגלות כירורגיות', 'מפתחות הברגה', 'טיפים לפיאזוסארג\'רי', 'מברגת מומנט חשמלית'],
   },
   {
     slug: 'motors',
     label: 'מנועים',
-    dbCategories: ['motors'],
+    dbCategories: ['מנועים של חברת Jinme', 'מיקרומוטורים של חברת Jinme', 'מנועים של חברת MK-DENT', 'מנועים טכניים', 'מערכות שליטה ומנועים כירורגיים'],
   },
   {
-    slug: 'drills',
-    label: 'מקדחים',
-    dbCategories: ['drills'],
+    slug: 'sterilization',
+    label: 'סטריליזציה ותחזוקה',
+    dbCategories: ['שמן פרימיום סינטטלי מלא', 'Exo-Safe', 'פיות שימון מכל הסוגים', 'Safe-Relax', 'מפתח טורק לסקיילר', 'אמבטית(YESON) 2.5 ליטר', 'אוטוקלאב (YESON)3 ליטר', 'Smart Cleaner', 'Osteo Safe'],
+  },
+  {
+    slug: 'connectors',
+    label: 'חיבורים ומתאמים',
+    dbCategories: ['חיבור EMS', 'חיבור SATALEC', 'חיבור Kavo', 'חיבור NSK', 'חיבור W&H'],
+  },
+  {
+    slug: 'general',
+    label: 'ערכות וכללי',
+    dbCategories: ['ערכות', 'מכשירי רפואה כללית'],
   },
 ];
 
 // Set to true to show catalog items publicly
-export const CATALOG_LIVE = false;
+export const CATALOG_LIVE = true;
 
 // Categories never shown on the public catalog
 // spare_parts / consumables / services are internal repair/service items
 // not purchased directly by clinics or healthcare centers
-export const HIDDEN_CATEGORIES = ['services', 'spare_parts', 'consumables'];
+export const HIDDEN_CATEGORIES = ['מאמרים | DES'];
 
 export const SUPPLIERS = [
   'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT', 'CHIRMED',

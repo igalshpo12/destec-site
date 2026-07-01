@@ -101,7 +101,7 @@ export default function SupplierLogoStrip() {
         );
 
         const { data, error } = await supabase
-          .from('equipment')
+          .from('catalog_products')
           .select('manufacturer')
           .eq('is_active', true)
           .not('category', 'in', '("services","spare_parts","consumables")')

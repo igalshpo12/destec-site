@@ -18,12 +18,10 @@ const CATEGORIES_WITH_IMAGES = new Set([
 
 async function fetchOne(id: string): Promise<EquipmentWithPrice | null> {
   const { data, error } = await supabase
-    .from('equipment')
+    .from('catalog_products')
     .select(
       `id, item_number, name_he, name_en, manufacturer, model, category,
-       description_he, description_en, is_active,
-       warranty_purchase_months, warranty_repair_months, warranty_manufacturer_months,
-       image_url, equipment_prices(tier, price, currency)`
+       description_he, description_en, is_active, image_url, price, currency`
     )
     .eq('id', id)
     .eq('is_active', true)
@@ -32,17 +30,11 @@ async function fetchOne(id: string): Promise<EquipmentWithPrice | null> {
   if (error || !data) return null;
 
   const r = data as Record<string, unknown>;
-  const prices = r.equipment_prices as { price: number; currency: string; tier?: number }[] | null;
-  let price: number | undefined;
-  let currency: string | undefined;
-  if (Array.isArray(prices) && prices.length > 0) {
-    const tier1 = prices.find((p) => !p.tier || p.tier === 1) ?? prices[0];
-    price = tier1.price;
-    currency = tier1.currency;
-  }
-  const { equipment_prices: _ep, ...rest } = r;
-  void _ep;
-  return { ...rest, price, currency } as EquipmentWithPrice;
+  return {
+    ...r,
+    price: (r.price as number | null) ?? undefined,
+    currency: (r.currency as string | null) ?? undefined,
+  } as EquipmentWithPrice;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

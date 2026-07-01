@@ -40,3 +40,8 @@ next-env.d.ts
 
 # playwright test artifacts
 /test-results/
+
+# Konimbo catalog migration — scraped data + internal-registry backups (do not commit)
+/data/*-legacy-backup.json
+/data/konimbo-products.json
+/data/konimbo-active.xml

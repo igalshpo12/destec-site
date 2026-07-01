@@ -13,34 +13,22 @@ const TABS = [
   { id: 'sale',     label: 'מבצעים'  },
 ];
 
-function extractPrice(prices: unknown): { price: number | undefined; currency: string | undefined } {
-  if (!prices) return { price: undefined, currency: undefined };
-  const arr = Array.isArray(prices) ? prices : [prices];
-  if (arr.length === 0) return { price: undefined, currency: undefined };
-  const tier1 = arr.find((p) => (p as { tier?: number }).tier === 1) ?? arr[0];
-  const p = tier1 as { price: number; currency: string } | null;
-  if (!p) return { price: undefined, currency: undefined };
-  return { price: p.price, currency: p.currency };
-}
-
 function mapRows(data: unknown[]): EquipmentWithPrice[] {
   return data.map((row) => {
     const r = row as Record<string, unknown>;
-    const { price, currency } = extractPrice(r.equipment_prices);
-    const { equipment_prices: _ep, ...rest } = r;
-    void _ep;
-    return { ...rest, price, currency } as EquipmentWithPrice;
+    const price = (r.price as number | null) ?? undefined;
+    const currency = (r.currency as string | null) ?? undefined;
+    return { ...r, price, currency } as EquipmentWithPrice;
   });
 }
 
-const PRICE_SELECT = 'equipment_prices(tier, price, currency)';
 const BASE_SELECT = `id, item_number, name_he, name_en, manufacturer, model, category,
-  description_he, description_en, is_active, created_at, updated_at, ${PRICE_SELECT}`;
+  description_he, description_en, is_active, created_at, updated_at, image_url, price, currency`;
 
 async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
-      .from('equipment').select(BASE_SELECT)
+      .from('catalog_products').select(BASE_SELECT)
       .eq('is_active', true)
       .not('category', 'in', HIDDEN_FILTER)
       .limit(80);
@@ -58,7 +46,7 @@ async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
 async function fetchNew(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
-      .from('equipment').select(BASE_SELECT)
+      .from('catalog_products').select(BASE_SELECT)
       .eq('is_active', true)
       .not('category', 'in', HIDDEN_FILTER)
       .order('created_at', { ascending: false }).limit(12);
@@ -70,7 +58,7 @@ async function fetchNew(): Promise<EquipmentWithPrice[]> {
 async function fetchSale(): Promise<EquipmentWithPrice[]> {
   try {
     const { data, error } = await supabase
-      .from('equipment').select(BASE_SELECT)
+      .from('catalog_products').select(BASE_SELECT)
       .eq('is_active', true)
       .not('category', 'in', HIDDEN_FILTER)
       .limit(80);
