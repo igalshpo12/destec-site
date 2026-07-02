@@ -63,7 +63,7 @@ export default function AboutSection() {
   return (
     <section
       dir="rtl"
-      className="py-16 lg:py-24 overflow-hidden"
+      className="relative py-16 lg:py-24 overflow-hidden"
       style={{ background: '#f7f8fa' }}
       aria-label="אודות DES"
     >

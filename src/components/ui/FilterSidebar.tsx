@@ -1,6 +1,6 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { NAV_CATEGORIES, SUPPLIERS } from '@/lib/utils';
+import { NAV_CATEGORIES, CATALOG_MANUFACTURERS } from '@/lib/utils';
 import { SlidersHorizontal, X } from 'lucide-react';
 
 export default function FilterSidebar() {
@@ -97,17 +97,17 @@ export default function FilterSidebar() {
               כל היצרנים
             </button>
           </li>
-          {SUPPLIERS.map((s) => (
-            <li key={s}>
+          {CATALOG_MANUFACTURERS.map((s) => (
+            <li key={s.value}>
               <button
-                onClick={() => updateParam('manufacturer', s)}
+                onClick={() => updateParam('manufacturer', s.value)}
                 className={`w-full text-right text-sm px-3 py-2 rounded-lg transition-colors ${
-                  currentManufacturer === s
+                  currentManufacturer === s.value
                     ? 'bg-[#1a2b4a] text-white font-medium'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                {s}
+                {s.label}
               </button>
             </li>
           ))}
