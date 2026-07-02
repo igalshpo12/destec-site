@@ -107,3 +107,17 @@ export const HIDDEN_CATEGORIES = ['מאמרים | DES'];
 export const SUPPLIERS = [
   'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT', 'CHIRMED',
 ];
+
+// Manufacturers as they actually appear in catalog_products.manufacturer —
+// the filter matches with eq(), so `value` must be the exact DB string.
+export const CATALOG_MANUFACTURERS: { value: string; label: string }[] = [
+  { value: 'MDT', label: 'MDT' },
+  { value: 'JINME', label: 'Jinme' },
+  { value: 'NOUVAG', label: 'Nouvag' },
+  { value: 'MK-DENT', label: 'MK-dent' },
+  { value: 'SPA LED', label: 'SPA LED' },
+  { value: 'ANTOGYR', label: 'Anthogyr' },
+  { value: 'SAESHIN', label: 'Saeshin' },
+  { value: 'ATITAN', label: 'ATitan' },
+  { value: 'MicroNX', label: 'MicroNX' },
+];

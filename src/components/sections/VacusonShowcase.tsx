@@ -1,6 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { MessageCircle } from 'lucide-react';
-import Spin360 from './Spin360';
 
 const SPECS = [
   { label: 'קצב זרימה', value: '60 L/min' },
@@ -44,25 +44,21 @@ export default function VacusonShowcase() {
                 border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
-              {/* 360° interactive viewer — drag to spin */}
-              <div className="relative flex items-center justify-center" style={{ padding: '2%' }}>
-                <Spin360
-                  dir="vacuson-360"
-                  count={48}
-                  width={600}
-                  height={600}
-                  alt="Nouvag Vacuson 60 LP"
-                  autoMs={95}
-                  shadow="drop-shadow(0 22px 28px rgba(13,25,41,0.20))"
-                />
+              {/* real product photo — background-removed cutout on the studio stage */}
+              <div className="relative flex items-center justify-center" style={{ padding: '7%' }}>
+                <div
+                  className="relative w-full"
+                  style={{ aspectRatio: '529/523', maxWidth: 520, filter: 'drop-shadow(0 22px 28px rgba(13,25,41,0.25))' }}
+                >
+                  <Image
+                    src="/products/cutouts/vacuson-60.webp"
+                    alt="Nouvag Vacuson 60 LP"
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 90vw, 520px"
+                  />
+                </div>
               </div>
-              {/* drag hint */}
-              <span
-                className="absolute bottom-4 left-4 text-[11px] font-semibold px-2.5 py-1 rounded-full"
-                style={{ background: 'rgba(255,255,255,0.7)', color: '#0d2b4a', border: '1px solid rgba(13,43,74,0.1)' }}
-              >
-                גררו לסיבוב · 360°
-              </span>
               {/* corner model tag */}
               <span
                 className="absolute top-4 right-4 text-[11px] font-bold tracking-wide px-3 py-1 rounded-full"
