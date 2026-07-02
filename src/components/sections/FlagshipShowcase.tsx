@@ -158,11 +158,23 @@ export default function FlagshipShowcase() {
               }}
             >
               <div className="relative w-full" style={{ aspectRatio: '16/10' }}>
+                {/* blurred copy of the photo fills the card so its own backdrop
+                    extends to the edges — no floating rectangle */}
+                <Image
+                  src={p.image}
+                  alt=""
+                  aria-hidden
+                  fill
+                  className="object-cover"
+                  style={{ filter: 'blur(28px)', transform: 'scale(1.15)', opacity: 0.9 }}
+                  sizes="(max-width: 1024px) 92vw, 620px"
+                />
+                <div className="absolute inset-0" style={{ background: 'rgba(255,255,255,0.35)' }} />
                 <Image
                   src={p.image}
                   alt={p.name}
                   fill
-                  className="object-contain p-6"
+                  className="object-contain p-8"
                   sizes="(max-width: 1024px) 92vw, 620px"
                 />
               </div>
