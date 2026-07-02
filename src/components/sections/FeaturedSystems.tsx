@@ -11,9 +11,12 @@ const PANELS = [
     spec: 'ביפולרי / מונופולרי · הגנות דיגיטליות',
     cta: 'ציוד כירורגי',
     href: '/catalog?category=surgery',
-    image: 'https://likaubaiqrojlwqzoepp.supabase.co/storage/v1/object/public/products/8602320.jpg',
-    imageAlt: 'LED Surtron 300 HP',
-    imageCaption: 'LED Surtron 300 HP',
+    hero: { src: '/products/cutouts/surtron-300hp.webp', alt: 'LED Surtron 300 HP', caption: 'LED Surtron 300 HP' },
+    more: [
+      { src: '/products/cutouts/surtron-400hp.webp', label: 'Surtron 400 HP', q: 'Surtron 400' },
+      { src: '/products/cutouts/surtron-80d.webp', label: 'Surtron 80d', q: 'Surtron 80d' },
+      { src: '/products/cutouts/surtron-50d.webp', label: 'Surtron 50d', q: 'Surtron 50d' },
+    ],
   },
   {
     pill: 'Switzerland',
@@ -24,9 +27,12 @@ const PANELS = [
     spec: 'Bone surgery · שליטה דיגיטלית',
     cta: 'מנועי Nouvag',
     href: '/catalog?manufacturer=NOUVAG',
-    image: 'https://likaubaiqrojlwqzoepp.supabase.co/storage/v1/object/public/products/8585131.jpg',
-    imageAlt: 'Nouvag TCM 3000 BL',
-    imageCaption: 'TCM 3000 BL',
+    hero: { src: '/products/cutouts/tcm-3000bl.webp', alt: 'Nouvag TCM 3000 BL', caption: 'TCM 3000 BL' },
+    more: [
+      { src: '/products/cutouts/vacuson-60.webp', label: 'Vacuson 60 LP', q: 'Vacuson' },
+      { src: '/products/cutouts/microsaws.webp', label: 'MicroSaws', q: 'MicroSaws' },
+      { src: '/products/cutouts/lipocart.webp', label: 'LipoCart', q: 'LipoCart' },
+    ],
   },
 ];
 
@@ -60,7 +66,7 @@ export default function FeaturedSystems() {
           {PANELS.map((panel) => (
             <div
               key={panel.heading}
-              className="relative overflow-hidden"
+              className="relative overflow-hidden flex flex-col"
               style={{
                 borderRadius: '16px',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
@@ -82,30 +88,33 @@ export default function FeaturedSystems() {
                 style={{ height: '3px', background: '#1e90ff', borderRadius: '16px 16px 0 0' }}
               />
 
-              <div className="relative p-8 flex flex-col sm:flex-row-reverse gap-6 items-start">
-                {/* Product photo — white inset card */}
-                <div className="flex-shrink-0 self-center sm:self-end order-last sm:order-none">
+              <div className="relative p-8 flex flex-col sm:flex-row-reverse gap-6 items-start flex-1">
+                {/* Hero product — cutout floating on the plate */}
+                <div className="flex-shrink-0 self-center sm:self-end order-last sm:order-none flex flex-col items-center gap-2">
                   <div
-                    className="rounded-2xl p-3"
-                    style={{ background: '#ffffff', boxShadow: '0 8px 28px rgba(0,0,0,0.35)' }}
+                    className="relative w-44 h-40 sm:w-56 sm:h-48"
+                    style={{ filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.55))' }}
                   >
-                    <div className="relative w-36 h-36 sm:w-44 sm:h-44">
-                      <Image
-                        src={panel.image}
-                        alt={panel.imageAlt}
-                        fill
-                        className="object-contain"
-                        sizes="176px"
-                      />
-                    </div>
-                    <p
-                      className="text-center font-mono mt-1"
-                      dir="ltr"
-                      style={{ color: '#9ba3af', fontSize: '0.62rem', letterSpacing: '0.05em' }}
-                    >
-                      {panel.imageCaption}
-                    </p>
+                    <Image
+                      src={panel.hero.src}
+                      alt={panel.hero.alt}
+                      fill
+                      className="object-contain"
+                      sizes="224px"
+                    />
                   </div>
+                  {/* soft floor glow under the device */}
+                  <div
+                    className="w-3/4 h-2 rounded-full -mt-1"
+                    style={{ background: 'radial-gradient(ellipse, rgba(94,178,255,0.28) 0%, transparent 70%)' }}
+                  />
+                  <p
+                    className="font-mono"
+                    dir="ltr"
+                    style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.65rem', letterSpacing: '0.06em' }}
+                  >
+                    {panel.hero.caption}
+                  </p>
                 </div>
 
                 {/* Text */}
@@ -133,7 +142,7 @@ export default function FeaturedSystems() {
                   </p>
 
                   <p
-                    className="text-sm leading-relaxed mb-6"
+                    className="text-sm leading-relaxed mb-5"
                     style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}
                   >
                     {panel.description}
@@ -161,6 +170,35 @@ export default function FeaturedSystems() {
                     <span style={{ transform: 'scaleX(-1)', display: 'inline-block' }}>→</span>
                   </Link>
                 </div>
+              </div>
+
+              {/* More-products strip */}
+              <div
+                className="relative flex items-stretch gap-2 px-6 py-4"
+                style={{ borderTop: '1px solid rgba(94,178,255,0.18)', background: 'rgba(9,17,31,0.45)' }}
+              >
+                {panel.more.map((m) => (
+                  <Link
+                    key={m.label}
+                    href={`/catalog?q=${encodeURIComponent(m.q)}`}
+                    className="group flex-1 flex flex-col items-center gap-1.5 rounded-xl px-2 py-2.5 transition-colors"
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  >
+                    <div
+                      className="relative w-full h-12 transition-transform duration-200 group-hover:scale-105"
+                      style={{ filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.5))' }}
+                    >
+                      <Image src={m.src} alt={m.label} fill className="object-contain" sizes="120px" />
+                    </div>
+                    <span
+                      className="font-mono text-center"
+                      dir="ltr"
+                      style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.6rem', letterSpacing: '0.04em' }}
+                    >
+                      {m.label}
+                    </span>
+                  </Link>
+                ))}
               </div>
             </div>
           ))}
