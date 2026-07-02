@@ -4,7 +4,7 @@ import { Phone, Mail, MessageCircle, MapPin } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'הצהרת נגישות',
   description:
-    'הצהרת הנגישות של DES — שירותי ציוד רפואי ודנטלי. האתר עומד בתקן הישראלי ת"י 5568 (WCAG 2.1 AA). דרכי פנייה לרכז הנגישות.',
+    'הצהרת הנגישות של DES — שירותי ציוד רפואי ודנטלי. האתר עומד בתקן הישראלי ת"י 5568 (WCAG 2.1 AA). דרכי פנייה בנושאי נגישות.',
 };
 
 function H2({ children }: { children: React.ReactNode }) {
@@ -57,14 +57,12 @@ export default function AccessibilityStatementPage() {
         לתיקון הליקויים בהקדם. אם נתקלתם בתוכן שאינו נגיש, נשמח שתעדכנו אותנו ונטפל בכך.
       </p>
 
-      <H2>פנייה בנושאי נגישות (רכז הנגישות)</H2>
+      <H2>פנייה בנושאי נגישות</H2>
       <p className="text-gray-700 leading-relaxed mb-4">
-        נתקלתם בבעיה או שיש לכם הצעה לשיפור הנגישות? נשמח לקבל את פנייתכם. נשתדל להגיב בהקדם האפשרי.
+        נתקלתם בבעיה או שיש לכם הצעה לשיפור הנגישות? נשמח לקבל את פנייתכם ונשתדל להגיב בהקדם האפשרי.
+        ניתן לפנות אלינו בכל אחת מהדרכים הבאות:
       </p>
       <div className="rounded-2xl p-6 space-y-3" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-        <p className="font-semibold" style={{ color: '#1a2b4a' }}>
-          רכז הנגישות: <span className="text-gray-500 font-normal">[שם רכז הנגישות — להשלמה]</span>
-        </p>
         <ul className="space-y-3 text-gray-700">
           <li className="flex items-center gap-3">
             <Phone className="w-4 h-4 flex-shrink-0" style={{ color: '#1e90ff' }} />
