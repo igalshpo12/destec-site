@@ -73,6 +73,8 @@ function humanTitle(p) {
 /* ---------- 3. sort_order ---------- */
 // lower = earlier. Devices/systems first, then handpieces, then burs, discs last.
 const CATEGORY_RANK = [
+  // accessories/consumables first in the list so they don't match the device patterns below
+  [/טיפים|צינורות|מזרקי|מפתח|פיות שימון|חיבור/i, 4],
   [/מערכות|פיזיודיספנסר|פיאזוסארג|אלקטרוכירורגיה|מברגת|רפואה כללית|אוטוקלאב|אמבטית|Smart Cleaner|עגלות/i, 0],
   [/טורבינות|זוויתנ|ידיתנים|מנועים|מיקרומוטור/i, 1],
   [/סטריל|שמן|Exo-Safe|Safe-Relax|Osteo|פיות שימון|חיבור|מפתח/i, 2],
