@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import TopFade from '../ui/TopFade';
 
 export default function TrainingSection() {
   return (
@@ -10,8 +9,6 @@ export default function TrainingSection() {
       style={{ background: '#0d1929 url(/images/training-bg.webp) center/cover no-repeat' }}
       aria-label="הדרכות תחזוקת ציוד"
     >
-      {/* previous light section dissolves into this one */}
-      <TopFade from="#f7f8fa" />
       {/* Legibility overlay — keeps the text side near-solid navy */}
       <div
         className="absolute inset-0 pointer-events-none"

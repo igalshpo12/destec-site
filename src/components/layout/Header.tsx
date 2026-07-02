@@ -106,6 +106,39 @@ export default function Header() {
             <MessageCircle className="w-5 h-5" />
           </a>
 
+          {/* Instagram */}
+          <a
+            href="https://www.instagram.com/des_medical_and_dental/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="p-2 rounded-lg transition-all duration-150"
+            style={{ color: '#E1306C' }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = 'rgba(225,48,108,0.1)';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = '';
+            }}
+          >
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+          </a>
+
           {/* Repair pickup CTA */}
           <Link
             href="/contact?service=repair"

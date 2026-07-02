@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { supabase, EquipmentWithPrice } from '@/lib/supabase';
 import { HIDDEN_CATEGORIES, CATALOG_LIVE } from '@/lib/utils';
-import TopFade from '../ui/TopFade';
 import ProductCard from '@/components/ui/ProductCard';
 import Link from 'next/link';
 
@@ -101,9 +100,8 @@ export default function ProductTabs() {
   }, [activeTab]);
 
   return (
-    <section dir="rtl" className="relative py-16" style={{ background: '#ffffff' }}>
-      <TopFade from="#1a2b4a" height={100} />
-      <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
+    <section dir="rtl" className="py-16" style={{ background: '#ffffff' }}>
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Header row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
           <div>
