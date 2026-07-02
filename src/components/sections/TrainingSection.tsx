@@ -6,23 +6,15 @@ export default function TrainingSection() {
     <section
       dir="rtl"
       className="relative overflow-hidden py-16 lg:py-24"
-      style={{ background: '#0d1929' }}
+      style={{ background: '#0d1929 url(/images/training-bg.webp) center/cover no-repeat' }}
       aria-label="הדרכות תחזוקת ציוד"
     >
-      {/* Subtle cross-hatch pattern overlay */}
+      {/* Legibility overlay — keeps the text side near-solid navy */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,144,255,0.04) 39px, rgba(30,144,255,0.04) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,144,255,0.04) 39px, rgba(30,144,255,0.04) 40px)',
-        }}
-      />
-
-      {/* Blue radial glow — top right */}
-      <div
-        className="absolute top-0 left-0 w-[500px] h-[500px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 20% 20%, rgba(30,144,255,0.07) 0%, transparent 70%)',
+          background:
+            'linear-gradient(90deg, rgba(13,25,41,0.6) 0%, rgba(13,25,41,0.25) 55%, rgba(13,25,41,0.05) 100%)',
         }}
       />
 
