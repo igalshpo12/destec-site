@@ -45,7 +45,23 @@ const ext = url => {
 };
 const mime = e => ({ png: 'image/png', jpg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp' }[e] || 'image/jpeg');
 const publicUrl = path => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
-const clean = s => (s || '').replace(/\s+/g, ' ').trim() || null;
+const ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+  ndash: '–', mdash: '—', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“',
+  hellip: '…', deg: '°', times: '×', middot: '·', bull: '•', plusmn: '±',
+  laquo: '«', raquo: '»', shy: '', trade: '™', reg: '®', copy: '©',
+};
+const decodeEntities = s => {
+  let out = s;
+  for (let i = 0; i < 2; i++) {
+    out = out
+      .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+      .replace(/&([a-z]+);/gi, (m, n) => (ENTITIES[n.toLowerCase()] ?? m));
+  }
+  return out;
+};
+const clean = s => decodeEntities(s || '').replace(/\s+/g, ' ').trim() || null;
 
 // --- ensure bucket ---
 if (!DRY_RUN) {

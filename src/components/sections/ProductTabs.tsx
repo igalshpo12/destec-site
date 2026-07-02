@@ -31,14 +31,10 @@ async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
       .from('catalog_products').select(BASE_SELECT)
       .eq('is_active', true)
       .not('category', 'in', HIDDEN_FILTER)
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .limit(80);
     if (error || !data) return [];
     const withPrices = mapRows(data).filter((item) => item.price != null);
-    withPrices.sort((a, b) => {
-      const numA = parseInt(String(a.id).replace(/\D/g, '').slice(-6) || '0', 10);
-      const numB = parseInt(String(b.id).replace(/\D/g, '').slice(-6) || '0', 10);
-      return (numA % 97) - (numB % 97);
-    });
     return withPrices.slice(0, 12);
   } catch { return []; }
 }
