@@ -1,0 +1,201 @@
+/* DES × AJAX sales-agreement stylesheet — RTL Hebrew, A4, branded.
+   Colours match tailwind.config.ts: navy #1a2b4a, dark #0d1929, des-blue #1e90ff.
+   The @font-face for Noto Sans Hebrew is injected at render time (base64) by render.mjs. */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #1f2937;
+  font-family: 'Noto Sans Hebrew', 'Segoe UI', Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  direction: rtl;
+}
+
+@page { size: A4; margin: 0; }
+
+/* ── Page container: one .page == one printed A4 page ── */
+.page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page:last-child { page-break-after: auto; }
+
+.page-body {
+  position: absolute;
+  top: 15mm;
+  right: 16mm;
+  left: 16mm;
+  bottom: 14mm;
+  overflow: hidden;
+}
+
+.page-foot {
+  position: absolute;
+  right: 16mm;
+  left: 16mm;
+  bottom: 7mm;
+  height: 9mm;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7.5pt;
+  color: #9ca3af;
+}
+.page-foot .pnum { direction: rtl; }
+
+/* ── Header / cover block ── */
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3px solid #1a2b4a;
+  padding-bottom: 4mm;
+  margin-bottom: 4mm;
+}
+.doc-header .logo { height: 20mm; }
+.doc-header .seller {
+  text-align: left;
+  font-size: 8.5pt;
+  line-height: 1.55;
+  color: #4b5563;
+  direction: rtl;
+}
+.doc-header .seller .name { font-weight: 700; color: #1a2b4a; font-size: 10pt; }
+.doc-header .seller .certs { color: #1e90ff; font-weight: 600; }
+
+.doc-title {
+  text-align: center;
+  margin: 3mm 0 5mm;
+}
+.doc-title h1 {
+  margin: 0;
+  font-size: 18pt;
+  color: #1a2b4a;
+  font-weight: 800;
+}
+.doc-title .sub { color: #6b7280; font-size: 10.5pt; margin-top: 1mm; }
+
+.doc-meta {
+  display: flex;
+  gap: 8mm;
+  justify-content: center;
+  margin-bottom: 4mm;
+  font-size: 10pt;
+}
+
+.trust-bar {
+  display: flex;
+  gap: 4mm;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 4mm;
+}
+.trust-bar span {
+  background: #f1f5fb;
+  color: #1a2b4a;
+  border: 1px solid #d9e4f2;
+  border-radius: 4px;
+  padding: 1mm 3mm;
+  font-size: 8pt;
+  font-weight: 600;
+}
+
+/* ── Sections ── */
+h2.sec {
+  font-size: 12.5pt;
+  color: #fff;
+  background: #1a2b4a;
+  border-radius: 3px;
+  padding: 1.6mm 3mm;
+  margin: 0 0 2.5mm;
+  font-weight: 700;
+}
+h2.sec.cont { background: #4b5f80; }
+.intro { margin: 0 0 2.5mm; }
+
+ol.clauses { list-style: none; margin: 0 0 2mm; padding: 0; }
+ol.clauses > li {
+  display: flex;
+  gap: 2.5mm;
+  margin-bottom: 1.8mm;
+  align-items: baseline;
+}
+ol.clauses > li .num {
+  flex: 0 0 auto;
+  min-width: 8mm;
+  font-weight: 700;
+  color: #1e90ff;
+}
+ol.clauses > li .txt { flex: 1 1 auto; }
+
+/* ── Tables (parties, specs, payment) ── */
+table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 2.5mm;
+  font-size: 10pt;
+}
+table.grid th, table.grid td {
+  border: 1px solid #d1d5db;
+  padding: 1.6mm 2.5mm;
+  text-align: right;
+  vertical-align: top;
+}
+table.grid th {
+  background: #f1f5fb;
+  color: #1a2b4a;
+  font-weight: 700;
+  white-space: nowrap;
+  width: 34%;
+}
+table.grid td.label {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #374151;
+  width: 34%;
+  white-space: nowrap;
+}
+table.pay td.money { text-align: left; direction: ltr; }
+table.grid caption {
+  caption-side: top;
+  text-align: right;
+  font-weight: 700;
+  color: #1a2b4a;
+  padding-bottom: 1.5mm;
+}
+
+/* ── Fill-in fields (blank underline; interactive AcroForm overlays it) ── */
+.field {
+  display: inline-block;
+  border-bottom: 1px solid #1a2b4a;
+  min-width: 20mm;
+  height: 1.25em;
+  vertical-align: -0.25em;
+}
+
+/* ── Signatures ── */
+.sign-wrap { display: flex; gap: 10mm; margin-top: 4mm; }
+.sign-box { flex: 1 1 0; }
+.sign-box .who { font-weight: 700; color: #1a2b4a; margin-bottom: 8mm; }
+.sign-line { border-top: 1px solid #374151; padding-top: 1.5mm; font-size: 9pt; color: #6b7280; }
+.sign-box .row { display: flex; justify-content: space-between; gap: 4mm; margin-top: 6mm; }
+.sign-box .row .cell { flex: 1 1 0; }
+
+.note {
+  margin-top: 3mm;
+  font-size: 8.5pt;
+  color: #6b7280;
+  background: #fbfbfb;
+  border-right: 3px solid #1e90ff;
+  padding: 2mm 3mm;
+}
