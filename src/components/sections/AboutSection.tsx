@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import TopFade from '../ui/TopFade';
 import type { ReactNode } from 'react';
 
 function CertCard({
@@ -63,11 +64,12 @@ export default function AboutSection() {
   return (
     <section
       dir="rtl"
-      className="py-16 lg:py-24 overflow-hidden"
+      className="relative py-16 lg:py-24 overflow-hidden"
       style={{ background: '#f7f8fa' }}
       aria-label="אודות DES"
     >
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
+      <TopFade from="#0a1626" height={140} />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-16 items-start">
 
           {/* ── Left column: "1998" + founding story ── */}

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MessageCircle } from 'lucide-react';
+import TopFade from '../ui/TopFade';
 
 const SPECS = [
   { label: 'קצב זרימה', value: '60 L/min' },
@@ -21,11 +22,10 @@ export default function VacusonShowcase() {
       style={{ background: '#070e1a' }}
       className="relative overflow-hidden"
     >
-      {/* top + bottom hairlines */}
-      <div className="absolute top-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(30,140,212,0.5),transparent)' }} />
-      <div className="absolute bottom-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(30,140,212,0.3),transparent)' }} />
+      {/* previous section's light tone dissolves into this one — no hard seam */}
+      <TopFade from="#eef0f3" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* ── Product stage (renders right in RTL) ── */}
