@@ -246,6 +246,19 @@ export default function HeroSlider() {
             className="flex flex-wrap items-center gap-3.5"
             style={{ animation: 'heroUp .8s cubic-bezier(.2,.7,.2,1) .3s both' }}
           >
+            <a
+              href="https://wa.me/972548818681?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-bold rounded-xl transition-all hover:-translate-y-0.5"
+              style={{ background: '#128c7e', color: '#fff', padding: '14px 26px', boxShadow: '0 16px 34px -14px rgba(18,140,126,.75)' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07a8.1 8.1 0 01-2.39-1.47 8.96 8.96 0 01-1.65-2.05c-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z" />
+                <path d="M12.05 2a9.9 9.9 0 00-8.57 14.86L2 22l5.28-1.38A9.9 9.9 0 1012.05 2zm0 18.13c-1.62 0-3.2-.44-4.58-1.26l-.33-.2-3.13.82.84-3.06-.22-.34a8.23 8.23 0 116.94 3.8z" />
+              </svg>
+              קבלו הצעת מחיר עכשיו
+            </a>
             <Link
               href="/catalog"
               className="inline-flex items-center gap-2 font-bold rounded-xl transition-all hover:-translate-y-0.5"

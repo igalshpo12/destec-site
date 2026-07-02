@@ -241,6 +241,10 @@ export default function Footer() {
             <CookieSettingsButton className="hover:text-white transition-colors" />
             <span>·</span>
             <span dir="ltr">destec.co.il</span>
+            <span>·</span>
+            <span dir="ltr" style={{ letterSpacing: '0.04em' }}>
+              Made by <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>HubTypus</span>
+            </span>
           </div>
         </div>
       </div>

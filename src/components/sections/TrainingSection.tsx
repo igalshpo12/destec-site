@@ -1,116 +1,94 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function TrainingSection() {
   return (
     <section
       dir="rtl"
       className="relative overflow-hidden py-16 lg:py-24"
-      style={{ background: '#0d1929' }}
+      style={{ background: '#0d1929 url(/images/training-bg.webp) center/cover no-repeat' }}
       aria-label="הדרכות תחזוקת ציוד"
     >
-      {/* Subtle cross-hatch pattern overlay */}
+      {/* Legibility overlay — keeps the text side near-solid navy */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,144,255,0.04) 39px, rgba(30,144,255,0.04) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,144,255,0.04) 39px, rgba(30,144,255,0.04) 40px)',
-        }}
-      />
-
-      {/* Blue radial glow — top right */}
-      <div
-        className="absolute top-0 left-0 w-[500px] h-[500px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 20% 20%, rgba(30,144,255,0.07) 0%, transparent 70%)',
+          background:
+            'linear-gradient(90deg, rgba(13,25,41,0.6) 0%, rgba(13,25,41,0.25) 55%, rgba(13,25,41,0.05) 100%)',
         }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-          {/* ── Photo placeholder (right column in RTL → renders right on screen) ── */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-start">
-            {/*
-              PHOTO SLOT — replace the inner content with:
-              <img src="/images/michael-shapoliansky-lecture.jpg" alt="מיכאל שפוליאנסקי בהרצאה" ... />
-              Keep the outer frame div intact.
-            */}
+          {/* ── Photo collage (renders right in RTL) ── */}
+          <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[480px] pb-16 pl-10">
+            {/* Main photo — Michael lecturing at the projected exploded-view */}
             <div
-              className="relative w-full max-w-[340px] mx-auto"
-              style={{ aspectRatio: '2/3' }}
-              aria-label="מקום לתמונת מיכאל שפוליאנסקי"
+              className="relative rounded-2xl overflow-hidden"
+              style={{
+                aspectRatio: '7/6',
+                border: '1px solid rgba(30,144,255,0.35)',
+                boxShadow: '0 24px 60px -20px rgba(0,0,0,0.6)',
+              }}
             >
-              {/* Frame border with thin blue accent */}
-              <div
-                className="absolute inset-0 rounded-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(30,144,255,0.25) 0%, rgba(13,25,41,0.8) 100%)',
-                  border: '1px solid rgba(30,144,255,0.25)',
-                }}
+              <Image
+                src="/images/training/lecture-screen.webp"
+                alt="מיכאל שפוליאנסקי מדגים תחזוקת טורבינה בהדרכה"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 90vw, 480px"
               />
-
-              {/* Inner dark field — the placeholder */}
+              {/* subtle navy tint so the photo sits in the section's palette */}
               <div
-                className="absolute inset-[3px] rounded-2xl flex flex-col items-center justify-center gap-4"
-                style={{ background: 'rgba(10,18,32,0.85)' }}
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, rgba(13,25,41,0.35) 0%, transparent 45%)' }}
+              />
+              {/* caption chip */}
+              <span
+                className="absolute bottom-3 right-3 text-[11px] font-semibold px-3 py-1.5 rounded-full"
+                style={{
+                  background: 'rgba(13,25,41,0.72)',
+                  color: 'rgba(255,255,255,0.85)',
+                  border: '1px solid rgba(30,144,255,0.3)',
+                  backdropFilter: 'blur(6px)',
+                }}
               >
-                {/* Camera icon */}
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="rgba(30,144,255,0.45)"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                  <circle cx="12" cy="13" r="4" />
-                </svg>
-
-                {/* Placeholder caption */}
-                <p
-                  className="text-center px-6 leading-snug"
-                  style={{
-                    color: 'rgba(30,144,255,0.55)',
-                    fontSize: '0.78rem',
-                    fontWeight: 500,
-                    letterSpacing: '0.03em',
-                  }}
-                >
-                  תמונה: מיכאל שפוליאנסקי בהרצאה
-                </p>
-
-                {/* Thin horizontal rule */}
-                <div
-                  className="w-12"
-                  style={{ height: '1px', background: 'rgba(30,144,255,0.18)' }}
-                />
-
-                {/* Corner accent marks */}
-                <div
-                  className="absolute top-4 right-4 w-5 h-5"
-                  style={{
-                    borderTop: '2px solid rgba(30,144,255,0.40)',
-                    borderRight: '2px solid rgba(30,144,255,0.40)',
-                    borderRadius: '0 4px 0 0',
-                  }}
-                />
-                <div
-                  className="absolute bottom-4 left-4 w-5 h-5"
-                  style={{
-                    borderBottom: '2px solid rgba(30,144,255,0.40)',
-                    borderLeft: '2px solid rgba(30,144,255,0.40)',
-                    borderRadius: '0 0 0 4px',
-                  }}
-                />
-              </div>
+                הדרכה במעבדת DES
+              </span>
             </div>
+
+            {/* Secondary photo — offset, overlapping */}
+            <div
+              className="absolute bottom-0 left-0 w-[42%] rounded-xl overflow-hidden"
+              style={{
+                aspectRatio: '639/600',
+                border: '1px solid rgba(30,144,255,0.45)',
+                boxShadow: '0 18px 44px -14px rgba(0,0,0,0.7)',
+                transform: 'rotate(-2deg)',
+              }}
+            >
+              <Image
+                src="/images/training/lecture-case.webp"
+                alt="הדגמת ערכת מקדחים בהדרכה"
+                fill
+                className="object-cover"
+                sizes="200px"
+              />
+            </div>
+
+            {/* Corner accent marks */}
+            <div
+              className="absolute -top-3 right-[-12px] w-8 h-8 pointer-events-none"
+              style={{
+                borderTop: '2px solid rgba(30,144,255,0.5)',
+                borderRight: '2px solid rgba(30,144,255,0.5)',
+                borderRadius: '0 8px 0 0',
+              }}
+            />
           </div>
 
-          {/* ── Text + CTA (left column in RTL → renders left on screen) ── */}
+          {/* ── Text + CTA (renders left in RTL) ── */}
           <div className="order-2 lg:order-1 flex flex-col justify-center">
 
             {/* Thin accent line + label */}
@@ -136,7 +114,7 @@ export default function TrainingSection() {
                 letterSpacing: '-0.01em',
               }}
             >
-              הדרכות תחזוקת ציוד
+              הדרכות תחזוקת ציוד — זה עלינו
             </h2>
 
             {/* Sub-headline */}
@@ -152,13 +130,15 @@ export default function TrainingSection() {
               className="leading-relaxed mb-8"
               style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1rem', maxWidth: '440px' }}
             >
-              DES מציעה הדרכות מקצועיות לצוות רפואי בנושאי תחזוקה, שימוש נכון וכיול ציוד.
-              ההדרכות מותאמות לקליניקות, בתי חולים ומרפאות שיניים.
+              כחלק מהמעטפת שלנו, לקוחות DES מקבלים הדרכת תחזוקת ציוד חינמית אחת לשנה.
+              הרופאים והצוותים לומדים כיצד לתחזק את הציוד ולמנוע תקלות עתידיות —
+              ידע שנצבר לאורך שנים, שמועבר לכם במספר שעות.
             </p>
 
             {/* Feature bullets */}
             <ul className="space-y-3 mb-10">
               {[
+                'הדרכה חינמית אחת לשנה ללקוחות DES',
                 'הדרכות בהתאמה אישית לכל מכשיר',
                 'תיעוד ואישורי השתתפות',
                 'מרצה מוסמך עם ניסיון קליני',
