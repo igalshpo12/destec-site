@@ -71,7 +71,11 @@ async function fetchCatalogProducts(params: {
     query = query.eq('manufacturer', manufacturer);
   }
 
-  query = query.order('id', { ascending: true }).range(from, to);
+  query = query
+    .order('sort_order', { ascending: true, nullsFirst: false })
+    .order('name_he', { ascending: true })
+    .order('id', { ascending: true })
+    .range(from, to);
 
   const { data, error, count } = await query;
 

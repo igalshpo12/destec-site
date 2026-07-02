@@ -287,13 +287,15 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
       {/* Content */}
       <div className="flex flex-col flex-1 p-4 gap-2.5">
         {/* Item number */}
-        <span
-          className="font-mono text-xs"
-          dir="ltr"
-          style={{ color: '#9ba3af', letterSpacing: '0.04em' }}
-        >
-          {item.item_number || '—'}
-        </span>
+        {item.item_number && (
+          <span
+            className="font-mono text-xs"
+            dir="ltr"
+            style={{ color: '#9ba3af', letterSpacing: '0.04em' }}
+          >
+            {item.item_number}
+          </span>
+        )}
 
         {/* Product name — short display name */}
         <h3

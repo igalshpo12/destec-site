@@ -121,7 +121,7 @@ export default function TrustBar() {
           obs.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.05, rootMargin: '0px 0px 200px 0px' }
     );
     obs.observe(el);
     return () => obs.disconnect();
