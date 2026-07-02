@@ -102,7 +102,7 @@ export default function ProductTabs() {
 
   return (
     <section dir="rtl" className="relative py-16" style={{ background: '#ffffff' }}>
-      <TopFade from="#1a2b4a" height={140} />
+      <TopFade from="#1a2b4a" height={100} />
       <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
         {/* Header row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">

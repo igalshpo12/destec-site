@@ -68,7 +68,7 @@ export default function AboutSection() {
       style={{ background: '#f7f8fa' }}
       aria-label="אודות DES"
     >
-      <TopFade from="#0a1626" height={140} />
+      <TopFade from="#0a1626" height={100} />
       <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-16 items-start">
 
