@@ -38,26 +38,20 @@ export default function VacusonShowcase() {
             <div
               className="relative rounded-[28px] overflow-hidden"
               style={{
-                // darker at the top so the unit's white head keeps contrast (frames are pre-darkened to match)
-                background: 'linear-gradient(180deg, #c9d2dd 0%, #dde3ea 45%, #eef1f5 100%)',
+                background: '#eceef1',
                 boxShadow: '0 30px 70px -25px rgba(0,0,0,0.65)',
                 border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
-              {/* real product photo — background-removed cutout on the studio stage */}
-              <div className="relative flex items-center justify-center" style={{ padding: '7%' }}>
-                <div
-                  className="relative w-full"
-                  style={{ aspectRatio: '529/523', maxWidth: 520, filter: 'drop-shadow(0 22px 28px rgba(13,25,41,0.25))' }}
-                >
-                  <Image
-                    src="/products/cutouts/vacuson-60.webp"
-                    alt="Nouvag Vacuson 60 LP"
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 1024px) 90vw, 520px"
-                  />
-                </div>
+              {/* real product photo, untouched — its own studio backdrop fills the card */}
+              <div className="relative w-full" style={{ aspectRatio: '1600/915' }}>
+                <Image
+                  src="https://likaubaiqrojlwqzoepp.supabase.co/storage/v1/object/public/products/8585237.jpg"
+                  alt="Nouvag Vacuson 60 LP"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 92vw, 620px"
+                />
               </div>
               {/* corner model tag */}
               <span
