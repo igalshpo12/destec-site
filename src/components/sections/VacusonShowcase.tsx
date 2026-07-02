@@ -38,17 +38,12 @@ export default function VacusonShowcase() {
             <div
               className="relative rounded-[28px] overflow-hidden"
               style={{
-                // exact match to the photo's uniform #f0f1f3 studio backdrop → seamless
-                background: '#f0f1f3',
+                // darker at the top so the unit's white head keeps contrast (frames are pre-darkened to match)
+                background: 'linear-gradient(180deg, #c9d2dd 0%, #dde3ea 45%, #eef1f5 100%)',
                 boxShadow: '0 30px 70px -25px rgba(0,0,0,0.65)',
                 border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
-              {/* soft studio spotlight behind the unit — kept subtle so it never washes out the device */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: 'radial-gradient(ellipse 65% 55% at 50% 80%, rgba(255,255,255,0.28) 0%, transparent 70%)' }}
-              />
               {/* 360° interactive viewer — drag to spin */}
               <div className="relative flex items-center justify-center" style={{ padding: '2%' }}>
                 <Spin360

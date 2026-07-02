@@ -70,7 +70,7 @@ export default function TrainingSection() {
             <div
               className="absolute bottom-0 left-0 w-[42%] rounded-xl overflow-hidden"
               style={{
-                aspectRatio: '559/600',
+                aspectRatio: '639/600',
                 border: '1px solid rgba(30,144,255,0.45)',
                 boxShadow: '0 18px 44px -14px rgba(0,0,0,0.7)',
                 transform: 'rotate(-2deg)',
