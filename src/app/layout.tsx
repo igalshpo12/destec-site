@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_Hebrew } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import AnnouncementBar from '@/components/sections/AnnouncementBar';
 import SiteAnalytics from '@/components/analytics/SiteAnalytics';
 import AccessibilityWidget from '@/components/a11y/AccessibilityWidget';
 
@@ -52,12 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${notoSansHebrew.variable} font-sans antialiased bg-gray-50 text-gray-900`}>
         <script dangerouslySetInnerHTML={{ __html: A11Y_INIT }} />
         <a href="#main-content" className="skip-link">דלג לתוכן הראשי</a>
-        <div id="site">
-          <AnnouncementBar />
-          <Header />
-          <main id="main-content">{children}</main>
-          <Footer />
-        </div>
+        <div id="site">{children}</div>
         <AccessibilityWidget />
         <SiteAnalytics />
       </body>
