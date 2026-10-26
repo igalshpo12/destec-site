@@ -41,8 +41,7 @@
 
 /* brand cards: edge fade so renders blend into the stage */
 .card { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: block; background: #070b14; }
-.card img { object-fit: cover; transition: transform 0.8s ease; }
-.card:hover img { transform: scale(1.04); }
+.card img { object-fit: cover; }
 .card::before {
   content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
@@ -54,4 +53,4 @@
 .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 20px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: padding 0.2s; }
 .row:hover { padding-right: 14px; }
 
-@media (prefers-reduced-motion: reduce) { .slide, .card img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
