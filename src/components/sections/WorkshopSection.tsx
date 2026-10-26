@@ -219,7 +219,7 @@ export default function WorkshopSection() {
             {/* CTAs */}
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/contact"
+                href="/repairs"
                 className="inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: '#1e90ff', color: '#ffffff' }}
               >

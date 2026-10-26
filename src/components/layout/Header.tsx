@@ -141,7 +141,7 @@ export default function Header() {
 
           {/* Repair pickup CTA */}
           <Link
-            href="/contact?service=repair"
+            href="/repairs"
             className="hidden md:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all duration-150 whitespace-nowrap"
             style={{
               background: '#f8f9fb',
@@ -245,7 +245,7 @@ export default function Header() {
             ))}
             <li>
               <Link
-                href="/contact?service=repair"
+                href="/repairs"
                 className="flex items-center gap-2 px-4 py-3.5 text-sm font-semibold"
                 style={{ color: '#1e90ff' }}
                 onClick={() => setMenuOpen(false)}

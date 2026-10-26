@@ -14,7 +14,7 @@ const CATEGORIES = [
 const SERVICES = [
   { label: 'קטלוג מוצרים',      href: '/catalog'              },
   { label: 'צור קשר',            href: '/contact'              },
-  { label: 'איסוף לתיקון',       href: '/contact?service=repair'},
+  { label: 'איסוף לתיקון',       href: '/repairs'},
   { label: 'אודות DES',          href: '/#about'               },
   { label: 'הצהרת נגישות',       href: '/accessibility'        },
   { label: 'מדיניות פרטיות',     href: '/privacy'              },
