@@ -22,7 +22,7 @@ export default function TrainingSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* ── Photo collage (renders right in RTL) ── */}
-          <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[480px] pb-16 pl-10">
+          <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[480px] sm:pb-16 sm:pl-10">
             {/* Main photo — Michael lecturing at the projected exploded-view */}
             <div
               className="relative rounded-2xl overflow-hidden"
@@ -60,7 +60,7 @@ export default function TrainingSection() {
 
             {/* Secondary photo — offset, overlapping */}
             <div
-              className="absolute bottom-0 left-0 w-[42%] rounded-xl overflow-hidden"
+              className="hidden sm:block absolute bottom-0 left-0 w-[42%] rounded-xl overflow-hidden"
               style={{
                 aspectRatio: '639/600',
                 border: '1px solid rgba(30,144,255,0.45)',
@@ -79,7 +79,7 @@ export default function TrainingSection() {
 
             {/* Corner accent marks */}
             <div
-              className="absolute -top-3 right-[-12px] w-8 h-8 pointer-events-none"
+              className="hidden sm:block absolute -top-3 right-[-12px] w-8 h-8 pointer-events-none"
               style={{
                 borderTop: '2px solid rgba(30,144,255,0.5)',
                 borderRight: '2px solid rgba(30,144,255,0.5)',

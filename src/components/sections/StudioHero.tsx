@@ -10,7 +10,6 @@ type Slide = {
   key: string;
   tab: string;
   img?: string;
-  imgMobile?: string;
   video?: string;
   poster?: string;
   alt: string;
@@ -41,7 +40,6 @@ const SLIDES: Slide[] = [
     key: 'nouvag',
     tab: 'Nouvag',
     img: '/studio/vacuson-dark.webp',
-    imgMobile: '/studio/vacuson-dark-m.jpg',
     alt: 'Nouvag Vacuson 60 LP',
     kicker: 'Nouvag · שוויץ',
     title: ['Vacuson 60 LP.', 'שאיבה כירורגית, מתחת ל‑55 dB.'],
@@ -54,7 +52,6 @@ const SLIDES: Slide[] = [
     key: 'surtron',
     tab: 'LED SpA',
     img: '/studio/surtron-dark.webp',
-    imgMobile: '/studio/surtron-dark-m.jpg',
     alt: 'LED Surtron 300 HP',
     kicker: 'LED SpA · איטליה',
     title: ['Surtron 300 HP.', 'חיתוך, קרישה ובייפולר.'],
@@ -115,15 +112,6 @@ export default function StudioHero() {
                   priority={k === 0}
                   quality={90}
                   sizes="100vw"
-                  className="max-[860px]:hidden"
-                />
-                <Image
-                  src={sl.imgMobile!}
-                  alt={sl.alt}
-                  fill
-                  priority={k === 0}
-                  sizes="100vw"
-                  className="min-[861px]:hidden object-cover"
                 />
               </>
             )}
@@ -137,7 +125,7 @@ export default function StudioHero() {
                 <h2 className={s.title}>{sl.title[0]}<br />{sl.title[1]}</h2>
               )}
               <p className="text-[17px] md:text-lg leading-relaxed text-[#c3cce0]">{sl.lede}</p>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 max-[860px]:flex-col max-[860px]:items-stretch max-[860px]:w-full">
                 <Link
                   href={sl.primary.href}
                   className="inline-flex items-center justify-center px-6 py-3.5 rounded bg-des-blue text-white font-medium hover:bg-[#1273d6] transition-colors"
@@ -148,12 +136,12 @@ export default function StudioHero() {
                   href={`https://wa.me/972548818681?text=${encodeURIComponent(sl.waText)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3.5 rounded border border-white/30 text-white font-medium hover:border-white transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded border border-white/30 text-white font-medium hover:border-white transition-colors"
                 >
                   <MessageCircle className="w-[18px] h-[18px]" aria-hidden />
                   וואטסאפ
                 </a>
-                <Link href={sl.secondary.href} className="font-medium border-b border-white/40 pb-0.5 hover:border-white">
+                <Link href={sl.secondary.href} className="font-medium border-b border-white/40 pb-0.5 hover:border-white max-[860px]:self-start">
                   {sl.secondary.label}
                 </Link>
               </div>

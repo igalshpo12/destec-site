@@ -17,7 +17,7 @@
     linear-gradient(to top, #05080f, rgba(5, 8, 15, 0) 10%);
 }
 .shrink img {
-  width: 90% !important; height: 90% !important; top: 5% !important; left: 0 !important; right: auto !important;
+  width: 66% !important; height: 90% !important; top: 5% !important; left: 0 !important; right: auto !important; object-position: 0% 50%; /* ends before the copy column (starts at 67%) */
   -webkit-mask-image: linear-gradient(to top, transparent, #000 14%, #000 86%, transparent), linear-gradient(to left, transparent, #000 12%);
   -webkit-mask-composite: source-in;
   mask-image: linear-gradient(to top, transparent, #000 14%, #000 86%, transparent), linear-gradient(to left, transparent, #000 12%);
@@ -30,11 +30,13 @@
 @media (max-width: 860px) {
   .slide { position: relative; display: none; opacity: 1; }
   .slide.on { display: block; }
-  .slide .pic { position: relative; aspect-ratio: 4 / 5; }
+  .slide .pic { position: relative; aspect-ratio: 16 / 10; } /* landscape renders shown whole, like the brand cards */
+  .slide img { object-position: 50% 50%; }
   /* video slide: show the 16:9 footage uncropped, fade its bottom into the stage */
   .slide.video .pic { aspect-ratio: 16 / 9; }
   .slide.video .pic::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; pointer-events: none; background: linear-gradient(to top, #05080f, rgba(5, 8, 15, 0)); }
   .slide::before { display: none; }
+  .shrink img { width: 100% !important; height: 100% !important; top: 0 !important; -webkit-mask-image: none; mask-image: none; } /* the 82% desktop inset left a gap on phones */
   .copy { position: relative; inset: auto; padding: 28px 0 84px; }
   .copy > div > * { max-width: none; }
 }
@@ -44,6 +46,12 @@
 
 /* brand cards: edge fade so renders blend into the stage */
 .card { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: block; background: #070b14; }
+@media (max-width: 639px) {
+  .card { aspect-ratio: 16 / 10; }
+  .card img { object-position: 50% 50% !important; }
+  .card.fit img { transform: translateZ(0) scale(1); }
+  .card.tall { aspect-ratio: 4 / 5; } /* portrait render: keep the whole handpiece */
+}
 .card img { object-fit: cover; transform: translateZ(0) scale(1); transition: transform 0.8s ease; will-change: transform; backface-visibility: hidden; }
 .card:hover img { transform: translateZ(0) scale(1.04); }
 .card.fit img { transform: translateZ(0) scale(0.92); }
