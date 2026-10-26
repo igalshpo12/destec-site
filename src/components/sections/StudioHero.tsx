@@ -25,7 +25,7 @@ const SLIDES: Slide[] = [
   {
     key: 'jinme',
     tab: 'Jinme',
-    img: '/studio/jinme-201-dark.jpg',
+    img: '/studio/jinme-201-dark.webp',
     imgMobile: '/studio/jinme-201-dark-m.jpg',
     alt: 'זוויתן השתלות Jinme 20:1 פייבר אופטי',
     kicker: 'Jinme · זוויתני השתלות',
@@ -38,7 +38,7 @@ const SLIDES: Slide[] = [
   {
     key: 'nouvag',
     tab: 'Nouvag',
-    img: '/studio/vacuson-dark.jpg',
+    img: '/studio/vacuson-dark.webp',
     imgMobile: '/studio/vacuson-dark-m.jpg',
     alt: 'Nouvag Vacuson 60 LP',
     kicker: 'Nouvag · שוויץ',
@@ -51,7 +51,7 @@ const SLIDES: Slide[] = [
   {
     key: 'surtron',
     tab: 'LED SpA',
-    img: '/studio/surtron-dark.jpg',
+    img: '/studio/surtron-dark.webp',
     imgMobile: '/studio/surtron-dark-m.jpg',
     alt: 'LED Surtron 300 HP',
     kicker: 'LED SpA · איטליה',
@@ -97,6 +97,7 @@ export default function StudioHero() {
               alt={sl.alt}
               fill
               priority={k === 0}
+              quality={90}
               sizes="100vw"
               className="max-[860px]:hidden"
             />
