@@ -9,16 +9,6 @@ const BRANDS = [
   { name: 'MK-dent', kicker: 'Turbines', sub: 'Prime, Classic, Eco Line', img: '/studio/turbine-dark.jpg', pos: '35% 50%', href: '/catalog?manufacturer=MK-DENT' },
 ];
 
-const CATEGORIES = [
-  { slug: 'drills', label: 'מקדחים', note: '396 · MDT' },
-  { slug: 'polishing', label: 'ליטוש וגימור', note: '232 · MDT' },
-  { slug: 'handpieces', label: 'טורבינות, זוויתנים וידיתנים', note: 'JINME · MK-DENT' },
-  { slug: 'surgery', label: 'כירורגיה והשתלות', note: 'NOUVAG · LED' },
-  { slug: 'motors', label: 'מנועים', note: 'JINME · MK-DENT' },
-  { slug: 'sterilization', label: 'סטריליזציה ותחזוקה', note: '' },
-  { slug: 'connectors', label: 'חיבורים ומתאמים', note: '' },
-  { slug: 'general', label: 'ערכות וכללי', note: '40 · MDT' },
-];
 
 const kicker = 'text-[12.5px] font-medium tracking-[0.2em] uppercase text-[#8e9ab3]';
 const h2 = 'font-black text-[clamp(28px,3.6vw,46px)] leading-[1.1] tracking-[-0.02em] text-balance';
@@ -67,31 +57,6 @@ export default function BrandShowcase() {
         />
       </section>
 
-      {/* catalog list */}
-      <section className="py-[clamp(64px,8vw,110px)]" id="catalog">
-        <div className="mx-auto max-w-[1280px] px-5">
-          <div className="flex flex-col gap-3 mb-10">
-            <div className={kicker}>762 מוצרים · 9 יצרנים</div>
-            <h2 className={h2}>הקטלוג המלא.</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-x-12 border-t border-white/10">
-            {CATEGORIES.map((c) => (
-              <Link key={c.slug} href={`/catalog?category=${c.slug}`} className={s.row}>
-                <b className="font-bold text-[clamp(20px,2.2vw,26px)]">{c.label}</b>
-                <span className="text-[13px] text-[#8e9ab3] tracking-[0.08em] tabular-nums" dir="ltr">{c.note}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-3.5 mt-9">
-            <Link href="/catalog" className="inline-flex items-center px-6 py-3.5 rounded border border-white/30 font-medium hover:border-white transition-colors">
-              לכל הקטלוג
-            </Link>
-            <Link href="/contact" className="inline-flex items-center px-6 py-3.5 rounded bg-des-blue text-white font-medium hover:bg-[#1273d6] transition-colors">
-              קבלו הצעת מחיר
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
