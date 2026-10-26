@@ -6,7 +6,7 @@ import RepairForm from '@/components/ui/RepairForm';
 export const metadata: Metadata = {
   title: 'תיקון טורבינות, זוויתנים ומנועים דנטליים',
   description:
-    'מעבדת השירות של DES בבת ים: תיקון טורבינות, זוויתנים, ידיות ומנועים כירורגיים לכל המותגים. איסוף מהמרפאה, אבחון תחת מיקרוסקופ, חלפים מקוריים ואחריות על התיקון.',
+    'מעבדת השירות של DES בבת ים: תיקון טורבינות, זוויתנים, ידיות ומנועים כירורגיים לכל המותגים. איסוף מהמרפאה, אבחון תחת מיקרוסקופ, הצעת מחיר לפני כל תיקון ואחריות על התיקון.',
   alternates: { canonical: 'https://destec.co.il/repairs' },
 };
 
@@ -25,7 +25,7 @@ const STEPS = [
   { icon: MessageCircle, title: 'פותחים קריאה', desc: 'בטופס, בוואטסאפ או בטלפון. מספרים מה הציוד ומה התקלה.' },
   { icon: Truck, title: 'אוספים מהמרפאה', desc: 'שליח מגיע למרפאה, או שולחים אלינו למעבדה בבת ים.' },
   { icon: Microscope, title: 'מאבחנים ומתמחרים', desc: 'אבחון תחת מיקרוסקופ והצעת מחיר לאישורכם לפני כל תיקון.' },
-  { icon: FileCheck, title: 'מתקנים, בודקים, מחזירים', desc: 'חלפים מקוריים, בדיקת סל״ד, לחץ ורעש, דוח בדיקה ואחריות על התיקון.' },
+  { icon: FileCheck, title: 'מתקנים, בודקים, מחזירים', desc: 'בדיקת סל״ד, לחץ ורעש, דוח בדיקה ואחריות על התיקון.' },
 ];
 
 const FACTS = [
@@ -69,10 +69,10 @@ export default function RepairsPage() {
             <h1 className="font-black text-[clamp(32px,4.4vw,60px)] leading-[1.08] tracking-[-0.02em] text-balance">
               תיקון טורבינות, זוויתנים ומנועים.
               <br />
-              במעבדה שלנו, לא בחו״ל.
+              במעבדה שלנו בבת ים.
             </h1>
             <p className="max-w-[34em] text-lg leading-relaxed text-[#c3cce0]">
-              איסוף מהמרפאה, אבחון תחת מיקרוסקופ, הצעת מחיר לפני כל תיקון, חלפים מקוריים ודוח בדיקה לכל ידית.
+              איסוף מהמרפאה, אבחון תחת מיקרוסקופ, הצעת מחיר לפני כל תיקון ודוח בדיקה לכל ידית.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <a href="#form" className="inline-flex items-center rounded bg-des-blue px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1273d6]">
