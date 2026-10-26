@@ -9,6 +9,7 @@
 .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.1s ease; pointer-events: none; }
 .slide.on { opacity: 1; pointer-events: auto; }
 .slide img { object-fit: cover; object-position: 0% 25%; }
+.slide.video::before { background: linear-gradient(to left, rgba(5, 8, 15, 0.92) 0%, rgba(5, 8, 15, 0.75) 38%, rgba(5, 8, 15, 0.1) 60%), linear-gradient(to top, #05080f, rgba(5, 8, 15, 0) 10%); }
 .slide::before {
   content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:

@@ -9,8 +9,10 @@ import s from './studio.module.css';
 type Slide = {
   key: string;
   tab: string;
-  img: string;
-  imgMobile: string;
+  img?: string;
+  imgMobile?: string;
+  video?: string;
+  poster?: string;
   alt: string;
   kicker: string;
   title: [string, string];
@@ -23,17 +25,17 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    key: 'jinme',
-    tab: 'Jinme',
-    img: '/studio/jinme-201-dark.webp',
-    imgMobile: '/studio/jinme-201-dark-m.jpg',
-    alt: 'זוויתן השתלות Jinme 20:1 פייבר אופטי',
-    kicker: 'Jinme · זוויתני השתלות',
-    title: ['זוויתן השתלות 20:1.', 'פייבר אופטי, בלי רעידה.'],
-    lede: 'הפחתה 20:1 להשתלות ולכירורגיה. כל יחידה נבדקת ומכוילת במעבדת DES לפני המסירה.',
-    primary: { href: '/catalog/2ba3cf5e-e0ad-4324-b4a2-f6240b80412d', label: 'לעמוד המוצר' },
+    key: 'lab',
+    tab: 'מעבדת שירות',
+    video: '/videos/repair-explainer.mp4',
+    poster: '/videos/repair-explainer-poster.jpg',
+    alt: 'מעבדת השירות של DES',
+    kicker: 'שירות ומעבדה · ישראל',
+    title: ['תיקון במעבדה שלנו.', 'לא בחו״ל.'],
+    lede: 'טכנאים מוסמכים, חלקים מקוריים ודוח בדיקה לכל ידית. איסוף מהמרפאה והחזרה תוך ימים.',
+    primary: { href: '/contact?service=repair', label: 'פתיחת קריאת שירות' },
     secondary: { href: '/catalog?manufacturer=JINME', label: 'לכל מוצרי Jinme' },
-    waText: 'שלום, אשמח לפרטים על זוויתן השתלות 20:1 Jinme',
+    waText: 'שלום, אשמח לתאם איסוף ציוד לתיקון',
   },
   {
     key: 'nouvag',
@@ -88,27 +90,43 @@ export default function StudioHero() {
       {SLIDES.map((sl, k) => (
         <div
           key={sl.key}
-          className={`${s.slide} ${k === i ? s.on : ''} ${sl.shrink ? s.shrink : ''}`}
+          className={`${s.slide} ${k === i ? s.on : ''} ${sl.shrink ? s.shrink : ''} ${sl.video ? s.video : ''}`}
           aria-hidden={k !== i}
         >
           <div className={`${s.pic} absolute inset-0 max-[860px]:relative`}>
-            <Image
-              src={sl.img}
-              alt={sl.alt}
-              fill
-              priority={k === 0}
-              quality={90}
-              sizes="100vw"
-              className="max-[860px]:hidden"
-            />
-            <Image
-              src={sl.imgMobile}
-              alt={sl.alt}
-              fill
-              priority={k === 0}
-              sizes="100vw"
-              className="min-[861px]:hidden object-cover"
-            />
+            {sl.video ? (
+              <video
+                src={sl.video}
+                poster={sl.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={sl.alt}
+                className="absolute inset-0 w-full h-full object-cover object-center"
+              />
+            ) : (
+              <>
+                <Image
+                  src={sl.img!}
+                  alt={sl.alt}
+                  fill
+                  priority={k === 0}
+                  quality={90}
+                  sizes="100vw"
+                  className="max-[860px]:hidden"
+                />
+                <Image
+                  src={sl.imgMobile!}
+                  alt={sl.alt}
+                  fill
+                  priority={k === 0}
+                  sizes="100vw"
+                  className="min-[861px]:hidden object-cover"
+                />
+              </>
+            )}
           </div>
           <div className={s.copy}>
             <div className="mx-auto w-full max-w-[1280px] px-5 flex flex-col items-start gap-5">
