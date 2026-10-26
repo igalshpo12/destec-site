@@ -10,7 +10,6 @@ type Slide = {
   key: string;
   tab: string;
   img?: string;
-  imgMobile?: string;
   video?: string;
   poster?: string;
   alt: string;
@@ -41,7 +40,6 @@ const SLIDES: Slide[] = [
     key: 'nouvag',
     tab: 'Nouvag',
     img: '/studio/vacuson-dark.webp',
-    imgMobile: '/studio/vacuson-dark-m.jpg',
     alt: 'Nouvag Vacuson 60 LP',
     kicker: 'Nouvag · שוויץ',
     title: ['Vacuson 60 LP.', 'שאיבה כירורגית, מתחת ל‑55 dB.'],
@@ -54,7 +52,6 @@ const SLIDES: Slide[] = [
     key: 'surtron',
     tab: 'LED SpA',
     img: '/studio/surtron-dark.webp',
-    imgMobile: '/studio/surtron-dark-m.jpg',
     alt: 'LED Surtron 300 HP',
     kicker: 'LED SpA · איטליה',
     title: ['Surtron 300 HP.', 'חיתוך, קרישה ובייפולר.'],
@@ -115,15 +112,6 @@ export default function StudioHero() {
                   priority={k === 0}
                   quality={90}
                   sizes="100vw"
-                  className="max-[860px]:hidden"
-                />
-                <Image
-                  src={sl.imgMobile!}
-                  alt={sl.alt}
-                  fill
-                  priority={k === 0}
-                  sizes="100vw"
-                  className="min-[861px]:hidden object-cover"
                 />
               </>
             )}
