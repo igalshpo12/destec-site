@@ -217,10 +217,10 @@ export default function WorkshopSection() {
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
               <Link
                 href="/repairs"
-                className="inline-flex items-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-3 font-semibold px-8 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: '#1e90ff', color: '#ffffff' }}
               >
                 צור קשר לשירות
@@ -230,7 +230,7 @@ export default function WorkshopSection() {
                 href="https://wa.me/972548818681?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%AA%D7%90%D7%9D%20%D7%90%D7%99%D7%A1%D7%95%D7%A3%20%D7%A6%D7%99%D7%95%D7%93%20%D7%9C%D7%AA%D7%99%D7%A7%D7%95%D7%9F"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-medium px-6 py-4 rounded-xl transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-medium px-6 py-4 rounded-xl transition-colors"
                 style={{ color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.18)' }}
               >
                 איסוף לתיקון ב-WhatsApp

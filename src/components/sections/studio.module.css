@@ -44,6 +44,12 @@
 
 /* brand cards: edge fade so renders blend into the stage */
 .card { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: block; background: #070b14; }
+@media (max-width: 639px) {
+  .card { aspect-ratio: 16 / 10; }
+  .card img { object-position: 50% 50% !important; }
+  .card.fit img { transform: translateZ(0) scale(1); }
+  .card.tall { aspect-ratio: 4 / 5; } /* portrait render: keep the whole handpiece */
+}
 .card img { object-fit: cover; transform: translateZ(0) scale(1); transition: transform 0.8s ease; will-change: transform; backface-visibility: hidden; }
 .card:hover img { transform: translateZ(0) scale(1.04); }
 .card.fit img { transform: translateZ(0) scale(0.92); }

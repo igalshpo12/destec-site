@@ -322,10 +322,10 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
 
         {/* Price + CTA */}
         <div
-          className="flex items-end justify-between pt-3 mt-auto"
+          className="flex items-end justify-between gap-2 pt-3 mt-auto"
           style={{ borderTop: '1px solid #f0f2f5' }}
         >
-          <div>
+          <div className="min-w-0">
             {item.price ? (
               <>
                 <div
@@ -339,14 +339,14 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
                 </div>
               </>
             ) : (
-              <span className="text-sm" style={{ color: '#9ba3af' }}>
+              <span className="text-xs sm:text-sm leading-tight block" style={{ color: '#9ba3af' }}>
                 לפרטי מחיר
               </span>
             )}
           </div>
           <Link
             href={`/catalog/${item.id}`}
-            className="relative z-[2] text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
+            className="relative z-[2] flex-shrink-0 text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
             style={{
               background: '#1a2b4a',
               color: '#fff',

@@ -50,7 +50,7 @@ function CertCard({
 
       {/* "CERTIFIED" stamp */}
       <div
-        className="absolute bottom-4 left-4 text-xs font-black tracking-[0.2em] uppercase rotate-[-12deg] opacity-10"
+        className="hidden sm:block absolute bottom-4 left-4 text-xs font-black tracking-[0.2em] uppercase rotate-[-12deg] opacity-10"
         style={{ color, fontSize: '0.55rem' }}
       >
         CERTIFIED
@@ -196,29 +196,6 @@ export default function AboutSection() {
               }
             />
 
-            {/* Client logos mini strip */}
-            <div
-              className="rounded-xl p-5"
-              style={{ background: '#f7f8fa', border: '1px solid #eaecf0' }}
-            >
-              <div
-                className="text-xs font-semibold tracking-wider uppercase mb-4"
-                style={{ color: '#9ba3af' }}
-              >
-                לקוחות מרכזיים
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {['כללית', 'מכבי דנט', 'איכילוב', 'Atidant', 'Lorian Medic'].map((client) => (
-                  <span
-                    key={client}
-                    className="text-xs font-medium px-3 py-1.5 rounded-lg"
-                    style={{ background: '#fff', border: '1px solid #e2e5ea', color: '#374151' }}
-                  >
-                    {client}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>
