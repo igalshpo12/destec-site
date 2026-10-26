@@ -6,7 +6,7 @@ const BRANDS = [
   { name: 'Jinme', kicker: 'Handpieces', sub: 'טורבינות, זוויתנים, מנועים', img: '/studio/jinme-15-dark.jpg', pos: '50% 40%', href: '/catalog?manufacturer=JINME' },
   { name: 'Nouvag', kicker: 'Surgery', sub: 'מנועים כירורגיים, שאיבה, ליפו', img: '/studio/vacuson-dark.webp', pos: '30% 50%', href: '/catalog?manufacturer=NOUVAG' },
   { name: 'LED SpA', kicker: 'Electrosurgery', sub: 'יחידות Surtron', img: '/studio/surtron-dark.webp', pos: '30% 50%', href: '/catalog?manufacturer=SPA%20LED' },
-  { name: 'MK-dent', kicker: 'Turbines', sub: 'Prime, Classic, Eco Line', img: '/studio/turbine-dark.jpg', pos: '35% 50%', href: '/catalog?manufacturer=MK-DENT' },
+  { name: 'MK-dent', kicker: 'Turbines', sub: 'Prime, Classic, Eco Line', img: '/studio/turbine-dark.jpg', pos: '27% 50%', fit: true, href: '/catalog?manufacturer=MK-DENT' },
 ];
 
 
@@ -25,7 +25,7 @@ export default function BrandShowcase() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
             {BRANDS.map((b) => (
-              <Link key={b.name} href={b.href} className={s.card} aria-label={`${b.name} – ${b.sub}`}>
+              <Link key={b.name} href={b.href} className={`${s.card} ${'fit' in b && b.fit ? s.fit : ''}`} aria-label={`${b.name} – ${b.sub}`}>
                 <Image src={b.img} alt="" fill sizes="(max-width: 768px) 50vw, 25vw" style={{ objectPosition: b.pos }} />
                 <div className={`${s.cap} flex flex-col gap-1`}>
                   <div className="text-[11.5px] font-medium tracking-[0.2em] uppercase text-[#aab6cf]">{b.kicker}</div>
