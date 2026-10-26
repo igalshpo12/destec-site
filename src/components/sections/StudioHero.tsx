@@ -33,7 +33,7 @@ const SLIDES: Slide[] = [
     kicker: 'שירות ומעבדה · ישראל',
     title: ['תיקון במעבדה שלנו.', 'לא בחו״ל.'],
     lede: 'טכנאים מוסמכים, חלקים מקוריים ודוח בדיקה לכל ידית. איסוף מהמרפאה והחזרה תוך ימים.',
-    primary: { href: '/contact?service=repair', label: 'פתיחת קריאת שירות' },
+    primary: { href: '/repairs', label: 'פתיחת קריאת שירות' },
     secondary: { href: '/catalog?manufacturer=JINME', label: 'לכל מוצרי Jinme' },
     waText: 'שלום, אשמח לתאם איסוף ציוד לתיקון',
   },
