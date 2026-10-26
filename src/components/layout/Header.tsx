@@ -144,25 +144,23 @@ export default function Header() {
             href="/repairs"
             className="hidden md:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all duration-150 whitespace-nowrap"
             style={{
-              background: '#f8f9fb',
-              color: '#4a5568',
-              border: '1px solid #e8ecf0',
+              background: '#1a2b4a',
+              color: '#ffffff',
+              border: '1px solid #1a2b4a',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = 'rgba(30,144,255,0.06)';
-              el.style.color = '#1a2b4a';
-              el.style.borderColor = 'rgba(30,144,255,0.4)';
+              el.style.background = '#1e90ff';
+              el.style.borderColor = '#1e90ff';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = '#f8f9fb';
-              el.style.color = '#4a5568';
-              el.style.borderColor = '#e8ecf0';
+              el.style.background = '#1a2b4a';
+              el.style.borderColor = '#1a2b4a';
             }}
           >
             <Wrench className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>{'איסוף לתיקון'}</span>
+            <span>{'תיקונים ושירות'}</span>
           </Link>
         </div>
       </div>
@@ -199,6 +197,20 @@ export default function Header() {
                 </Link>
               </li>
             ))}
+            <li className="mr-2 pr-2" style={{ borderRight: '1px solid #e8ecf0' }}>
+              <Link
+                href="/repairs"
+                className="flex items-center gap-1.5 text-sm px-4 py-3 whitespace-nowrap transition-colors duration-150 relative group"
+                style={{ color: '#1e90ff', fontWeight: 600 }}
+              >
+                <Wrench className="w-4 h-4 flex-shrink-0" />
+                {'תיקונים ושירות'}
+                <span
+                  className="absolute bottom-0 right-0 left-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  style={{ background: '#1e90ff' }}
+                />
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
