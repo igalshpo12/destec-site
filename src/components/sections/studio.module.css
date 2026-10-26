@@ -3,12 +3,12 @@
 
 .hero { position: relative; overflow: hidden; }
 @media (min-width: 861px) {
-  .hero { aspect-ratio: 16 / 9; max-height: 860px; }
+  .hero { width: 100%; height: min(56.25vw, 860px); }
 }
 
 .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.1s ease; pointer-events: none; }
 .slide.on { opacity: 1; pointer-events: auto; }
-.slide img { object-fit: cover; object-position: 0% 50%; }
+.slide img { object-fit: cover; object-position: 0% 25%; }
 .slide::before {
   content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
