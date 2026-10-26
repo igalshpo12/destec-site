@@ -4,8 +4,8 @@ import s from './studio.module.css';
 
 const BRANDS = [
   { name: 'Jinme', kicker: 'Handpieces', sub: 'טורבינות, זוויתנים, מנועים', img: '/studio/jinme-15-dark.jpg', pos: '50% 40%', href: '/catalog?manufacturer=JINME' },
-  { name: 'Nouvag', kicker: 'Surgery', sub: 'מנועים כירורגיים, שאיבה, ליפו', img: '/studio/vacuson-dark.jpg', pos: '30% 50%', href: '/catalog?manufacturer=NOUVAG' },
-  { name: 'LED SpA', kicker: 'Electrosurgery', sub: 'יחידות Surtron', img: '/studio/surtron-dark.jpg', pos: '30% 50%', href: '/catalog?manufacturer=SPA%20LED' },
+  { name: 'Nouvag', kicker: 'Surgery', sub: 'מנועים כירורגיים, שאיבה, ליפו', img: '/studio/vacuson-dark.webp', pos: '30% 50%', href: '/catalog?manufacturer=NOUVAG' },
+  { name: 'LED SpA', kicker: 'Electrosurgery', sub: 'יחידות Surtron', img: '/studio/surtron-dark.webp', pos: '30% 50%', href: '/catalog?manufacturer=SPA%20LED' },
   { name: 'MK-dent', kicker: 'Turbines', sub: 'Prime, Classic, Eco Line', img: '/studio/turbine-dark.jpg', pos: '35% 50%', href: '/catalog?manufacturer=MK-DENT' },
 ];
 
