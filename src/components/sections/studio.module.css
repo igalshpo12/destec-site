@@ -41,9 +41,10 @@
 
 /* brand cards: edge fade so renders blend into the stage */
 .card { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: block; background: #070b14; }
-.card img { object-fit: cover; }
+.card img { object-fit: cover; transform: translateZ(0) scale(1); transition: transform 0.8s ease; will-change: transform; backface-visibility: hidden; }
+.card:hover img { transform: translateZ(0) scale(1.04); }
 .card::before {
-  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; transform: translateZ(0);
   background:
     linear-gradient(to right, #070b14, rgba(7, 11, 20, 0) 16%, rgba(7, 11, 20, 0) 84%, #070b14),
     linear-gradient(to bottom, #070b14, rgba(7, 11, 20, 0) 16%, rgba(7, 11, 20, 0) 84%, #070b14);
@@ -53,4 +54,4 @@
 .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 20px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: padding 0.2s; }
 .row:hover { padding-right: 14px; }
 
-@media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .slide, .card img { transition: none; } }
