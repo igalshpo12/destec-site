@@ -31,6 +31,9 @@
   .slide { position: relative; display: none; opacity: 1; }
   .slide.on { display: block; }
   .slide .pic { position: relative; aspect-ratio: 4 / 5; }
+  /* video slide: show the 16:9 footage uncropped, fade its bottom into the stage */
+  .slide.video .pic { aspect-ratio: 16 / 9; }
+  .slide.video .pic::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; pointer-events: none; background: linear-gradient(to top, #05080f, rgba(5, 8, 15, 0)); }
   .slide::before { display: none; }
   .copy { position: relative; inset: auto; padding: 28px 0 84px; }
   .copy > div > * { max-width: none; }

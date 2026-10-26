@@ -48,22 +48,29 @@ export default function RepairsPage() {
     <div dir="rtl" className="bg-white text-gray-900">
       {/* hero */}
       <section className="relative overflow-hidden bg-[#05080f] text-[#eef2f8]" aria-label="מעבדת השירות של DES">
-        <video
-          src="/videos/repair-explainer.mp4"
-          poster="/videos/repair-explainer-poster.jpg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(to left, rgba(5,8,15,.94) 0%, rgba(5,8,15,.8) 45%, rgba(5,8,15,.25) 100%), linear-gradient(to top, #05080f 0%, rgba(5,8,15,.92) 28%, rgba(5,8,15,0) 60%)' }}
-        />
-        <div className="relative mx-auto max-w-[1280px] px-5 py-20 md:py-28 lg:py-36">
+        {/* phones: uncropped 16:9 block above the copy; md+: full-bleed background behind it */}
+        <div className="relative aspect-video md:absolute md:inset-0 md:aspect-auto">
+          <video
+            src="/videos/repair-explainer.mp4"
+            poster="/videos/repair-explainer-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          <div
+            className="absolute inset-0 md:hidden"
+            style={{ background: 'linear-gradient(to top, #05080f 0%, rgba(5,8,15,0) 24%)' }}
+          />
+          <div
+            className="absolute inset-0 hidden md:block"
+            style={{ background: 'linear-gradient(to left, rgba(5,8,15,.94) 0%, rgba(5,8,15,.8) 45%, rgba(5,8,15,.25) 100%), linear-gradient(to top, #05080f 0%, rgba(5,8,15,.92) 28%, rgba(5,8,15,0) 60%)' }}
+          />
+        </div>
+        <div className="relative mx-auto max-w-[1280px] px-5 pt-6 pb-16 md:py-28 lg:py-36">
           <div className="max-w-[620px] flex flex-col items-start gap-5">
             <div className="text-[12.5px] font-medium uppercase tracking-[0.2em] text-[#b7c3dd]">שירות ומעבדה · בת ים</div>
             <h1 className="font-black text-[clamp(32px,4.4vw,60px)] leading-[1.08] tracking-[-0.02em] text-balance">
