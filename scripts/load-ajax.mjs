@@ -87,7 +87,7 @@ for (const p of data.products) {
     description_en: null,
     price: null,
     currency: 'ILS',
-    is_active: true,
+    is_active: p.active !== false,
     sort_order: p.sort,
     updated_at: new Date().toISOString(),
   };

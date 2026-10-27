@@ -176,12 +176,12 @@ export default function Header() {
         aria-label="קטגוריות"
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <ul className="flex items-center justify-center overflow-x-auto">
+          <ul className="flex items-center justify-center flex-wrap">
             {NAV_CATEGORIES.map((cat) => (
               <li key={cat.slug}>
                 <Link
                   href={`/catalog?category=${cat.slug}`}
-                  className="block text-sm px-4 py-3 whitespace-nowrap transition-all duration-150 relative group"
+                  className="block text-sm px-3 py-3 whitespace-nowrap transition-all duration-150 relative group"
                   style={{ color: '#4a5568', fontWeight: 500 }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLElement;
@@ -201,10 +201,10 @@ export default function Header() {
                 </Link>
               </li>
             ))}
-            <li className="mr-2 pr-2" style={{ borderRight: '1px solid #e8ecf0' }}>
+            <li className="hidden xl:block mr-2 pr-2" style={{ borderRight: '1px solid #e8ecf0' }}>
               <Link
                 href="/repairs"
-                className="flex items-center gap-1.5 text-sm px-4 py-3 whitespace-nowrap transition-colors duration-150 relative group"
+                className="flex items-center gap-1.5 text-sm px-3 py-3 whitespace-nowrap transition-colors duration-150 relative group"
                 style={{ color: '#1e90ff', fontWeight: 600 }}
               >
                 <Wrench className="w-4 h-4 flex-shrink-0" />
