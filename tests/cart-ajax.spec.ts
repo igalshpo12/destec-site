@@ -19,17 +19,17 @@ for (const vp of [{ name: 'desktop-1100', width: 1100, height: 800 }, { name: 'p
     test('AJAX catalog, add from card, badge persists, product page, cart, checkout', async ({ page }) => {
       await stubOrder(page);
 
-      // Catalog filtered to AJAX — 32 products, AJ15 first
+      // Catalog filtered to AJAX — 14 products, AJ15 first
       await page.goto(`${BASE}/catalog?manufacturer=AJAX`);
       await expect(page.locator('h1')).toContainText('AJAX');
-      await expect(page.getByText('32 מוצרים נמצאו')).toBeVisible();
+      await expect(page.getByText('14 מוצרים נמצאו')).toBeVisible();
       const firstCard = page.locator('article').first();
       await expect(firstCard).toContainText('AJ15');
       await page.screenshot({ path: `${SHOTS}/${vp.name}-catalog-ajax.png`, fullPage: false });
 
       // Nav category works
       await page.goto(`${BASE}/catalog?category=clinic`);
-      await expect(page.getByText('32 מוצרים נמצאו')).toBeVisible();
+      await expect(page.getByText('14 מוצרים נמצאו')).toBeVisible();
 
       // Add from card must NOT navigate
       await page.goto(`${BASE}/catalog?manufacturer=AJAX`);
