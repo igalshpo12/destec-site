@@ -90,6 +90,11 @@ export const NAV_CATEGORIES = [
     dbCategories: ['חיבור EMS', 'חיבור SATALEC', 'חיבור Kavo', 'חיבור NSK', 'חיבור W&H'],
   },
   {
+    slug: 'clinic',
+    label: 'יחידות טיפול וציוד מרפאה',
+    dbCategories: ['יחידות טיפול דנטליות', 'מדחסי אוויר', 'מערכות ואקום מרכזיות', 'דימות ורנטגן'],
+  },
+  {
     slug: 'general',
     label: 'ערכות וכללי',
     dbCategories: ['ערכות', 'מכשירי רפואה כללית'],
@@ -111,6 +116,7 @@ export const SUPPLIERS = [
 // Manufacturers as they actually appear in catalog_products.manufacturer —
 // the filter matches with eq(), so `value` must be the exact DB string.
 export const CATALOG_MANUFACTURERS: { value: string; label: string }[] = [
+  { value: 'AJAX', label: 'AJAX Dental' },
   { value: 'MDT', label: 'MDT' },
   { value: 'JINME', label: 'Jinme' },
   { value: 'NOUVAG', label: 'Nouvag' },

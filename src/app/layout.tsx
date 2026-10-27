@@ -6,6 +6,8 @@ import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/sections/AnnouncementBar';
 import SiteAnalytics from '@/components/analytics/SiteAnalytics';
 import AccessibilityWidget from '@/components/a11y/AccessibilityWidget';
+import { CartProvider } from '@/lib/cart';
+import CartToast from '@/components/cart/CartToast';
 
 // Restore saved accessibility settings before paint (no flash of unstyled content)
 const A11Y_INIT = `(function(){try{var s=JSON.parse(localStorage.getItem('des-a11y')||'{}'),d=document.documentElement;
@@ -52,12 +54,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${notoSansHebrew.variable} font-sans antialiased bg-gray-50 text-gray-900`}>
         <script dangerouslySetInnerHTML={{ __html: A11Y_INIT }} />
         <a href="#main-content" className="skip-link">דלג לתוכן הראשי</a>
-        <div id="site">
-          <AnnouncementBar />
-          <Header />
-          <main id="main-content">{children}</main>
-          <Footer />
-        </div>
+        <CartProvider>
+          <div id="site">
+            <AnnouncementBar />
+            <Header />
+            <main id="main-content">{children}</main>
+            <Footer />
+          </div>
+          <CartToast />
+        </CartProvider>
         <AccessibilityWidget />
         <SiteAnalytics />
       </body>

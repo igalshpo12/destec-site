@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { supabase, EquipmentWithPrice } from '@/lib/supabase';
 import { formatPrice, CATEGORY_LABELS, CATALOG_LIVE } from '@/lib/utils';
 import { MessageCircle, ChevronLeft, ShieldCheck } from 'lucide-react';
+import AddToCartButton from '@/components/cart/AddToCartButton';
+import AjaxFeatureGallery from '@/components/sections/AjaxFeatureGallery';
+import ProductDetails, { parseDescription } from '@/components/ui/ProductDetails';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,7 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const name = item.name_he || item.name_en || 'מוצר';
   return {
     title: name,
-    description: item.description_he || `${name} — ${item.manufacturer || 'DES'} · מופץ בישראל על ידי DES.`,
+    description: (item.description_he || '').split('\n')[0] || `${name} — ${item.manufacturer || 'DES'} · מופץ בישראל על ידי DES.`,
   };
 }
 
@@ -73,6 +76,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
     (item.category && CATEGORIES_WITH_IMAGES.has(item.category)
       ? `/images/categories/${item.category}.jpg`
       : null);
+
+  const { intro, features, specs } = parseDescription(item.description_he);
 
   const hasWarranty =
     item.warranty_purchase_months || item.warranty_repair_months || item.warranty_manufacturer_months;
@@ -130,8 +135,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
             {item.model && <span className="font-mono">{item.model}</span>}
           </div>
 
-          {item.description_he && (
-            <p className="text-gray-600 leading-relaxed mb-6">{item.description_he}</p>
+          {intro && (
+            <div className="text-gray-600 leading-relaxed mb-6 whitespace-pre-line">{intro}</div>
           )}
 
           {/* Price */}
@@ -147,6 +152,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <div className="text-gray-600 font-medium">לקבלת מחיר וזמינות — צרו קשר</div>
             )}
           </div>
+
+          {/* Add to cart */}
+          <AddToCartButton item={item} variant="full" className="mb-3" />
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -189,6 +197,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      <ProductDetails features={features} specs={specs} />
+      {item.manufacturer === 'AJAX' && <AjaxFeatureGallery model={item.model} />}
     </div>
   );
 }

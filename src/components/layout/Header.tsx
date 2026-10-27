@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, MessageCircle, Wrench, Menu, X } from 'lucide-react';
 import { NAV_CATEGORIES } from '@/lib/utils';
+import CartButton from '@/components/cart/CartButton';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -86,6 +87,9 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Cart */}
+          <CartButton />
+
           {/* WhatsApp */}
           <a
             href="https://wa.me/972548818681"
