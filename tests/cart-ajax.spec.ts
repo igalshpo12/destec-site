@@ -1,7 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
 const BASE = process.env.BASE_URL || 'http://localhost:3077';
-const SHOTS = process.env.SHOTS || '/private/tmp/claude-501/-Users-igalsh/1797e831-774e-4090-aab6-0e1511f023be/scratchpad/shots';
+const SHOTS = process.env.SHOTS || 'test-results/cart-ajax';
+// catalog_products ids of the two spotlighted AJAX units (stable — upserted by konimbo_id)
 const AJ15 = '6bb09f83-232a-46ce-86a6-d3edede337d6';
 const AJ25 = 'a8d32c03-6f00-4e7d-84af-bc0da90e5843';
 

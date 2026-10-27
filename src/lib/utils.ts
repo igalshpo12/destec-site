@@ -110,7 +110,7 @@ export const CATALOG_LIVE = true;
 export const HIDDEN_CATEGORIES = ['מאמרים | DES'];
 
 export const SUPPLIERS = [
-  'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT', 'CHIRMED', 'AJAX',
+  'NSK', 'W&H', 'KaVo', 'MK-dent', 'Nouvag', 'Bien-Air', 'Anthogyr', 'Dentsply Sirona', 'JINME', 'MDT', 'CHIRMED',
 ];
 
 // Manufacturers as they actually appear in catalog_products.manufacturer —
