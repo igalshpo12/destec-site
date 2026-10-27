@@ -5,6 +5,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { EquipmentWithPrice } from '@/lib/supabase';
 import { formatPrice, CATEGORY_LABELS, shortName } from '@/lib/utils';
+import AddToCartButton from '@/components/cart/AddToCartButton';
 
 /* Brand → accent color map */
 const BRAND_COLORS: Record<string, { accent: string; letter: string }> = {
@@ -17,6 +18,7 @@ const BRAND_COLORS: Record<string, { accent: string; letter: string }> = {
   Anthogyr:          { accent: '#8e44ad', letter: 'A' },
   'Dentsply Sirona': { accent: '#00589b', letter: 'D' },
   JINME:             { accent: '#e74c3c', letter: 'J' },
+  AJAX:              { accent: '#1e90ff', letter: 'A' },
 };
 
 const FALLBACK = { accent: '#1a2b4a', letter: '?' };
@@ -322,10 +324,10 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
 
         {/* Price + CTA */}
         <div
-          className="flex items-end justify-between gap-2 pt-3 mt-auto"
+          className="flex flex-wrap items-end justify-between gap-2 pt-3 mt-auto"
           style={{ borderTop: '1px solid #f0f2f5' }}
         >
-          <div className="min-w-0">
+          <div className="min-w-0 truncate">
             {item.price ? (
               <>
                 <div
@@ -344,9 +346,11 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
               </span>
             )}
           </div>
+          <div className="relative z-[2] flex items-center gap-1.5 flex-shrink-0 ms-auto">
+          <AddToCartButton item={item} accent={brand.accent} />
           <Link
             href={`/catalog/${item.id}`}
-            className="relative z-[2] flex-shrink-0 text-xs font-semibold px-4 py-2 rounded-lg transition-colors duration-150"
+            className="relative z-[2] flex-shrink-0 text-xs font-semibold px-2.5 sm:px-3.5 py-2 rounded-lg transition-colors duration-150"
             style={{
               background: '#1a2b4a',
               color: '#fff',
@@ -360,6 +364,7 @@ export default function ProductCard({ item, showSaleBadge = false }: Props) {
           >
             פרטים
           </Link>
+          </div>
         </div>
       </div>
     </article>
