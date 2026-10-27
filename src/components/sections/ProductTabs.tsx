@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase, EquipmentWithPrice } from '@/lib/supabase';
-import { HIDDEN_CATEGORIES, CATALOG_LIVE } from '@/lib/utils';
+import { HIDDEN_CATEGORIES, CATALOG_LIVE, FEATURED_PRODUCT_IDS } from '@/lib/utils';
 import ProductCard from '@/components/ui/ProductCard';
 import Link from 'next/link';
 
@@ -25,7 +25,19 @@ function mapRows(data: unknown[]): EquipmentWithPrice[] {
 const BASE_SELECT = `id, item_number, name_he, name_en, manufacturer, model, category,
   description_he, description_en, is_active, created_at, updated_at, image_url, price, currency`;
 
+// Curated showcase (FEATURED_PRODUCT_IDS, in that order); falls back to the
+// cheapest-first priced list only if the curated fetch yields nothing.
 async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
+  try {
+    const { data, error } = await supabase
+      .from('catalog_products').select(BASE_SELECT)
+      .eq('is_active', true)
+      .in('id', FEATURED_PRODUCT_IDS);
+    if (!error && data && data.length > 0) {
+      const rank = new Map(FEATURED_PRODUCT_IDS.map((id, i) => [id, i]));
+      return mapRows(data).sort((a, b) => (rank.get(a.id) ?? 99) - (rank.get(b.id) ?? 99));
+    }
+  } catch { /* fall through */ }
   try {
     const { data, error } = await supabase
       .from('catalog_products').select(BASE_SELECT)
@@ -34,8 +46,7 @@ async function fetchFeatured(): Promise<EquipmentWithPrice[]> {
       .order('sort_order', { ascending: true, nullsFirst: false })
       .limit(80);
     if (error || !data) return [];
-    const withPrices = mapRows(data).filter((item) => item.price != null);
-    return withPrices.slice(0, 12);
+    return mapRows(data).filter((item) => item.price != null).slice(0, 12);
   } catch { return []; }
 }
 
