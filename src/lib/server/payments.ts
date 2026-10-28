@@ -63,7 +63,7 @@ export async function startOrderPayment(db: SupabaseClient, { ref, customer, lin
   const env = paymentEnv();
   const amountAgorot = toAgorot(linesTotal(lines));
   const orderRef = newOrderRef(randomBytes);
-  const { data: row, error } = await db.from('web_orders')
+  const { data: row, error } = await db.from('online_orders')
     .insert({ ref, order_ref: orderRef, amount_agorot: amountAgorot, customer, lines, status: 'pending' })
     .select('id').single();
   if (error || !row) throw new Error('Could not record the order');
@@ -76,10 +76,10 @@ export async function startOrderPayment(db: SupabaseClient, { ref, customer, lin
     const pageUrl = parsePageUrl(xml, '');
     if (!pageUrl) throw new Error('Credit2000 did not return a payment page');
     const uid = uidFromUrl(pageUrl);
-    if (uid) await db.from('web_orders').update({ gateway_uid: uid }).eq('id', row.id).eq('status', 'pending');
+    if (uid) await db.from('online_orders').update({ gateway_uid: uid }).eq('id', row.id).eq('status', 'pending');
     return { orderId: row.id as string, pageUrl, amount: amountAgorot / 100 };
   } catch (err) {
-    await db.from('web_orders').update({ status: 'error', error_text: String((err as Error)?.message || err).slice(0, 500) })
+    await db.from('online_orders').update({ status: 'error', error_text: String((err as Error)?.message || err).slice(0, 500) })
       .eq('id', row.id).eq('status', 'pending');
     throw err;
   }
@@ -87,7 +87,7 @@ export async function startOrderPayment(db: SupabaseClient, { ref, customer, lin
 
 export async function loadOrder(db: SupabaseClient, id: string): Promise<WebOrder | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
-  const { data } = await db.from('web_orders').select('*').eq('id', id).maybeSingle();
+  const { data } = await db.from('online_orders').select('*').eq('id', id).maybeSingle();
   return (data as WebOrder) || null;
 }
 
@@ -105,7 +105,7 @@ export async function resolveOrder(db: SupabaseClient, order: WebOrder, uidHint?
   // claim: one verifier at a time; a stale claim (crashed verifier) is released after 20 s
   const now = new Date();
   const stale = new Date(now.getTime() - 20_000).toISOString();
-  const { data: claimed } = await db.from('web_orders').update({ verifying_at: now.toISOString(), gateway_uid: uid })
+  const { data: claimed } = await db.from('online_orders').update({ verifying_at: now.toISOString(), gateway_uid: uid })
     .eq('id', order.id).eq('status', 'pending').or(`verifying_at.is.null,verifying_at.lt.${stale}`).select('id').maybeSingle();
   if (!claimed) return order;
 
@@ -113,16 +113,16 @@ export async function resolveOrder(db: SupabaseClient, order: WebOrder, uidHint?
   try {
     xml = await soapCall(fetch, env.url, TOKEN_OP, tokenEnvelope({ uid }));
   } finally {
-    if (!xml) await db.from('web_orders').update({ verifying_at: null }).eq('id', order.id);
+    if (!xml) await db.from('online_orders').update({ verifying_at: null }).eq('id', order.id);
   }
   const tk = parseToken(xml);
   const pending = !tk.returnCode || tk.returnCode === '123';
   if (pending) {
-    await db.from('web_orders').update({ verifying_at: null }).eq('id', order.id);
+    await db.from('online_orders').update({ verifying_at: null }).eq('id', order.id);
     return { ...order, gateway_uid: uid };
   }
   // money may have moved: the raw answer is on the row before any decision is made
-  await db.from('web_orders').update({ gateway_raw: xml, gateway_return_code: tk.returnCode || null }).eq('id', order.id);
+  await db.from('online_orders').update({ gateway_raw: xml, gateway_return_code: tk.returnCode || null }).eq('id', order.id);
 
   const problems: string[] = [];
   if (tk.productId && tk.productId !== order.order_ref) problems.push(`order ${tk.productId} ≠ ${order.order_ref}`);
@@ -135,7 +135,7 @@ export async function resolveOrder(db: SupabaseClient, order: WebOrder, uidHint?
   if (problems.length) Object.assign(patch, { status: 'error', error_text: `Mismatch: ${problems.join('; ')}` });
   else if (declined) Object.assign(patch, { status: 'declined', error_text: !isApprovedCode(tk.returnCode) ? `Return code ${tk.returnCode}` : 'No approval number' });
   else Object.assign(patch, { status: 'approved', error_text: null });
-  const { data: saved } = await db.from('web_orders').update(patch).eq('id', order.id).eq('status', 'pending').select('*').maybeSingle();
+  const { data: saved } = await db.from('online_orders').update(patch).eq('id', order.id).eq('status', 'pending').select('*').maybeSingle();
   return (saved as WebOrder) || { ...order, ...patch } as WebOrder;
 }
 

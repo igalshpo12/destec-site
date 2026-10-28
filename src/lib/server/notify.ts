@@ -6,7 +6,7 @@ import { sendOrderEmail } from './orderEmail';
 export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
   if (row.status !== 'approved' || row.notified_at) return;
   // claim the notification so two verifiers never send two e-mails
-  const { data } = await db.from('web_orders').update({ notified_at: new Date().toISOString() }).eq('id', row.id).is('notified_at', null).select('id').maybeSingle();
+  const { data } = await db.from('online_orders').update({ notified_at: new Date().toISOString() }).eq('id', row.id).is('notified_at', null).select('id').maybeSingle();
   if (!data) return;
   try {
     await sendOrderEmail({
@@ -16,6 +16,6 @@ export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
     });
   } catch (e) {
     console.error('[Pay] order e-mail failed:', e);
-    await db.from('web_orders').update({ notified_at: null }).eq('id', row.id);
+    await db.from('online_orders').update({ notified_at: null }).eq('id', row.id);
   }
 }

@@ -5,7 +5,7 @@ import { paymentEnv, serviceDb, repriceLines, startOrderPayment } from '@/lib/se
 /**
  * Order request from the cart/checkout.
  *  - Online payment configured (Credit2000) and every item priced in the catalog: the order is
- *    recorded (web_orders), the hosted payment page is opened, and DES is e-mailed only once the
+ *    recorded (online_orders), the hosted payment page is opened, and DES is e-mailed only once the
  *    payment is approved (/api/pay/verify).
  *  - Otherwise (quote items, or payment not configured): the order goes to DES by e-mail, as before.
  * Prices in the request are display only — a charge is always re-priced from catalog_products.
