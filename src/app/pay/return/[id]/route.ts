@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { paymentEnv, serviceDb, loadOrder, resolveOrder, publicView } from '@/lib/server/payments';
 import { isUid } from '@/lib/credit2000.js';
-import { notifyIfApproved } from '@/lib/server/notify';
+import { notifyIfApproved, markInboxUnpaid } from '@/lib/server/notify';
 
 // Where Credit2000 sends the payer's browser after the hosted form (?params=<uid>). It lands
 // inside the checkout page's iframe (or a tab the customer opened). The payment is verified
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const db = serviceDb();
     const order = await loadOrder(db, id);
     if (order) {
-      try { const row = await resolveOrder(db, order, uid); await notifyIfApproved(db, row); view = publicView(row); }
+      try { const row = await resolveOrder(db, order, uid); await notifyIfApproved(db, row); await markInboxUnpaid(row); view = publicView(row); }
       catch (e) { console.error('[Pay] return verify failed:', e); view = publicView(order); }
     }
   }

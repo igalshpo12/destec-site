@@ -44,6 +44,16 @@ export async function POST(req: NextRequest) {
       if (priced) {
         try {
           const { orderId, pageUrl, amount } = await startOrderPayment(db, { ref: orderRef, customer, lines: priced });
+          // In the inbox right away as "awaiting payment": a customer who fills everything and
+          // never pays is a lead. /api/pay/verify rewrites the entry when the payment settles.
+          const emailLines = priced.map((l) => ({ name: l.name, itemNumber: l.item_number, manufacturer: l.manufacturer, price: l.unit_price, qty: l.qty }));
+          await pushToInbox({
+            source: 'website', client_name: customer.name, client_phone: customer.phone, client_email: customer.email,
+            subject: `הזמנה מהאתר ${orderRef} — ממתין לתשלום באתר (${new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount)})`,
+            message: orderMessage({ lines: emailLines, customer, paymentNote: '⏳ דף התשלום נפתח ללקוח — התשלום טרם אושר' }),
+            order_ref: orderRef, equipment_item_number: priced[0]?.item_number || null, equipment_name: priced.length === 1 ? priced[0].name : null,
+            notes: `online_orders ${orderId}`,
+          });
           return NextResponse.json({ success: true, ref: orderRef, payment: { order_id: orderId, page_url: pageUrl, amount } });
         } catch (e) {
           console.error('[Order] payment start failed, falling back to e-mail:', e);

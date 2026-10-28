@@ -31,19 +31,34 @@ export async function pushToInbox(entry: InboxEntry): Promise<string | null> {
   }
 }
 
+// Update the inbox entry of one shop order (matched by the WEB ref) — its text only, never the
+// status the staff set (read / converted / spam). False when no such entry exists.
+export async function updateInboxByRef(orderRef: string, patch: { subject?: string; message?: string; notes?: string | null }): Promise<boolean> {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL) return false;
+  try {
+    const { data, error } = await serviceDb().from('web_orders').update(patch).eq('order_ref', orderRef).eq('source', 'website').select('id');
+    if (error) { console.error('[Inbox] update failed:', error.message); return false; }
+    return !!data?.length;
+  } catch (e) {
+    console.error('[Inbox] update failed:', e);
+    return false;
+  }
+}
+
 const ils = (n: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 2 }).format(n);
 
 // The order as the inbox shows it: one line per item, then the customer's details.
-export function orderMessage({ lines, customer, paid }: {
+export function orderMessage({ lines, customer, paid, paymentNote }: {
   lines: Array<{ name: string; itemNumber?: string | null; manufacturer?: string | null; qty: number; price?: number | null }>;
   customer: { clinic?: string; address?: string; notes?: string; email?: string };
   paid?: { amount: number; approval: string; brand?: string } | null;
+  paymentNote?: string;   // the unpaid wording: quote ("התשלום טרם בוצע") or an online attempt
 }) {
   const items = lines.map((l) => `• ${l.name}${l.manufacturer ? ` (${l.manufacturer})` : ''}${l.itemNumber ? ` · מק״ט ${l.itemNumber}` : ''} × ${l.qty}${l.price ? ` · ${ils(l.price * l.qty)}` : ' · לפי הצעת מחיר'}`);
   const total = lines.reduce((s, l) => s + (l.price ? l.price * l.qty : 0), 0);
   const out = [...items, `סה״כ מתומחר: ${ils(total)} כולל מע״מ`];
   if (paid) out.push(`✔ שולם באתר בכרטיס אשראי: ${ils(paid.amount)} · אישור ${paid.approval}${paid.brand ? ` · ${paid.brand}` : ''} — יש להפיק קבלה`);
-  else out.push('התשלום טרם בוצע');
+  else out.push(paymentNote || 'התשלום טרם בוצע');
   if (customer.clinic) out.push(`מרפאה/חברה: ${customer.clinic}`);
   if (customer.address) out.push(`כתובת: ${customer.address}`);
   if (customer.notes) out.push(`הערות: ${customer.notes}`);
