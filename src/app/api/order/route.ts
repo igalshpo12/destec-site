@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOrderEmail } from '@/lib/server/orderEmail';
 import { paymentEnv, serviceDb, repriceLines, startOrderPayment } from '@/lib/server/payments';
+import { pushToInbox, orderMessage } from '@/lib/server/inbox';
 
 /**
  * Order request from the cart/checkout.
@@ -50,8 +51,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ---- quote / e-mail path (unchanged behaviour)
+    // ---- quote / e-mail path: e-mail to DES + the manager's inbox (הזמנות נכנסות)
     try { await sendOrderEmail({ ref: orderRef, customer, lines }); } catch (e) { console.error('[Order] Failed to send email:', e); }
+    await pushToInbox({
+      source: 'website', client_name: customer.name, client_phone: customer.phone, client_email: customer.email,
+      subject: `הזמנה מהאתר ${orderRef} — ${lines.length} פריטים (טרם שולם)`,
+      message: orderMessage({ lines, customer }), order_ref: orderRef,
+      equipment_item_number: lines[0]?.itemNumber || null, equipment_name: lines.length === 1 ? lines[0].name : null,
+    });
     return NextResponse.json({ success: true, ref: orderRef });
   } catch (err) {
     console.error('[Order] Unexpected error:', err);

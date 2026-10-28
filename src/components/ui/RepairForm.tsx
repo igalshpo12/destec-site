@@ -62,6 +62,7 @@ export default function RepairForm() {
           message,
           attribution: getAttribution(),
           eventId,
+          source: 'repair',
         }),
       });
       if (!res.ok) throw new Error('Request failed');

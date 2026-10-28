@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { pushToInbox } from '@/lib/server/inbox';
 
 interface TouchData {
   utm_source?: string;
@@ -22,6 +23,7 @@ interface ContactPayload {
   message: string;
   attribution?: { first?: TouchData; last?: TouchData };
   eventId?: string;
+  source?: 'contact' | 'repair';   // which site form (RepairForm sends 'repair')
 }
 
 const esc = (s = '') =>
@@ -124,6 +126,17 @@ export async function POST(req: NextRequest) {
     console.log('[Contact Form]', {
       timestamp: new Date().toISOString(),
       ...body,
+    });
+
+    // The manager's inbox (הזמנות נכנסות): every lead, with where it came from.
+    const source = body.source === 'repair' ? 'repair' : 'contact';
+    const last = body.attribution?.last;
+    const touch = last ? [last.utm_source, last.utm_medium, last.utm_campaign].filter(Boolean).join(' / ') || last.referrer || '' : '';
+    await pushToInbox({
+      source, client_name: String(body.name), client_phone: String(body.phone), client_email: body.email || null,
+      subject: source === 'repair' ? `בקשת תיקון מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}` : `פנייה מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}`,
+      message: String(body.message),
+      notes: [body.company ? `מרפאה/חברה: ${body.company}` : '', touch ? `מקור: ${touch}` : '', last?.landing_page ? `דף נחיתה: ${last.landing_page}` : ''].filter(Boolean).join('\n') || null,
     });
 
     // Send email via Resend if API key is configured

@@ -31,7 +31,7 @@ export default function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, attribution: getAttribution(), eventId }),
+        body: JSON.stringify({ ...formData, attribution: getAttribution(), eventId, source: 'contact' }),
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('success');
