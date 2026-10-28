@@ -1,30 +1,76 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Loader2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { CheckCircle2, Loader2, ShieldCheck, ArrowLeft, CreditCard, ExternalLink, XCircle } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/utils';
+import { verifyPayment, returnMessage, type PaymentStart, type PaymentView } from '@/lib/payment-client';
 
 type Form = { name: string; phone: string; email: string; clinic: string; address: string; notes: string };
 const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', address: '', notes: '' };
 
 /**
- * Online payment seam. When Credit2000 (hosted payment page) credentials
- * are configured, this is where we redirect/open the hosted page with the
- * order ref + amount. Until then the order goes to DES by email and
- * payment is settled with the client directly.
+ * Online payment (Credit2000 hosted page, the same terminal des-manager charges on). When
+ * /api/order answers with `payment`, the card is typed on Credit2000's own form shown right
+ * here; the result is confirmed SERVER-SIDE (/api/pay/verify asks Credit2000 — the page's
+ * redirect alone proves nothing). Quote orders, or payment not configured: e-mail as before.
  */
-async function startPayment(orderRef: string, amount: number): Promise<void> {
-  // not wired yet — see src/lib/cart.tsx header comment
-  void orderRef;
-  void amount;
-}
+const POLL_MS = 5000;
 
 export default function CheckoutForm() {
   const { items, count, subtotal, unpricedCount, hydrated, clear } = useCart();
   const [form, setForm] = useState<Form>(EMPTY);
-  const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error' | 'paying' | 'verifying' | 'paid' | 'declined'>('idle');
   const [orderRef, setOrderRef] = useState('');
+  const [payment, setPayment] = useState<PaymentStart | null>(null);
+  const [payView, setPayView] = useState<PaymentView | null>(null);
+  const search = useSearchParams();
+  const busy = useRef(false);
+
+  // The server's verdict for one order. True once settled (paid / declined / error).
+  const settle = useCallback((view: PaymentView) => {
+    setPayView(view);
+    if (view.status === 'approved') { clear(); setStatus('paid'); return true; }
+    if (view.status === 'declined' || view.status === 'error') { setStatus('declined'); return true; }
+    return false;
+  }, [clear]);
+
+  const check = useCallback(async (orderId: string, uid?: string | null, visible = false) => {
+    if (busy.current) return;
+    busy.current = true;
+    if (visible) setStatus('verifying');
+    try { if (!settle(await verifyPayment(orderId, uid)) && visible) setStatus('paying'); }
+    catch { if (visible) setStatus('paying'); }
+    finally { busy.current = false; }
+  }, [settle]);
+
+  // Returning from a tab the customer opened (the return page links back with ?order=<id>).
+  useEffect(() => {
+    const id = search.get('order');
+    if (id && status === 'idle') { setPayment({ order_id: id, page_url: '', amount: 0 }); check(id, null, true); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // The return page (inside the iframe or a tab) posts { type: 'c2k-return', order_id, uid, view }.
+  useEffect(() => {
+    if (!payment) return undefined;
+    const onMessage = (e: MessageEvent) => {
+      const m = returnMessage(e, payment.order_id);
+      if (!m) return;
+      if (m.view && settle(m.view)) return;
+      check(payment.order_id, m.uid, true);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [payment, settle, check]);
+
+  // Slow poll while the form is open — covers a redirect that never reaches us.
+  useEffect(() => {
+    if (!payment || status !== 'paying') return undefined;
+    const t = setInterval(() => check(payment.order_id), POLL_MS);
+    return () => clearInterval(t);
+  }, [payment, status, check]);
 
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -45,13 +91,84 @@ export default function CheckoutForm() {
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       setOrderRef(data.ref || '');
-      await startPayment(data.ref, subtotal);
+      if (data.payment?.page_url) {
+        setPayment(data.payment as PaymentStart);
+        setStatus('paying');          // the cart is cleared only once the payment is approved
+        return;
+      }
       clear();
       setStatus('done');
     } catch {
       setStatus('error');
     }
   };
+
+  if (status === 'paid') {
+    return (
+      <div dir="rtl" className="max-w-2xl mx-auto px-4 py-20 text-center" data-testid="order-paid">
+        <CheckCircle2 className="w-14 h-14 mx-auto mb-4" style={{ color: '#16a34a' }} />
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#1a2b4a' }}>התשלום התקבל, תודה!</h1>
+        <p className="text-sm text-gray-400 font-mono mb-1" dir="ltr">{payView?.ref || orderRef}</p>
+        <p className="text-sm text-gray-500 mb-6">
+          {payView?.amount ? `${formatPrice(payView.amount)} · ` : ''}אישור {payView?.approval}
+        </p>
+        <p className="text-gray-600 leading-relaxed mb-8">
+          ההזמנה נקלטה ושולמה. נציג DES יחזור אליכם לתיאום המשלוח/ההתקנה, והקבלה תישלח אליכם.
+        </p>
+        <Link href="/catalog" className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-white" style={{ background: '#1a2b4a' }}>
+          חזרה לקטלוג
+          <ArrowLeft className="w-4 h-4" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (status === 'declined') {
+    return (
+      <div dir="rtl" className="max-w-2xl mx-auto px-4 py-20 text-center" data-testid="order-declined">
+        <XCircle className="w-14 h-14 mx-auto mb-4" style={{ color: '#dc2626' }} />
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#1a2b4a' }}>התשלום לא אושר</h1>
+        <p className="text-sm text-gray-400 font-mono mb-3" dir="ltr">{payView?.ref || orderRef}</p>
+        <p className="text-gray-600 leading-relaxed mb-8">
+          החיוב לא בוצע והעגלה נשמרה. אפשר לנסות שוב, או לשלוח את ההזמנה ונחזור אליכם להסדרת התשלום.
+        </p>
+        <button type="button" onClick={() => { setPayment(null); setPayView(null); setStatus('idle'); }}
+          className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-white" style={{ background: '#1e90ff' }}>
+          נסיון נוסף
+        </button>
+      </div>
+    );
+  }
+
+  if (payment && (status === 'paying' || status === 'verifying')) {
+    return (
+      <div dir="rtl" className="max-w-2xl mx-auto px-4 py-8" data-testid="order-payment">
+        <h1 className="text-2xl font-bold mb-1 flex items-center gap-2" style={{ color: '#1a2b4a' }}>
+          <CreditCard className="w-6 h-6" /> תשלום מאובטח
+        </h1>
+        <p className="text-sm text-gray-500 mb-1">הזמנה <span className="font-mono" dir="ltr">{orderRef}</span>{payment.amount ? ` · ${formatPrice(payment.amount)} כולל מע״מ` : ''}</p>
+        <p className="text-xs text-gray-400 mb-4">הכרטיס מוקלד בדף המאובטח של קרדיט 2000 — פרטי הכרטיס לא עוברים דרך האתר.</p>
+        {status === 'verifying' && (
+          <div className="mb-3 text-sm rounded-lg p-3 flex items-center gap-2" style={{ background: '#fffbeb', color: '#92400e' }}>
+            <Loader2 className="w-4 h-4 animate-spin" /> מאמת את התשלום מול קרדיט 2000…
+          </div>
+        )}
+        {payment.page_url ? (
+          <>
+            <iframe title="תשלום מאובטח" src={payment.page_url} allow="payment" referrerPolicy="no-referrer"
+              className="w-full rounded-2xl bg-white" style={{ height: 600, border: '1px solid #e8ecf0' }} />
+            <a href={payment.page_url} target="_blank" rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1 text-xs" style={{ color: '#1e90ff' }}>
+              <ExternalLink className="w-3.5 h-3.5" /> הטופס לא נטען? פתחו אותו בלשונית נפרדת
+            </a>
+          </>
+        ) : null}
+        <p className="mt-4 text-xs text-gray-400 flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5" /> סליקה מאובטחת (PCI DSS) באמצעות קרדיט 2000 · <Link href="/privacy" className="underline">תקנון ומדיניות ביטולים</Link>
+        </p>
+      </div>
+    );
+  }
 
   if (status === 'done') {
     return (
@@ -92,7 +209,7 @@ export default function CheckoutForm() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
         <form onSubmit={submit} className="rounded-2xl p-5 sm:p-7 bg-white" style={{ border: '1px solid #e8ecf0' }} data-testid="checkout-form">
           <h1 className="text-2xl font-bold mb-1" style={{ color: '#1a2b4a' }}>פרטי ההזמנה</h1>
-          <p className="text-sm text-gray-500 mb-6">מלאו את הפרטים ונחזור אליכם לאישור ההזמנה ולתשלום.</p>
+          <p className="text-sm text-gray-500 mb-6">{unpricedCount ? 'מלאו את הפרטים ונחזור אליכם עם הצעת מחיר ולתשלום.' : 'מלאו את הפרטים והמשיכו לתשלום מאובטח בכרטיס אשראי.'}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="block">
@@ -135,11 +252,13 @@ export default function CheckoutForm() {
             style={{ background: '#1e90ff', boxShadow: '0 8px 20px rgba(30,144,255,0.25)' }}
           >
             {status === 'sending' ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
-            שליחת ההזמנה
+            {unpricedCount ? 'שליחת ההזמנה' : 'המשך לתשלום'}
           </button>
           <p className="mt-3 text-xs text-gray-400 flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5" />
-            לא נדרש תשלום באתר בשלב זה — התשלום מוסדר מול נציג DES לאחר אישור ההזמנה.
+            {unpricedCount
+              ? 'פריטים לפי הצעת מחיר — נחזור אליכם לאישור ההזמנה ולתשלום.'
+              : 'תשלום מאובטח בכרטיס אשראי דרך קרדיט 2000. אם התשלום באתר אינו זמין, ההזמנה תישלח אלינו ונחזור אליכם.'}
           </p>
         </form>
 
