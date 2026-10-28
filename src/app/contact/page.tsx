@@ -42,7 +42,12 @@ const INFO = [
   },
 ];
 
-export default function ContactPage() {
+type Search = { item?: string; name?: string; id?: string };
+
+export default async function ContactPage({ searchParams }: { searchParams: Promise<Search> }) {
+  // ?item=&name=&id= — a quote request from a product page: the item rides into the form
+  const q = await searchParams;
+  const product = q?.name ? { itemNumber: String(q.item || ''), name: String(q.name), id: String(q.id || '') } : null;
   return (
     <div dir="rtl" className="max-w-6xl mx-auto px-4 py-12">
       <div className="mb-8">
@@ -104,7 +109,7 @@ export default function ContactPage() {
 
         {/* Form — left/wider column */}
         <div className="lg:col-span-3">
-          <ContactForm />
+          <ContactForm product={product} />
         </div>
       </div>
     </div>

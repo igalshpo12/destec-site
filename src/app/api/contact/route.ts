@@ -23,7 +23,8 @@ interface ContactPayload {
   message: string;
   attribution?: { first?: TouchData; last?: TouchData };
   eventId?: string;
-  source?: 'contact' | 'repair';   // which site form (RepairForm sends 'repair')
+  source?: 'contact' | 'repair' | 'quote';   // which site form (RepairForm 'repair', a product's quote request 'quote')
+  product?: { itemNumber?: string; name?: string; id?: string } | null;
 }
 
 const esc = (s = '') =>
@@ -130,12 +131,15 @@ export async function POST(req: NextRequest) {
 
     // The manager's inbox (הזמנות נכנסות): every lead, with where it came from.
     const source = body.source === 'repair' ? 'repair' : 'contact';
+    const product = body.product && body.product.name ? { itemNumber: String(body.product.itemNumber || '').slice(0, 60), name: String(body.product.name).slice(0, 200) } : null;
     const last = body.attribution?.last;
     const touch = last ? [last.utm_source, last.utm_medium, last.utm_campaign].filter(Boolean).join(' / ') || last.referrer || '' : '';
     await pushToInbox({
       source, client_name: String(body.name), client_phone: String(body.phone), client_email: body.email || null,
-      subject: source === 'repair' ? `בקשת תיקון מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}` : `פנייה מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}`,
+      subject: product ? `בקשת הצעת מחיר — ${product.name}${product.itemNumber ? ` (${product.itemNumber})` : ''} · ${body.name}`
+        : source === 'repair' ? `בקשת תיקון מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}` : `פנייה מהאתר — ${body.name}${body.company ? ` (${body.company})` : ''}`,
       message: String(body.message),
+      equipment_item_number: product?.itemNumber || null, equipment_name: product?.name || null,
       notes: [body.company ? `מרפאה/חברה: ${body.company}` : '', touch ? `מקור: ${touch}` : '', last?.landing_page ? `דף נחיתה: ${last.landing_page}` : ''].filter(Boolean).join('\n') || null,
     });
 
@@ -154,11 +158,12 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             from: 'DES Contact Form <noreply@destec.co.il>',
             to: [contactEmail],
-            subject: `פנייה חדשה מ-${body.name}${body.company ? ` (${body.company})` : ''}`,
+            subject: `${product ? `בקשת הצעת מחיר: ${product.name} — ` : 'פנייה חדשה מ-'}${body.name}${body.company ? ` (${body.company})` : ''}`,
             html: `
               <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #1a2b4a;">פנייה חדשה מאתר DES</h2>
                 <table style="width: 100%; border-collapse: collapse;">
+                  ${product ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>מוצר:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(product.name)}${product.itemNumber ? ` · <span dir="ltr">${esc(product.itemNumber)}</span>` : ''}</td></tr>` : ''}
                   <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>שם:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(body.name)}</td></tr>
                   ${body.company ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>חברה:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(body.company)}</td></tr>` : ''}
                   <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>טלפון:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;" dir="ltr">${esc(body.phone)}</td></tr>

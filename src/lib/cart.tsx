@@ -5,7 +5,8 @@
  * hydration mismatches on the header badge.
  *
  * Prices stored here are the catalog prices (ILS, VAT included). Items with
- * no price are allowed — they become "לפי הצעת מחיר" lines in checkout.
+ * no price are NOT added — their button is a quote request that carries the item to /contact
+ * (owner 2026-10-28). The "לפי הצעת מחיר" handling below is kept only for old carts.
  *
  * Payment: checkout currently sends the order to DES by email (/api/order).
  * The online-payment hook (Credit2000 hosted page) will be wired in
