@@ -5,14 +5,16 @@ import { getAttribution, trackEvent, trackMeta } from '@/lib/analytics';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export default function ContactForm() {
+export type QuoteProduct = { itemNumber: string; name: string; id: string };
+
+export default function ContactForm({ product = null }: { product?: QuoteProduct | null }) {
   const [status, setStatus] = useState<Status>('idle');
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     phone: '',
     email: '',
-    message: '',
+    message: product ? `אשמח לקבל הצעת מחיר וזמינות עבור ${product.name}${product.itemNumber ? ` (מק״ט ${product.itemNumber})` : ''}.` : '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -31,7 +33,7 @@ export default function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, attribution: getAttribution(), eventId, source: 'contact' }),
+        body: JSON.stringify({ ...formData, attribution: getAttribution(), eventId, source: product ? 'quote' : 'contact', product }),
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('success');
@@ -144,6 +146,13 @@ export default function ContactForm() {
         <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
           הודעה <span className="text-red-500">*</span>
         </label>
+        {product && (
+          <div className="flex items-center gap-2 text-sm rounded-xl px-4 py-3" style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#9a3412' }} data-testid="quote-product">
+            <span className="font-semibold">בקשת הצעת מחיר:</span>
+            <span className="truncate">{product.name}</span>
+            {product.itemNumber && <span className="text-xs font-mono" dir="ltr">{product.itemNumber}</span>}
+          </div>
+        )}
         <textarea
           id="message"
           name="message"

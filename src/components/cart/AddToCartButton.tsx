@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { ShoppingCart, Check, Minus, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { ShoppingCart, Check, Minus, Plus, FileText } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import type { EquipmentWithPrice } from '@/lib/supabase';
 
@@ -18,6 +19,29 @@ export default function AddToCartButton({ item, variant = 'compact', accent = '#
   const [done, setDone] = useState(false);
 
   const name = item.name_he || item.name_en || 'מוצר';
+  // No price yet → "request a quote" that carries the item into the contact form (owner
+  // 2026-10-28: a quote lead without the item is useless; most items are priced, the rest soon).
+  if (!(item.price && item.price > 0)) {
+    const href = `/contact?item=${encodeURIComponent(item.item_number || '')}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(item.id)}`;
+    if (variant === 'compact') {
+      return (
+        <Link href={href} onClick={(e) => e.stopPropagation()} data-testid="request-quote"
+          className={`relative z-[2] inline-flex items-center justify-center gap-1.5 rounded-lg text-xs font-semibold px-2.5 sm:px-3 py-2 transition-colors duration-150 ${className}`}
+          style={{ background: '#fff7ed', color: '#9a3412', border: '1px solid #fed7aa' }}>
+          <FileText className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">הצעת מחיר</span>
+        </Link>
+      );
+    }
+    return (
+      <Link href={href} data-testid="request-quote"
+        className={`inline-flex items-center justify-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-white transition-all hover:-translate-y-0.5 ${className}`}
+        style={{ background: '#1a2b4a' }}>
+        <FileText className="w-5 h-5" />
+        בקשת הצעת מחיר
+      </Link>
+    );
+  }
   const doAdd = () => {
     add(
       {

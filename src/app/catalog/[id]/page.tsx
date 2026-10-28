@@ -168,13 +168,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <MessageCircle className="w-5 h-5" />
               שאל ב-WhatsApp
             </a>
-            <Link
-              href="/contact"
-              className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3.5 rounded-xl transition-all hover:-translate-y-0.5"
-              style={{ background: '#1a2b4a', color: '#fff' }}
-            >
-              בקשת הצעת מחיר
-            </Link>
           </div>
 
           {/* Warranty */}
