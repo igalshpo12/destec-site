@@ -1,4 +1,4 @@
--- 005_web_orders.sql — orders placed on destec.co.il that are PAID ONLINE through Credit2000
+-- 005_online_orders.sql — orders placed on destec.co.il that are PAID ONLINE through Credit2000
 -- (D.C.S, terminal 5432336 — the same terminal des-manager charges on).
 --
 -- Lives in the Supabase project the site shares with des-manager. The site's publishable key is
@@ -6,7 +6,11 @@
 -- writes this table. The card itself is typed on Credit2000's hosted page — no card number ever
 -- reaches this table; the gateway's token is NOT stored either (the site never refunds — a refund
 -- is done in the Credit2000 portal and the receipt handled in des-manager).
-create table if not exists public.web_orders (
+-- NOT `web_orders`: that table already exists in this project — it is des-manager's inbox of
+-- website inquiries (IncomingOrders page, status new/read/spam). A first run of this file under
+-- that name (2026-10-28) only replaced its comment; restored here.
+comment on table public.web_orders is 'Website inquiries shown in des-manager (הזמנות נכנסות): new/read/spam, convertible to documents';
+create table if not exists public.online_orders (
   id              uuid primary key default gen_random_uuid(),
   created_at      timestamptz not null default now(),
   ref             text not null unique,                 -- WEB-YYYYMMDD-XXXX, shown to the customer
@@ -27,7 +31,7 @@ create table if not exists public.web_orders (
   notified_at     timestamptz,                          -- the order e-mail to DES went out
   error_text      text
 );
-create index if not exists idx_web_orders_status_created on public.web_orders (status, created_at desc);
-alter table public.web_orders enable row level security;
+create index if not exists idx_online_orders_status_created on public.online_orders (status, created_at desc);
+alter table public.online_orders enable row level security;
 -- no policies on purpose: service role only
-comment on table public.web_orders is 'destec.co.il online orders paid via Credit2000; server-only (RLS, no policies)';
+comment on table public.online_orders is 'destec.co.il online orders paid via Credit2000; server-only (RLS, no policies)';
