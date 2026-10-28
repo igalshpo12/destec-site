@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import CheckoutForm from './CheckoutForm';
 
 export const metadata: Metadata = {
@@ -8,5 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutPage() {
-  return <CheckoutForm />;
+  // Suspense: the form reads ?order=<id> (return from a payment tab) via useSearchParams.
+  return <Suspense fallback={null}><CheckoutForm /></Suspense>;
 }
