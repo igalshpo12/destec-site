@@ -7,8 +7,8 @@ import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/utils';
 import { verifyPayment, returnMessage, type PaymentStart, type PaymentView } from '@/lib/payment-client';
 
-type Form = { name: string; phone: string; email: string; clinic: string; vat_number: string; address: string; city: string; notes: string };
-const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', vat_number: '', address: '', city: '', notes: '' };
+type Form = { name: string; phone: string; email: string; clinic: string; vat_number: string; address: string; city: string; notes: string; digital_docs_consent: boolean };
+const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', vat_number: '', address: '', city: '', notes: '', digital_docs_consent: false };
 
 /**
  * Online payment (Credit2000 hosted page, the same terminal des-manager charges on). When
@@ -278,6 +278,16 @@ export default function CheckoutForm() {
               ? 'פריטים לפי הצעת מחיר — נחזור אליכם לאישור ההזמנה ולתשלום.'
               : 'תשלום מאובטח בכרטיס אשראי דרך קרדיט 2000. אם התשלום באתר אינו זמין, ההזמנה תישלח אלינו ונחזור אליכם.'}
           </p>
+          {!unpricedCount && (
+            // הוראות ניהול ספרים 18ב(ג): the signed חשבונית מס/קבלה (מסמך ממוחשב) may be e-mailed only to
+            // someone who agreed beforehand; the consent is recorded on the client in the manager.
+            <label className="mt-3 flex items-start gap-2 text-xs text-gray-600 cursor-pointer">
+              <input type="checkbox" required name="digital_docs_consent" checked={form.digital_docs_consent}
+                onChange={(e) => setForm((f) => ({ ...f, digital_docs_consent: e.target.checked }))}
+                className="mt-0.5" data-testid="digital-docs-consent" />
+              <span>אני מסכים/ה לקבל את חשבונית המס/קבלה ומסמכים נוספים כמסמכים ממוחשבים חתומים דיגיטלית לכתובת האימייל שמסרתי, במקום מסמך מודפס.</span>
+            </label>
+          )}
           <p className="mt-2 text-xs text-gray-400">
             בלחיצה על {unpricedCount ? '״שליחת ההזמנה״' : '״המשך לתשלום״'} אתם מאשרים את{' '}
             <Link href="/terms" className="underline" target="_blank" rel="noopener noreferrer">תקנון האתר ומדיניות הביטולים</Link>.
