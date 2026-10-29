@@ -1,7 +1,7 @@
 // DES is e-mailed exactly once per APPROVED online order (the row's notified_at is the claim).
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { WebOrder } from './payments';
-import { sendOrderEmail } from './orderEmail';
+import { sendOrderEmail, sendCustomerThanks } from './orderEmail';
 import { pushToInbox, updateInboxByRef, orderMessage } from './inbox';
 
 export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
@@ -25,6 +25,7 @@ export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
   }
   try {
     await sendOrderEmail({ ref: row.ref, customer: row.customer, lines, payment });
+    try { await sendCustomerThanks({ ref: row.ref, customer: row.customer, lines, payment }); } catch (e) { console.error('[Pay] customer e-mail failed:', e); }
   } catch (e) {
     console.error('[Pay] order e-mail failed:', e);
     await db.from('online_orders').update({ notified_at: null }).eq('id', row.id);

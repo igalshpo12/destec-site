@@ -19,8 +19,8 @@ const clean = (s: unknown, max = 200) => String(s ?? '').trim().slice(0, max);
 export async function POST(req: NextRequest) {
   try {
     const body: OrderPayload = await req.json();
-    if (!body.name || !body.phone || !Array.isArray(body.items) || body.items.length === 0) {
-      return NextResponse.json({ error: 'Missing required fields: name, phone, items' }, { status: 400 });
+    if (!body.name || !body.phone || !body.email || !Array.isArray(body.items) || body.items.length === 0) {
+      return NextResponse.json({ error: 'Missing required fields: name, phone, email, items' }, { status: 400 });
     }
     if (body.items.length > 100) return NextResponse.json({ error: 'Too many items' }, { status: 400 });
 
