@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+// Approval triggers the manager draft + the PDF render (headless Chromium): more than 10 s.
+export const maxDuration = 60;
 import { paymentEnv, serviceDb, loadOrder, resolveOrder, publicView } from '@/lib/server/payments';
 import { notifyIfApproved, markInboxUnpaid } from '@/lib/server/notify';
 

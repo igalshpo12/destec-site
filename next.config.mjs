@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Headless Chromium renders the order-confirmation PDF (src/lib/server/orderPdf.ts); it must
+  // not be bundled.
+  serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
   images: {
     remotePatterns: [
       // Re-hosted Konimbo product photos (Supabase Storage)
