@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { pushToInbox } from '@/lib/server/inbox';
+import { sendMail } from '@/lib/server/mail';
 
 interface TouchData {
   utm_source?: string;
@@ -143,23 +144,8 @@ export async function POST(req: NextRequest) {
       notes: [body.company ? `מרפאה/חברה: ${body.company}` : '', touch ? `מקור: ${touch}` : '', last?.landing_page ? `דף נחיתה: ${last.landing_page}` : ''].filter(Boolean).join('\n') || null,
     });
 
-    // Send email via Resend if API key is configured
-    const resendKey = process.env.RESEND_API_KEY;
     const contactEmail = process.env.CONTACT_EMAIL || 'info@destec.co.il';
-
-    if (resendKey) {
-      try {
-        const res = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: 'DES Contact Form <noreply@destec.co.il>',
-            to: [contactEmail],
-            subject: `${product ? `בקשת הצעת מחיר: ${product.name} — ` : 'פנייה חדשה מ-'}${body.name}${body.company ? ` (${body.company})` : ''}`,
-            html: `
+    const html = `
               <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #1a2b4a;">פנייה חדשה מאתר DES</h2>
                 <table style="width: 100%; border-collapse: collapse;">
@@ -179,22 +165,12 @@ export async function POST(req: NextRequest) {
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;" />
                 <p style="color: #999; font-size: 12px;">נשלח מאתר destec.co.il</p>
               </div>
-            `,
-          }),
-        });
-
-        if (!res.ok) {
-          const err = await res.text();
-          console.error('[Contact Form] Resend error:', err);
-        } else {
-          console.log('[Contact Form] Email sent via Resend');
-        }
-      } catch (emailErr) {
-        console.error('[Contact Form] Failed to send email:', emailErr);
-        // Don't fail the request if email fails — submission is still logged
-      }
-    } else {
-      console.log('[Contact Form] RESEND_API_KEY not configured — email not sent');
+            `;
+    try {
+      const sent = await sendMail({ to: [contactEmail], fromName: 'DES Contact Form', replyTo: body.email || undefined, subject: `${product ? `בקשת הצעת מחיר: ${product.name} — ` : 'פנייה חדשה מ-'}${body.name}${body.company ? ` (${body.company})` : ''}`, html });
+      console.log(sent ? '[Contact Form] Email sent' : '[Contact Form] Email NOT sent');
+    } catch (emailErr) {
+      console.error('[Contact Form] Failed to send email:', emailErr);
     }
 
     // Server-side conversion signal (non-fatal).

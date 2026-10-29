@@ -3,6 +3,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { serviceDb } from './payments';
+import { sendMail, mailEnabled } from './mail';
 
 export const SESSION_COOKIE = 'des_session';
 const SESSION_DAYS = 30;
@@ -10,7 +11,7 @@ const TOKEN_MINUTES = 30;
 const MAX_LINKS_PER_15_MIN = 5;
 
 const secret = () => process.env.SITE_AUTH_SECRET || '';
-export const authEnabled = () => !!(secret() && process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.RESEND_API_KEY && (process.env.SITE_URL || '').startsWith('http'));
+export const authEnabled = () => !!(secret() && process.env.SUPABASE_SERVICE_ROLE_KEY && mailEnabled() && (process.env.SITE_URL || '').startsWith('http'));
 
 export const normEmail = (e: string) => String(e || '').trim().toLowerCase();
 export const isEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e) && e.length <= 254;
@@ -73,19 +74,13 @@ export async function consumeLoginToken(token: string): Promise<string | null> {
 
 export async function sendLoginLink(email: string, token: string): Promise<boolean> {
   const link = `${process.env.SITE_URL}/api/auth/verify?token=${encodeURIComponent(token)}`;
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'DES <noreply@destec.co.il>', to: [email], subject: 'הכניסה שלך לאתר DES',
-      html: `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;color:#1a2b4a;">
+  return sendMail({
+    to: [email], fromName: 'DES', subject: 'הכניסה שלך לאתר DES',
+    html: `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;color:#1a2b4a;">
         <h2>כניסה לאזור האישי</h2>
         <p>לחצו על הכפתור כדי להיכנס. הקישור תקף ל-${TOKEN_MINUTES} דקות ולשימוש חד-פעמי.</p>
         <p style="margin:24px 0;"><a href="${link}" style="background:#1e90ff;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:bold;">כניסה לחשבון</a></p>
         <p style="color:#888;font-size:12px;">אם לא ביקשתם להיכנס, אפשר להתעלם מהודעה זו.</p>
       </div>`,
-    }),
   });
-  if (!res.ok) console.error('[Auth] Resend error:', await res.text());
-  return res.ok;
 }
