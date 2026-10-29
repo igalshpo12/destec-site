@@ -1,11 +1,13 @@
-// A paid order → a חשבונית מס/קבלה DRAFT in des-manager, created by the manager's own document
-// code (des-manager api/_lib/webSaleRoute.js). Shared secret WEB_SALE_KEY on both sides.
+// A paid order → a חשבונית מס/קבלה ISSUED in des-manager by the manager's own document code
+// (des-manager api/_lib/webSaleRoute.js; owner 2026-10-29: real documents, no receipt drafts). Shared secret WEB_SALE_KEY on both sides.
 // Idempotent there (one draft per WEB ref); a failure here never fails the customer's payment.
 import type { WebOrder } from './payments';
 
 export const managerDraftEnabled = () => !!(process.env.MANAGER_URL && process.env.WEB_SALE_KEY);
 
-export async function createManagerDraft(row: WebOrder): Promise<{ doc_number?: string; doc_id?: string; existed?: boolean; warning?: string; client?: { created?: boolean } } | null> {
+export type ManagerDoc = { doc_number?: string; draft_number?: string; doc_id?: string; issued?: boolean; existed?: boolean; warning?: string; allocation_number?: string | null; client?: { created?: boolean } };
+
+export async function createManagerDraft(row: WebOrder): Promise<ManagerDoc | null> {
   if (!managerDraftEnabled() || row.status !== 'approved') return null;
   try {
     const res = await fetch(`${String(process.env.MANAGER_URL).replace(/\/+$/, '')}/api/calendar/web-sale-draft`, {

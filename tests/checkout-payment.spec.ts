@@ -26,6 +26,9 @@ async function fillAndSubmit(page: Page) {
   await page.getByLabel('שם מלא *').fill('בדיקה');
   await page.getByLabel('טלפון *').fill('0501234567');
   await page.getByLabel('אימייל *').fill('test@example.com');   // required since the customer account
+  await page.getByLabel('ח.פ / ע.מ / ת.ז *').fill('515123456');
+  await page.getByLabel('עיר *').fill('תל אביב');
+  await page.getByLabel('כתובת למשלוח / התקנה *').fill('הרצל 10');
   await expect(page.getByTestId('submit-order')).toHaveText(/המשך לתשלום/);
   await page.getByTestId('submit-order').click();
 }

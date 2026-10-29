@@ -50,7 +50,7 @@ const ils = (n: number) => new Intl.NumberFormat('he-IL', { style: 'currency', c
 // The order as the inbox shows it: one line per item, then the customer's details.
 export function orderMessage({ lines, customer, paid, paymentNote }: {
   lines: Array<{ name: string; itemNumber?: string | null; manufacturer?: string | null; qty: number; price?: number | null }>;
-  customer: { clinic?: string; address?: string; notes?: string; email?: string };
+  customer: { clinic?: string; vat_number?: string; address?: string; city?: string; notes?: string; email?: string };
   paid?: { amount: number; approval: string; brand?: string } | null;
   paymentNote?: string;   // the unpaid wording: quote ("התשלום טרם בוצע") or an online attempt
 }) {
@@ -60,7 +60,8 @@ export function orderMessage({ lines, customer, paid, paymentNote }: {
   if (paid) out.push(`✔ שולם באתר בכרטיס אשראי: ${ils(paid.amount)} · אישור ${paid.approval}${paid.brand ? ` · ${paid.brand}` : ''} — יש להפיק קבלה`);
   else out.push(paymentNote || 'התשלום טרם בוצע');
   if (customer.clinic) out.push(`מרפאה/חברה: ${customer.clinic}`);
-  if (customer.address) out.push(`כתובת: ${customer.address}`);
+  if (customer.vat_number) out.push(`ח.פ/ע.מ: ${customer.vat_number}`);
+  if (customer.address || customer.city) out.push(`כתובת: ${[customer.address, customer.city].filter(Boolean).join(', ')}`);
   if (customer.notes) out.push(`הערות: ${customer.notes}`);
   return out.join('\n');
 }

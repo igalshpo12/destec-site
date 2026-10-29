@@ -7,8 +7,8 @@ const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').r
 const ils = (n: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 2 }).format(n);
 
 export type EmailLine = { name: string; itemNumber?: string | null; manufacturer?: string | null; price?: number | null; qty: number };
-export type EmailCustomer = { name: string; phone: string; email?: string; clinic?: string; address?: string; notes?: string };
-export type Payment = { approval: string; brand?: string; amount: number };
+export type EmailCustomer = { name: string; phone: string; email?: string; clinic?: string; vat_number?: string; address?: string; city?: string; notes?: string };
+export type Payment = { approval: string; brand?: string; amount: number; document?: { issued: boolean; doc_number?: string; warning?: string } | null };
 
 export function orderEmailHtml({ ref, customer, lines, payment }: { ref: string; customer: EmailCustomer; lines: EmailLine[]; payment?: Payment | null }) {
   const subtotal = lines.reduce((s, l) => s + (l.price ? l.price * l.qty : 0), 0);
@@ -23,7 +23,9 @@ export function orderEmailHtml({ ref, customer, lines, payment }: { ref: string;
   const paidBlock = payment
     ? `<div style="margin:16px 0;padding:12px 14px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;">
          <strong>שולם באתר בכרטיס אשראי (קרדיט 2000)</strong> — ${ils(payment.amount)} · אישור ${esc(payment.approval)}${payment.brand ? ` · ${esc(payment.brand)}` : ''}<br/>
-         <span style="font-size:12px;">יש להפיק קבלה ללקוח במערכת הניהול על תשלום זה.</span>
+         <div style="font-size:12px;margin-top:6px;">${payment.document?.issued
+           ? `הופקה חשבונית מס/קבלה <b dir="ltr">${esc(payment.document.doc_number || '')}</b> במערכת הניהול.`
+           : `<span style="color:#b91c1c;font-weight:bold;">לא הופק מסמך אוטומטית${payment.document?.doc_number ? ` — נשמרה טיוטה ${esc(payment.document.doc_number)}` : ''}. יש להפיק חשבונית מס/קבלה במערכת הניהול היום.</span>${payment.document?.warning ? `<br/><span style="color:#777;">${esc(payment.document.warning)}</span>` : ''}`}</div>
        </div>`
     : '';
   return `
@@ -35,7 +37,8 @@ export function orderEmailHtml({ ref, customer, lines, payment }: { ref: string;
         ${customer.clinic ? `<tr><td style="padding:6px;color:#666;">מרפאה/חברה:</td><td style="padding:6px;">${esc(customer.clinic)}</td></tr>` : ''}
         <tr><td style="padding:6px;color:#666;">טלפון:</td><td style="padding:6px;" dir="ltr">${esc(customer.phone)}</td></tr>
         ${customer.email ? `<tr><td style="padding:6px;color:#666;">אימייל:</td><td style="padding:6px;">${esc(customer.email)}</td></tr>` : ''}
-        ${customer.address ? `<tr><td style="padding:6px;color:#666;">כתובת למשלוח:</td><td style="padding:6px;">${esc(customer.address)}</td></tr>` : ''}
+        ${customer.vat_number ? `<tr><td style="padding:6px;color:#666;">ח.פ/ע.מ:</td><td style="padding:6px;" dir="ltr">${esc(customer.vat_number)}</td></tr>` : ''}
+        ${customer.address || customer.city ? `<tr><td style="padding:6px;color:#666;">כתובת למשלוח:</td><td style="padding:6px;">${esc([customer.address, customer.city].filter(Boolean).join(', '))}</td></tr>` : ''}
       </table>
       <table style="width:100%;border-collapse:collapse;font-size:14px;">
         <thead><tr style="background:#f4f6f8;">

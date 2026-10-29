@@ -7,8 +7,8 @@ import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/utils';
 import { verifyPayment, returnMessage, type PaymentStart, type PaymentView } from '@/lib/payment-client';
 
-type Form = { name: string; phone: string; email: string; clinic: string; address: string; notes: string };
-const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', address: '', notes: '' };
+type Form = { name: string; phone: string; email: string; clinic: string; vat_number: string; address: string; city: string; notes: string };
+const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', vat_number: '', address: '', city: '', notes: '' };
 
 /**
  * Online payment (Credit2000 hosted page, the same terminal des-manager charges on). When
@@ -228,9 +228,19 @@ export default function CheckoutForm() {
               <span className="text-xs font-semibold text-gray-600 mb-1 block">מרפאה / חברה</span>
               <input name="clinic" value={form.clinic} onChange={set('clinic')} className={input} style={inputStyle} autoComplete="organization" />
             </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">ח.פ / ע.מ / ת.ז *</span>
+              <input required name="vat_number" dir="ltr" inputMode="numeric" pattern="[0-9]{5,9}" maxLength={9} title="5–9 ספרות"
+                value={form.vat_number} onChange={set('vat_number')} className={input} style={inputStyle} />
+              <span className="text-[11px] text-gray-400 mt-1 block">נדרש להפקת חשבונית מס/קבלה</span>
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">עיר *</span>
+              <input required name="city" value={form.city} onChange={set('city')} className={input} style={inputStyle} autoComplete="address-level2" />
+            </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs font-semibold text-gray-600 mb-1 block">כתובת למשלוח / התקנה</span>
-              <input name="address" value={form.address} onChange={set('address')} className={input} style={inputStyle} autoComplete="street-address" />
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">כתובת למשלוח / התקנה *</span>
+              <input required name="address" value={form.address} onChange={set('address')} className={input} style={inputStyle} autoComplete="street-address" />
             </label>
             <label className="block sm:col-span-2">
               <span className="text-xs font-semibold text-gray-600 mb-1 block">הערות</span>

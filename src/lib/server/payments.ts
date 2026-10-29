@@ -10,7 +10,7 @@ import {
   isApprovedCode, isUid, uidFromUrl, newOrderRef, toAgorot, cardBrand,
 } from '../credit2000.js';
 
-export type Customer = { name: string; phone: string; email?: string; clinic?: string; address?: string; notes?: string };
+export type Customer = { name: string; phone: string; email?: string; clinic?: string; vat_number?: string; address?: string; city?: string; notes?: string };
 export type OrderLine = { id: string; item_number: string | null; name: string; manufacturer: string | null; qty: number; unit_price: number };
 export type WebOrder = {
   id: string; ref: string; order_ref: string; status: 'pending' | 'approved' | 'declined' | 'error' | 'abandoned';
