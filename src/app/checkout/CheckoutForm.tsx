@@ -169,7 +169,7 @@ export default function CheckoutForm() {
           </>
         ) : null}
         <p className="mt-4 text-xs text-gray-400 flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5" /> סליקה מאובטחת (PCI DSS) באמצעות קרדיט 2000 · <Link href="/privacy" className="underline">תקנון ומדיניות ביטולים</Link>
+          <ShieldCheck className="w-3.5 h-3.5" /> סליקה מאובטחת (PCI DSS) באמצעות קרדיט 2000 · <Link href="/terms" className="underline">תקנון ומדיניות ביטולים</Link>
         </p>
       </div>
     );
@@ -277,6 +277,10 @@ export default function CheckoutForm() {
             {unpricedCount
               ? 'פריטים לפי הצעת מחיר — נחזור אליכם לאישור ההזמנה ולתשלום.'
               : 'תשלום מאובטח בכרטיס אשראי דרך קרדיט 2000. אם התשלום באתר אינו זמין, ההזמנה תישלח אלינו ונחזור אליכם.'}
+          </p>
+          <p className="mt-2 text-xs text-gray-400">
+            בלחיצה על {unpricedCount ? '״שליחת ההזמנה״' : '״המשך לתשלום״'} אתם מאשרים את{' '}
+            <Link href="/terms" className="underline" target="_blank" rel="noopener noreferrer">תקנון האתר ומדיניות הביטולים</Link>.
           </p>
         </form>
 

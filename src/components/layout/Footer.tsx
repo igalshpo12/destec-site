@@ -18,6 +18,7 @@ const SERVICES = [
   { label: 'אודות DES',          href: '/#about'               },
   { label: 'הצהרת נגישות',       href: '/accessibility'        },
   { label: 'מדיניות פרטיות',     href: '/privacy'              },
+  { label: 'תקנון האתר',         href: '/terms'                },
 ];
 
 function WhatsAppIcon() {
@@ -237,6 +238,8 @@ export default function Footer() {
           </span>
           <div className="flex items-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
             <Link href="/privacy" className="hover:text-white transition-colors">מדיניות פרטיות</Link>
+            <span>·</span>
+            <Link href="/terms" className="hover:text-white transition-colors">תקנון</Link>
             <span>·</span>
             <CookieSettingsButton className="hover:text-white transition-colors" />
             <span>·</span>
