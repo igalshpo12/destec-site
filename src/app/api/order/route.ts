@@ -12,7 +12,7 @@ import { pushToInbox, orderMessage } from '@/lib/server/inbox';
  * Prices in the request are display only — a charge is always re-priced from catalog_products.
  */
 interface OrderLine { id: string; name: string; itemNumber?: string | null; manufacturer?: string | null; price?: number | null; qty: number }
-interface OrderPayload { name: string; phone: string; email?: string; clinic?: string; vat_number?: string; address?: string; city?: string; notes?: string; items: OrderLine[] }
+interface OrderPayload { name: string; phone: string; email?: string; clinic?: string; vat_number?: string; address?: string; city?: string; notes?: string; digital_docs_consent?: boolean; items: OrderLine[] }
 
 const clean = (s: unknown, max = 200) => String(s ?? '').trim().slice(0, max);
 
@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
       name: clean(body.name, 120), phone: clean(body.phone, 40), email: clean(body.email, 120) || undefined,
       clinic: clean(body.clinic, 120) || undefined, address: clean(body.address, 300) || undefined, notes: clean(body.notes, 2000) || undefined,
       vat_number: clean(body.vat_number, 9).replace(/\D/g, '') || undefined, city: clean(body.city, 80) || undefined,
+      // 18ב(ג) consent to receive signed documents by e-mail — kept with the order, recorded on the client by the manager.
+      consent_digital_docs: body.digital_docs_consent === true,
     };
     const lines = body.items.map((l) => ({
       ...l,

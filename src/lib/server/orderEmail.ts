@@ -65,7 +65,10 @@ export async function sendOrderEmail({ ref, customer, lines, payment }: { ref: s
 
 // To the CUSTOMER, once the payment is approved: thanks + the order summary. Not a tax document —
 // the קבלה is issued in des-manager (and must carry a secure digital signature to be e-mailed).
-export async function sendCustomerThanks({ ref, customer, lines, payment, pdf }: { ref: string; customer: EmailCustomer; lines: EmailLine[]; payment: Payment; pdf?: Buffer | null }) {
+export type ReceiptAttachment = { filename: string; content: Buffer };
+// `receipt`: the SIGNED חשבונית מס/קבלה from des-manager (a מסמך ממוחשב, 18ב) — attached when the
+// customer consented at checkout; otherwise the document follows by print.
+export async function sendCustomerThanks({ ref, customer, lines, payment, pdf, receipt }: { ref: string; customer: EmailCustomer; lines: EmailLine[]; payment: Payment; pdf?: Buffer | null; receipt?: ReceiptAttachment | null }) {
   if (!customer.email) return false;
   const site = process.env.SITE_URL || 'https://destec.co.il';
   const rows = lines.map((l) => `<tr><td style="padding:8px;border-bottom:1px solid #eee;">${esc(l.name)}${l.manufacturer ? ` <span style="color:#888;font-size:12px;">${esc(l.manufacturer)}</span>` : ''}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${l.qty}</td><td style="padding:8px;border-bottom:1px solid #eee;">${l.price ? ils(l.price * l.qty) : ''}</td></tr>`).join('');
@@ -78,14 +81,17 @@ export async function sendCustomerThanks({ ref, customer, lines, payment, pdf }:
     </table>
     <p style="font-size:16px;"><strong>סה״כ ששולם: ${ils(payment.amount)}</strong> <span style="color:#888;font-size:12px;">כולל מע״מ · אישור ${esc(payment.approval)}</span></p>
     ${customer.address ? `<p style="color:#555;">כתובת למשלוח/התקנה: ${esc(customer.address)}</p>` : ''}
-    <p>אישור ההזמנה מצורף כקובץ PDF. נציג DES ייצור איתכם קשר לתיאום המשלוח או ההתקנה; חשבונית מס/קבלה תישלח אליכם בנפרד.</p>
+    <p>${receipt
+      ? 'חשבונית המס/קבלה המקורית מצורפת כקובץ PDF חתום דיגיטלית (מסמך ממוחשב) — זהו המסמך לרישומיכם; אישור ההזמנה מצורף גם הוא.'
+      : 'אישור ההזמנה מצורף כקובץ PDF; חשבונית מס/קבלה תישלח אליכם בנפרד.'} נציג DES ייצור איתכם קשר לתיאום המשלוח או ההתקנה.</p>
     <p style="margin:20px 0;"><a href="${site}/account" style="background:#1e90ff;color:#fff;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:bold;">ההזמנות שלי באתר</a></p>
     <hr style="margin:20px 0;border:none;border-top:1px solid #eee;" />
     <p style="color:#999;font-size:12px;">DES — שירותי ציוד רפואי ודנטלי · 054-881-8681 · info@destec.co.il</p>
   </div>`;
+  const attachments = [...(receipt ? [receipt] : []), ...(pdf ? [{ filename: `DES-order-${ref}.pdf`, content: pdf }] : [])];
   return sendMail({
     to: [customer.email], fromName: 'DES', replyTo: process.env.CONTACT_EMAIL || 'info@destec.co.il',
     subject: `תודה על הרכישה ב-DES — הזמנה ${ref}`, html,
-    attachments: pdf ? [{ filename: `DES-order-${ref}.pdf`, content: pdf }] : undefined,
+    attachments: attachments.length ? attachments : undefined,
   });
 }

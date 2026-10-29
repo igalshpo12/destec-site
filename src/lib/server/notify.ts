@@ -28,8 +28,9 @@ export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
   // the manager's draft first (its number goes into the inbox entry), then the e-mails
   const doc = await createManagerDraft(row);
   if (doc) {
+    const receiptLine = doc.receipt ? ' · מסמך ממוחשב חתום נשלח ללקוח במייל' : doc.receipt_warning ? ` · ⚠ המסמך לא נשלח ללקוח (${doc.receipt_warning}) — יש להדפיס ולשלוח` : '';
     const line = doc.issued
-      ? `חשבונית מס/קבלה ${doc.doc_number} הופקה במנהל${doc.allocation_number ? ` · הקצאה ${doc.allocation_number}` : ''}`
+      ? `חשבונית מס/קבלה ${doc.doc_number} הופקה במנהל${doc.allocation_number ? ` · הקצאה ${doc.allocation_number}` : ''}${receiptLine}`
       : `⚠ לא הופק מסמך אוטומטית${doc.doc_number ? ` — טיוטה ${doc.doc_number}` : ''}${doc.warning ? ` · ${doc.warning}` : ''} — יש להפיק היום`;
     await updateInboxByRef(row.ref, { notes: `${entry.notes} · ${line}${doc.client?.created ? ' · לקוח חדש נפתח' : ''}` });
   } else {
@@ -40,7 +41,8 @@ export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
     await sendOrderEmail({ ref: row.ref, customer: row.customer, lines, payment: paymentForDes });
     let pdf: Buffer | null = null;
     try { pdf = await renderOrderPdf({ ref: row.ref, customer: row.customer, lines, payment }); } catch (e) { console.error('[Pay] order PDF failed (mail goes without it):', e); }
-    try { await sendCustomerThanks({ ref: row.ref, customer: row.customer, lines, payment, pdf }); } catch (e) { console.error('[Pay] customer e-mail failed:', e); }
+    const receipt = doc?.receipt ? { filename: doc.receipt.filename, content: Buffer.from(doc.receipt.pdf_base64, 'base64') } : null;
+    try { await sendCustomerThanks({ ref: row.ref, customer: row.customer, lines, payment, pdf, receipt }); } catch (e) { console.error('[Pay] customer e-mail failed:', e); }
   } catch (e) {
     console.error('[Pay] order e-mail failed:', e);
     await db.from('online_orders').update({ notified_at: null }).eq('id', row.id);
