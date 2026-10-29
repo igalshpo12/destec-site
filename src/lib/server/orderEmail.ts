@@ -1,6 +1,7 @@
 // The order e-mail to DES (Resend). One builder for both paths: a quote/e-mail order (no payment)
 // and an online order that was PAID through Credit2000 (approval number included; a קבלה must
-// then be issued in des-manager — the site issues no documents).
+// then be issued in des-manager — the site issues no documents). Since 2026-10-29 the manager
+// issues a קבלה for the money at once; the חשבונית מס is staff's job at delivery.
 import { sendMail } from './mail';
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -24,8 +25,8 @@ export function orderEmailHtml({ ref, customer, lines, payment }: { ref: string;
     ? `<div style="margin:16px 0;padding:12px 14px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;">
          <strong>שולם באתר בכרטיס אשראי (קרדיט 2000)</strong> — ${ils(payment.amount)} · אישור ${esc(payment.approval)}${payment.brand ? ` · ${esc(payment.brand)}` : ''}<br/>
          <div style="font-size:12px;margin-top:6px;">${payment.document?.issued
-           ? `הופקה חשבונית מס/קבלה <b dir="ltr">${esc(payment.document.doc_number || '')}</b> במערכת הניהול.`
-           : `<span style="color:#b91c1c;font-weight:bold;">לא הופק מסמך אוטומטית${payment.document?.doc_number ? ` — נשמרה טיוטה ${esc(payment.document.doc_number)}` : ''}. יש להפיק חשבונית מס/קבלה במערכת הניהול היום.</span>${payment.document?.warning ? `<br/><span style="color:#777;">${esc(payment.document.warning)}</span>` : ''}`}</div>
+           ? `הופקה קבלה <b dir="ltr">${esc(payment.document.doc_number || '')}</b> במערכת הניהול. חשבונית מס — עם האספקה, לשייך לקבלה.`
+           : `<span style="color:#b91c1c;font-weight:bold;">לא הופקה קבלה אוטומטית${payment.document?.doc_number ? ` — נשמרה טיוטה ${esc(payment.document.doc_number)}` : ''}. יש להפיק קבלה במערכת הניהול היום.</span>${payment.document?.warning ? `<br/><span style="color:#777;">${esc(payment.document.warning)}</span>` : ''}`}</div>
        </div>`
     : '';
   return `
@@ -82,8 +83,8 @@ export async function sendCustomerThanks({ ref, customer, lines, payment, pdf, r
     <p style="font-size:16px;"><strong>סה״כ ששולם: ${ils(payment.amount)}</strong> <span style="color:#888;font-size:12px;">כולל מע״מ · אישור ${esc(payment.approval)}</span></p>
     ${customer.address ? `<p style="color:#555;">כתובת למשלוח/התקנה: ${esc(customer.address)}</p>` : ''}
     <p>${receipt
-      ? 'חשבונית המס/קבלה המקורית מצורפת כקובץ PDF חתום דיגיטלית (מסמך ממוחשב) — זהו המסמך לרישומיכם; אישור ההזמנה מצורף גם הוא.'
-      : 'אישור ההזמנה מצורף כקובץ PDF; חשבונית מס/קבלה תישלח אליכם בנפרד.'} נציג DES ייצור איתכם קשר לתיאום המשלוח או ההתקנה.</p>
+      ? 'הקבלה על התשלום מצורפת כקובץ PDF חתום דיגיטלית (מסמך ממוחשב), יחד עם אישור ההזמנה. חשבונית המס תופק ותישלח אליכם עם אספקת המוצרים.'
+      : 'אישור ההזמנה מצורף כקובץ PDF; הקבלה על התשלום תישלח אליכם בנפרד, וחשבונית המס — עם אספקת המוצרים.'} נציג DES ייצור איתכם קשר בהקדם לאישור הזמינות ולתיאום המשלוח או ההתקנה.</p>
     <p style="margin:20px 0;"><a href="${site}/account" style="background:#1e90ff;color:#fff;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:bold;">ההזמנות שלי באתר</a></p>
     <hr style="margin:20px 0;border:none;border-top:1px solid #eee;" />
     <p style="color:#999;font-size:12px;">DES — שירותי ציוד רפואי ודנטלי · 054-881-8681 · info@destec.co.il</p>

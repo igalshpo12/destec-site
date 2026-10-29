@@ -30,8 +30,8 @@ export async function notifyIfApproved(db: SupabaseClient, row: WebOrder) {
   if (doc) {
     const receiptLine = doc.receipt ? ' · מסמך ממוחשב חתום נשלח ללקוח במייל' : doc.receipt_warning ? ` · ⚠ המסמך לא נשלח ללקוח (${doc.receipt_warning}) — יש להדפיס ולשלוח` : '';
     const line = doc.issued
-      ? `חשבונית מס/קבלה ${doc.doc_number} הופקה במנהל${doc.allocation_number ? ` · הקצאה ${doc.allocation_number}` : ''}${receiptLine}`
-      : `⚠ לא הופק מסמך אוטומטית${doc.doc_number ? ` — טיוטה ${doc.doc_number}` : ''}${doc.warning ? ` · ${doc.warning}` : ''} — יש להפיק היום`;
+      ? `קבלה ${doc.doc_number} הופקה במנהל${receiptLine} · חשבונית מס עם האספקה (לשייך לקבלה)`
+      : `⚠ לא הופקה קבלה אוטומטית${doc.doc_number ? ` — טיוטה ${doc.doc_number}` : ''}${doc.warning ? ` · ${doc.warning}` : ''} — יש להפיק היום`;
     await updateInboxByRef(row.ref, { notes: `${entry.notes} · ${line}${doc.client?.created ? ' · לקוח חדש נפתח' : ''}` });
   } else {
     await updateInboxByRef(row.ref, { notes: `${entry.notes} · ⚠ המנהל לא הגיב — יש להפיק חשבונית מס/קבלה ידנית` });
