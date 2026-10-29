@@ -25,6 +25,7 @@ async function fillAndSubmit(page: Page) {
   await page.goto(`${BASE}/checkout`);
   await page.getByLabel('שם מלא *').fill('בדיקה');
   await page.getByLabel('טלפון *').fill('0501234567');
+  await page.getByLabel('אימייל *').fill('test@example.com');   // required since the customer account
   await expect(page.getByTestId('submit-order')).toHaveText(/המשך לתשלום/);
   await page.getByTestId('submit-order').click();
 }
