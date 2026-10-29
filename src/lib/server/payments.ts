@@ -143,3 +143,21 @@ export async function resolveOrder(db: SupabaseClient, order: WebOrder, uidHint?
 export function publicView(o: WebOrder) {
   return { order_id: o.id, ref: o.ref, status: o.status, amount: o.amount_agorot / 100, approval: o.approval || '', brand: o.card_brand || '', error: o.error_text || '' };
 }
+
+// Is this buyer already a client in des-manager (matched by e-mail, then phone)? Then the
+// client card already holds the ח.פ/ע.מ, address and city the document needs (owner
+// 2026-10-29: "we have the ח.פ in the client settings for a reason") and the checkout must not
+// ask again. Only a buyer nobody knows has to type a business number.
+export async function knownClient(db: SupabaseClient, { email, phone }: { email?: string; phone?: string }): Promise<boolean> {
+  const e = String(email || '').trim().toLowerCase();
+  const digits = String(phone || '').replace(/\D/g, '').replace(/^972/, '0');
+  const ors: string[] = [];
+  if (e) ors.push(`email.ilike.${e.replace(/[,()]/g, '')}`);
+  if (digits.length >= 7) ors.push(`phone.ilike.%${digits.slice(-7)}%`);
+  if (!ors.length) return false;
+  const { data } = await db.from('clients').select('id, email, phone, vat_number, is_active').or(ors.join(',')).limit(20);
+  return (data || []).some((c) => c.is_active !== false && (
+    (e && String(c.email || '').trim().toLowerCase() === e) ||
+    (digits.length >= 7 && String(c.phone || '').replace(/\D/g, '').replace(/^972/, '0').endsWith(digits.slice(-7)))
+  ));
+}

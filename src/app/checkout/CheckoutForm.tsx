@@ -25,6 +25,7 @@ export default function CheckoutForm() {
   const [orderRef, setOrderRef] = useState('');
   const [payment, setPayment] = useState<PaymentStart | null>(null);
   const [payView, setPayView] = useState<PaymentView | null>(null);
+  const [needVat, setNeedVat] = useState(false);   // the server asked: this buyer is not a known client
   const search = useSearchParams();
   const busy = useRef(false);
 
@@ -88,7 +89,11 @@ export default function CheckoutForm() {
           items: items.map((i) => ({ id: i.id, name: i.name, itemNumber: i.itemNumber, manufacturer: i.manufacturer, price: i.price ?? null, qty: i.qty })),
         }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        if (err?.code === 'need_vat') { setNeedVat(true); setStatus('idle'); return; }
+        throw new Error(err?.error || 'request failed');
+      }
       const data = await res.json();
       setOrderRef(data.ref || '');
       if (data.payment?.page_url) {
@@ -229,10 +234,13 @@ export default function CheckoutForm() {
               <input name="clinic" value={form.clinic} onChange={set('clinic')} className={input} style={inputStyle} autoComplete="organization" />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600 mb-1 block">ח.פ / ע.מ / ת.ז *</span>
-              <input required name="vat_number" dir="ltr" inputMode="numeric" pattern="[0-9]{5,9}" maxLength={9} title="5–9 ספרות"
-                value={form.vat_number} onChange={set('vat_number')} className={input} style={inputStyle} />
-              <span className="text-[11px] text-gray-400 mt-1 block">נדרש להפקת חשבונית מס/קבלה</span>
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">ח.פ / ע.מ / ת.ז{needVat ? ' *' : ''}</span>
+              <input required={needVat} name="vat_number" dir="ltr" inputMode="numeric" pattern="[0-9]{5,9}" maxLength={9} title="5–9 ספרות"
+                value={form.vat_number} onChange={set('vat_number')} className={input}
+                style={needVat && !form.vat_number ? { ...inputStyle, borderColor: '#dc2626' } : inputStyle} data-testid="vat-number" />
+              <span className="text-[11px] mt-1 block" style={{ color: needVat ? '#b91c1c' : '#9ca3af' }}>
+                {needVat ? 'לא מצאנו אתכם במערכת לפי הטלפון או האימייל — נדרש ח.פ / ע.מ / ת.ז להפקת חשבונית מס/קבלה.' : 'לקוחות קיימים של DES יכולים להשאיר ריק.'}
+              </span>
             </label>
             <label className="block">
               <span className="text-xs font-semibold text-gray-600 mb-1 block">עיר *</span>

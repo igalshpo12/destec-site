@@ -26,7 +26,6 @@ async function fillAndSubmit(page: Page) {
   await page.getByLabel('שם מלא *').fill('בדיקה');
   await page.getByLabel('טלפון *').fill('0501234567');
   await page.getByLabel('אימייל *').fill('test@example.com');   // required since the customer account
-  await page.getByLabel('ח.פ / ע.מ / ת.ז *').fill('515123456');
   await page.getByLabel('עיר *').fill('תל אביב');
   await page.getByLabel('כתובת למשלוח / התקנה *').fill('הרצל 10');
   await expect(page.getByTestId('submit-order')).toHaveText(/המשך לתשלום/);
@@ -61,4 +60,21 @@ test('return page message settles immediately (no poll)', async ({ page }) => {
   await page.evaluate((orderId) => window.postMessage({ type: 'c2k-return', order_id: orderId, uid: null,
     view: { order_id: orderId, ref: 'WEB-TEST-0002', status: 'approved', amount: 1250, approval: '0348557', brand: 'visa', error: '' } }, window.location.origin), ORDER);
   await expect(page.getByTestId('order-paid')).toBeVisible({ timeout: 3000 });
+});
+
+test('an unknown buyer without a business number is asked for it, then proceeds', async ({ page }) => {
+  await seedCart(page);
+  let calls = 0;
+  await page.route('**/api/order', (route) => {
+    calls += 1;
+    if (calls === 1) return route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: 'נדרש ח.פ', code: 'need_vat' }) });
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, ref: 'WEB-TEST-0003', payment: { order_id: ORDER, page_url: `${BASE}/privacy`, amount: 1250 } }) });
+  });
+  await page.route('**/api/pay/verify', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, order_id: ORDER, ref: 'WEB-TEST-0003', status: 'pending', amount: 1250, approval: '', brand: '', error: '' }) }));
+  await fillAndSubmit(page);
+  await expect(page.getByText('לא מצאנו אתכם במערכת')).toBeVisible();
+  await expect(page.getByTestId('checkout-form')).toBeVisible();
+  await page.getByTestId('vat-number').fill('515123456');
+  await page.getByTestId('submit-order').click();
+  await expect(page.getByTestId('order-payment')).toBeVisible();
 });
