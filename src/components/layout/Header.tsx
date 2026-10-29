@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, MessageCircle, Wrench, Menu, X } from 'lucide-react';
+import { Search, MessageCircle, Wrench, Menu, X, UserRound } from 'lucide-react';
 import { NAV_CATEGORIES } from '@/lib/utils';
 import CartButton from '@/components/cart/CartButton';
 
@@ -89,6 +89,11 @@ export default function Header() {
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Cart */}
           <CartButton />
+
+          {/* Account */}
+          <Link href="/account" aria-label="האזור האישי" title="האזור האישי" className="p-2 rounded-lg transition-all duration-150" style={{ color: '#1a2b4a' }}>
+            <UserRound className="w-5 h-5" />
+          </Link>
 
           {/* WhatsApp */}
           <a

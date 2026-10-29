@@ -221,8 +221,8 @@ export default function CheckoutForm() {
               <input required name="phone" type="tel" dir="ltr" value={form.phone} onChange={set('phone')} className={input} style={inputStyle} autoComplete="tel" />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600 mb-1 block">אימייל</span>
-              <input name="email" type="email" dir="ltr" value={form.email} onChange={set('email')} className={input} style={inputStyle} autoComplete="email" />
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">אימייל *</span>
+              <input required name="email" type="email" dir="ltr" value={form.email} onChange={set('email')} className={input} style={inputStyle} autoComplete="email" />
             </label>
             <label className="block">
               <span className="text-xs font-semibold text-gray-600 mb-1 block">מרפאה / חברה</span>
