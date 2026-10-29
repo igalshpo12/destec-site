@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOrderEmail } from '@/lib/server/orderEmail';
-import { paymentEnv, serviceDb, repriceLines, startOrderPayment, knownClient } from '@/lib/server/payments';
+import { paymentEnv, serviceDb, repriceLines, startOrderPayment } from '@/lib/server/payments';
 import { pushToInbox, orderMessage } from '@/lib/server/inbox';
 
 /**
@@ -44,11 +44,9 @@ export async function POST(req: NextRequest) {
     if (paymentEnv().enabled) {
       const db = serviceDb();
       const priced = await repriceLines(db, lines.map((l) => ({ id: l.id, qty: l.qty })));
-      // A paid order becomes an issued חשבונית מס/קבלה, which needs the client's business number.
       // Known clients have it on their card in the manager; only a new buyer must type it.
-      if (priced && !customer.vat_number && !(await knownClient(db, customer))) {
-        return NextResponse.json({ error: 'נדרש ח.פ / ע.מ / ת.ז להפקת חשבונית מס/קבלה', code: 'need_vat' }, { status: 400 });
-      }
+      // No business number needed here: the manager issues a קבלה (no VAT, no ח.פ); the חשבונית מס
+      // is issued at delivery, when staff talk to the customer anyway (owner 2026-10-29).
       if (priced) {
         try {
           const { orderId, pageUrl, amount } = await startOrderPayment(db, { ref: orderRef, customer, lines: priced });

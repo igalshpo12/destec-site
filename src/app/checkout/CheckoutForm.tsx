@@ -25,7 +25,6 @@ export default function CheckoutForm() {
   const [orderRef, setOrderRef] = useState('');
   const [payment, setPayment] = useState<PaymentStart | null>(null);
   const [payView, setPayView] = useState<PaymentView | null>(null);
-  const [needVat, setNeedVat] = useState(false);   // the server asked: this buyer is not a known client
   const search = useSearchParams();
   const busy = useRef(false);
 
@@ -91,7 +90,6 @@ export default function CheckoutForm() {
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        if (err?.code === 'need_vat') { setNeedVat(true); setStatus('idle'); return; }
         throw new Error(err?.error || 'request failed');
       }
       const data = await res.json();
@@ -234,12 +232,11 @@ export default function CheckoutForm() {
               <input name="clinic" value={form.clinic} onChange={set('clinic')} className={input} style={inputStyle} autoComplete="organization" />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600 mb-1 block">ח.פ / ע.מ / ת.ז{needVat ? ' *' : ''}</span>
-              <input required={needVat} name="vat_number" dir="ltr" inputMode="numeric" pattern="[0-9]{5,9}" maxLength={9} title="5–9 ספרות"
-                value={form.vat_number} onChange={set('vat_number')} className={input}
-                style={needVat && !form.vat_number ? { ...inputStyle, borderColor: '#dc2626' } : inputStyle} data-testid="vat-number" />
-              <span className="text-[11px] mt-1 block" style={{ color: needVat ? '#b91c1c' : '#9ca3af' }}>
-                {needVat ? 'לא מצאנו אתכם במערכת לפי הטלפון או האימייל — נדרש ח.פ / ע.מ / ת.ז להפקת חשבונית מס/קבלה.' : 'לקוחות קיימים של DES יכולים להשאיר ריק.'}
+              <span className="text-xs font-semibold text-gray-600 mb-1 block">ח.פ / ע.מ / ת.ז</span>
+              <input name="vat_number" dir="ltr" inputMode="numeric" pattern="[0-9]{5,9}" maxLength={9} title="5–9 ספרות"
+                value={form.vat_number} onChange={set('vat_number')} className={input} style={inputStyle} data-testid="vat-number" />
+              <span className="text-[11px] mt-1 block" style={{ color: '#9ca3af' }}>
+                {'לא חובה — לחשבונית המס שתופק עם האספקה. לקוחות קיימים של DES יכולים להשאיר ריק.'}
               </span>
             </label>
             <label className="block">
@@ -285,7 +282,7 @@ export default function CheckoutForm() {
               <input type="checkbox" required name="digital_docs_consent" checked={form.digital_docs_consent}
                 onChange={(e) => setForm((f) => ({ ...f, digital_docs_consent: e.target.checked }))}
                 className="mt-0.5" data-testid="digital-docs-consent" />
-              <span>אני מסכים/ה לקבל את חשבונית המס/קבלה ומסמכים נוספים כמסמכים ממוחשבים חתומים דיגיטלית לכתובת האימייל שמסרתי, במקום מסמך מודפס.</span>
+              <span>אני מסכים/ה לקבל את הקבלה, חשבונית המס ומסמכים נוספים כמסמכים ממוחשבים חתומים דיגיטלית לכתובת האימייל שמסרתי, במקום מסמך מודפס.</span>
             </label>
           )}
           <p className="mt-2 text-xs text-gray-400">
