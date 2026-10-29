@@ -1,6 +1,8 @@
 // The order e-mail to DES (Resend). One builder for both paths: a quote/e-mail order (no payment)
 // and an online order that was PAID through Credit2000 (approval number included; a קבלה must
 // then be issued in des-manager — the site issues no documents).
+import { sendMail } from './mail';
+
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const ils = (n: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 2 }).format(n);
 
@@ -50,29 +52,18 @@ export function orderEmailHtml({ ref, customer, lines, payment }: { ref: string;
 }
 
 export async function sendOrderEmail({ ref, customer, lines, payment }: { ref: string; customer: EmailCustomer; lines: EmailLine[]; payment?: Payment | null }) {
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) { console.log('[Order] RESEND_API_KEY not configured — email not sent'); return false; }
   const contactEmail = process.env.CONTACT_EMAIL || 'info@destec.co.il';
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'DES Orders <noreply@destec.co.il>',
-      to: [contactEmail],
-      reply_to: customer.email || undefined,
-      subject: `[הזמנה מהאתר${payment ? ' · שולם' : ''}] ${ref} — ${customer.name}${customer.clinic ? ` (${customer.clinic})` : ''} · ${lines.length} פריטים`,
-      html: orderEmailHtml({ ref, customer, lines, payment }),
-    }),
+  return sendMail({
+    to: [contactEmail], fromName: 'DES Orders', replyTo: customer.email || undefined,
+    subject: `[הזמנה מהאתר${payment ? ' · שולם' : ''}] ${ref} — ${customer.name}${customer.clinic ? ` (${customer.clinic})` : ''} · ${lines.length} פריטים`,
+    html: orderEmailHtml({ ref, customer, lines, payment }),
   });
-  if (!res.ok) { console.error('[Order] Resend error:', await res.text()); return false; }
-  return true;
 }
 
 // To the CUSTOMER, once the payment is approved: thanks + the order summary. Not a tax document —
 // the קבלה is issued in des-manager (and must carry a secure digital signature to be e-mailed).
 export async function sendCustomerThanks({ ref, customer, lines, payment, pdf }: { ref: string; customer: EmailCustomer; lines: EmailLine[]; payment: Payment; pdf?: Buffer | null }) {
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey || !customer.email) return false;
+  if (!customer.email) return false;
   const site = process.env.SITE_URL || 'https://destec.co.il';
   const rows = lines.map((l) => `<tr><td style="padding:8px;border-bottom:1px solid #eee;">${esc(l.name)}${l.manufacturer ? ` <span style="color:#888;font-size:12px;">${esc(l.manufacturer)}</span>` : ''}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${l.qty}</td><td style="padding:8px;border-bottom:1px solid #eee;">${l.price ? ils(l.price * l.qty) : ''}</td></tr>`).join('');
   const html = `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#1a2b4a;">
@@ -89,15 +80,9 @@ export async function sendCustomerThanks({ ref, customer, lines, payment, pdf }:
     <hr style="margin:20px 0;border:none;border-top:1px solid #eee;" />
     <p style="color:#999;font-size:12px;">DES — שירותי ציוד רפואי ודנטלי · 054-881-8681 · info@destec.co.il</p>
   </div>`;
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'DES <info@destec.co.il>', to: [customer.email], reply_to: process.env.CONTACT_EMAIL || 'info@destec.co.il',
-      subject: `תודה על הרכישה ב-DES — הזמנה ${ref}`, html,
-      ...(pdf ? { attachments: [{ filename: `DES-order-${ref}.pdf`, content: pdf.toString('base64') }] } : {}),
-    }),
+  return sendMail({
+    to: [customer.email], fromName: 'DES', replyTo: process.env.CONTACT_EMAIL || 'info@destec.co.il',
+    subject: `תודה על הרכישה ב-DES — הזמנה ${ref}`, html,
+    attachments: pdf ? [{ filename: `DES-order-${ref}.pdf`, content: pdf }] : undefined,
   });
-  if (!res.ok) console.error('[Order] customer thanks Resend error:', await res.text());
-  return res.ok;
 }
