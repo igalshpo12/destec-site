@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { CheckCircle2, Loader2, ShieldCheck, ArrowLeft, CreditCard, ExternalLink, XCircle } from 'lucide-react';
+import { CheckCircle2, Loader2, ShieldCheck, ArrowLeft, CreditCard, ExternalLink, XCircle, RefreshCw } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/utils';
 import { verifyPayment, returnMessage, type PaymentStart, type PaymentView } from '@/lib/payment-client';
@@ -15,8 +15,14 @@ const EMPTY: Form = { name: '', phone: '', email: '', clinic: '', vat_number: ''
  * /api/order answers with `payment`, the card is typed on Credit2000's own form shown right
  * here; the result is confirmed SERVER-SIDE (/api/pay/verify asks Credit2000 — the page's
  * redirect alone proves nothing). Quote orders, or payment not configured: e-mail as before.
+ *
+ * NO POLLING WHILE THE FORM IS OPEN (DCS/Credit2000 support, 2026-11-03): the verify call
+ * (getTokenAndApprovePro) DELETES the hosted-page transaction, after which the form shows
+ * "העסקה הושלמה עם מזהה עסקה זה / מזהה עסקה לא קיים" and the card cannot be typed. The 5-second
+ * poll this page used to run (the order already knows its uid from the page URL) killed every
+ * live attempt that way. Verification runs only after the return redirect (server-side in
+ * /pay/return, then posted here) or when the customer presses the "check payment" button.
  */
-const POLL_MS = 5000;
 
 export default function CheckoutForm() {
   const { items, count, subtotal, unpricedCount, hydrated, clear } = useCart();
@@ -64,13 +70,6 @@ export default function CheckoutForm() {
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, [payment, settle, check]);
-
-  // Slow poll while the form is open — covers a redirect that never reaches us.
-  useEffect(() => {
-    if (!payment || status !== 'paying') return undefined;
-    const t = setInterval(() => check(payment.order_id), POLL_MS);
-    return () => clearInterval(t);
-  }, [payment, status, check]);
 
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -160,10 +159,18 @@ export default function CheckoutForm() {
           <>
             <iframe title="תשלום מאובטח" src={payment.page_url} allow="payment" referrerPolicy="no-referrer"
               className="w-full rounded-2xl bg-white" style={{ height: 600, border: '1px solid #e8ecf0' }} />
-            <a href={payment.page_url} target="_blank" rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1 text-xs" style={{ color: '#1e90ff' }}>
-              <ExternalLink className="w-3.5 h-3.5" /> הטופס לא נטען? פתחו אותו בלשונית נפרדת
-            </a>
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+              <a href={payment.page_url} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs" style={{ color: '#1e90ff' }}>
+                <ExternalLink className="w-3.5 h-3.5" /> הטופס לא נטען? פתחו אותו בלשונית נפרדת
+              </a>
+              {/* For a payment finished in another tab/window whose redirect never reached this
+                  page. Only on request — never on a timer (see the note at the top). */}
+              <button type="button" onClick={() => check(payment.order_id, null, true)} disabled={status === 'verifying'}
+                className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg border" style={{ color: '#1a2b4a', borderColor: '#e8ecf0' }}>
+                <RefreshCw className="w-3.5 h-3.5" /> שילמתם ולא עודכן? בדיקת תשלום
+              </button>
+            </div>
           </>
         ) : null}
         <p className="mt-4 text-xs text-gray-400 flex items-center gap-1.5">
