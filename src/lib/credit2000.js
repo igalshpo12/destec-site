@@ -97,14 +97,17 @@ export const tokenEnvelope = ({ uid }) =>
 export function refundEnvelope({ vendor, clientKey, token, validDate, amountAgorot, installments, purchaseType }) {
   const split = splitInstallments(amountAgorot, installments)
   const vd = String(validDate || '').replace(/\D/g, '')
+  // Numeric placeholders exactly as the DCS CreditXML example ("Credit2000 - English.pdf"):
+  // the first live refund (2026-11-12) with cardType '' came back -571 "cardType can not have
+  // non numerical characters", so no field here is left empty that the example fills.
   return envelope('CreditXML', fields({
-    cvvNumber: '', cardType: '', vendorName: vendor,
+    cvvNumber: '000', cardType: '1', vendorName: vendor,
     purchaseType: String(purchaseType || split.purchaseType), currency: CURRENCY.ILS,
     cardNumber: token, validationMonth: vd.slice(0, 2), validationYear: vd.slice(2, 4),
     totalPayment: String(Math.round(Number(amountAgorot))), paymentsNumber: String(split.payments),
     firstPayment: String(split.first), fixedAmmount: split.payments === 1 ? '000' : String(split.fixed),
-    customerId: '', returnCode: '000', confirmationNumber: '00000', actionType: ACTION.REFUND,
-    cardReader: '0', confirmationSource: '2', tzNumber: '', club: '0', stars: '0', readerData: '',
+    customerId: '000000001', returnCode: '000', confirmationNumber: '00000', actionType: ACTION.REFUND,
+    cardReader: '0', confirmationSource: '2', tzNumber: '00000000', club: '0', stars: '0', readerData: '',
     ClientKey: clientKey,
   }))
 }
@@ -180,10 +183,20 @@ export function parseToken(xml) {
 // "000" is approved on every Credit2000 response we have seen documented.
 export const isApprovedCode = (code) => /^0+$/.test(String(code || '').trim())
 
+// UNVERIFIED response shape: the DCS document "Credit2000 - English.pdf" specifies the CreditXML
+// REQUEST only; nothing we have shows what the answer carries. So the approval number is read
+// from every name it could plausibly use (confirmationNumber / Approve / approveNum, any
+// namespace), falling back to the raw CreditXMLResult text and finally the return code itself —
+// an approved refund row needs a non-null approval (migration 113 CHECK). The first live refund
+// will show the real shape; until then every field of the answer is kept verbatim by the route.
 export function parseRefund(xml) {
   const result = tagText(xml, 'CreditXMLResult')
   const code = tagText(xml, 'returnCode') || result
-  return { ok: isApprovedCode(code), returnCode: code, result }
+  const noZeros = (s) => (/^0*$/.test(String(s || '').replace(/\s/g, '')) ? '' : String(s).replace(/\s/g, ''))
+  const approval = noZeros(tagText(xml, 'confirmationNumber')) || noZeros(tagText(xml, 'Approve'))
+    || noZeros(tagText(xml, 'approveNum')) || noZeros(tagText(xml, 'ApprovalNumber'))
+    || result.trim() || code.trim()
+  return { ok: isApprovedCode(code), returnCode: code, result, approval }
 }
 
 // ---------------------------------------------------------------- unified file (D120)
